@@ -1,6 +1,6 @@
 {
-    "name": "ymcatwincities/openy_activity_finder",
-    "description": "Open Y Activity Finder",
+    "name": "ycloudyusa/yusaopeny_activity_finder",
+    "description": "Y USA Open Y Activity Finder",
     "type": "drupal-module",
     "license": "GPL-2.0+",
     "minimum-stability": "dev"
