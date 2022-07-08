@@ -26,7 +26,7 @@ pieces and might require additional steps to make it working. The list of
 actions below outlines the major steps to get Activity Finder updated to
 version 4.
 - Update the codebase using composer command:
-  `composer require ymcatwincities/openy_activity_finder:"^4.0"`
+  `composer require ycloudyusa/yusaopeny_activity_finder:"^4.0"`
 - Run database updates `drush -y updb`
   - Verify there were no errors and updates went fine
 - Install the new "Open Y Paragraph Activity Finder" module,
