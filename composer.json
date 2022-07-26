@@ -4,4 +4,7 @@
     "type": "drupal-module",
     "license": "GPL-2.0+",
     "minimum-stability": "dev"
+    "replace": {
+        "ymcatwincities/openy_activity_finder": "*"
+    },
 }
