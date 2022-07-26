@@ -3,7 +3,7 @@
     "description": "Y USA Open Y Activity Finder",
     "type": "drupal-module",
     "license": "GPL-2.0+",
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
     "replace": {
         "ymcatwincities/openy_activity_finder": "*"
     }
