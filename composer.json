@@ -5,6 +5,7 @@
     "license": "GPL-2.0+",
     "minimum-stability": "dev",
     "replace": {
-        "ymcatwincities/openy_activity_finder": "*"
+        "ymcatwincities/openy_activity_finder": "*",
+        "drupal/openy_activity_finder": "*"
     }
 }
