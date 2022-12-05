@@ -463,8 +463,8 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
           ['log' => $log_id],
           ['query' => ['url' => $entity->field_session_reg_link->uri]])
           ->toString(TRUE)->getGeneratedUrl(),
-        'description' => html_entity_decode(strip_tags(text_summary($entity->field_session_description->value, $entity->field_session_description->format, 600))),
-        'ages' => $this->convertData([$entity->field_session_min_age->value, isset($entity->field_session_max_age->value) ? $entity->field_session_max_age->value : '0']),
+        'description' => html_entity_decode(strip_tags(text_summary($entity->field_session_description->value ?? '', $entity->field_session_description->format, 600) ?? '')),
+        'ages' => $this->convertData([$entity->field_session_min_age->value, $entity->field_session_max_age->value ?? '0']),
         'gender' => !empty($entity->field_session_gender->value) ? $entity->field_session_gender->value : '',
         // We keep empty variables in order to have the same structure with other backends (e.g. Daxko) for avoiding unexpected errors.
         'program_id' => $sub_category->id(),
