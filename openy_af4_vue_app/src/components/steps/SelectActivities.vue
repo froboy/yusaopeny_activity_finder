@@ -113,7 +113,7 @@ export default {
         }
 
         const filteredValue = activityGroup.value.filter(item => {
-          let r = false
+          let r = true
           // Items must pass both tests, so we intentionally do not ELSE these.
           // If there are excludes, the item must NOT be excluded.
           if (this.excludeByCategory.length) {
