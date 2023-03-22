@@ -1,0 +1,5 @@
+excluded:
+  - field.field.node.article_lb.layout_builder__layout
+  - field.field.node.landing_page_lb.layout_builder__layout
+  - field.storage.node.layout_builder__layout
+required: true
