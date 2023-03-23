@@ -295,7 +295,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'images_library',
       $conf['background_image'],
       1,
-      'preview'
+      'thumbnail_for_preview'
     );
     // Convert the wrapping container to a details element.
     $form['background_image']['#type'] = 'details';
