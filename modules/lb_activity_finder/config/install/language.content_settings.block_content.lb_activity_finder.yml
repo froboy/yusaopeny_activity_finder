@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.lb_activity_finder
+id: block_content.lb_activity_finder
+target_entity_type_id: block_content
+target_bundle: lb_activity_finder
+default_langcode: site_default
+language_alterable: false

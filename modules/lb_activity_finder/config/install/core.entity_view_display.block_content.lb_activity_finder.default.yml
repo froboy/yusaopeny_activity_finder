@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.lb_activity_finder
+    - field.field.block_content.lb_activity_finder.field_block
+  module:
+    - plugin
+id: block_content.lb_activity_finder.default
+targetEntityType: block_content
+bundle: lb_activity_finder
+mode: default
+content:
+  field_block:
+    type: plugin_block_built
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

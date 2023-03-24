@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.lb_activity_finder
+    - field.storage.block_content.field_block
+  module:
+    - plugin
+id: block_content.lb_activity_finder.field_block
+field_name: field_block
+entity_type: block_content
+bundle: lb_activity_finder
+label: Block
+description: 'A reference to the Activity Finder 4 block.'
+required: true
+translatable: false
+default_value:
+  -
+    plugin_id: activity_finder_4
+    plugin_configuration:
+      id: activity_finder_4
+      label: 'Activity Finder v4'
+      label_display: '0'
+      provider: openy_activity_finder
+      limit_by_category_daxko: null
+      limit_by_category: {  }
+      exclude_by_category: {  }
+      exclude_by_location: {  }
+      legacy_mode: 0
+      weeks_filter: 0
+      hide_home_branch_block: 0
+      background_image: ''
+    plugin_configuration_schema_id: block.settings.activity_finder_4
+default_value_callback: ''
+settings: {  }
+field_type: 'plugin:block'
