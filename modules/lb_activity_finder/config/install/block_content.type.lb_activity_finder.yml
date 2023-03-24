@@ -2,6 +2,6 @@ langcode: en
 status: true
 dependencies: {  }
 id: lb_activity_finder
-label: 'Activity Finder'
+label: 'Activity Finder v4'
 revision: 0
-description: 'A component to add Activity Finder block to Layout Builder.'
+description: 'A component to add Activity Finder v4 block to Layout Builder.'

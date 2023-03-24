@@ -24,7 +24,7 @@ function lb_activity_finder_theme() {
  */
 function lb_activity_finder_preprocess_block__lb_activity_finder(&$variables) {
   if ($variables['in_preview']) {
-    $variables['in_preview_placeholder'] = t('Activity Finder: To see your changes in this block, please save the layout.');
+    $variables['in_preview_placeholder'] = t('Activity Finder v4: To see your changes in this block, please save the layout.');
   }
 }
 
@@ -94,7 +94,7 @@ function _select_block_field_after_build($element, FormStateInterface $form_stat
     // Hide the select block field.
     $element[0]['plugin_selector']['container']['select']['container']['#attributes']['class'][] = 'hidden';
     // Override a text before edit the AF block settings.
-    $element[0]['plugin_selector']['container']['plugin_form']['admin_label']['#title'] = t('Please configure your Activity Finder block.');
+    $element[0]['plugin_selector']['container']['plugin_form']['admin_label']['#title'] = t('Please configure your Activity Finder v4 block.');
     unset($element[0]['plugin_selector']['container']['plugin_form']['admin_label']['#plain_text']);
   }
   return $element;

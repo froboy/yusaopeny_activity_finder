@@ -1,11 +1,11 @@
 name: 'LB Activity Finder'
 type: module
 description: Helper module to show "Activity Finder" block in Layout Builder.
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^8.8 || ^9 || ^10
 dependencies:
   - block_content
   - layout_builder
   - plugin
   - y_lb
   - yusaopeny_activity_finder
-version: 9.x-1.0
+version: 1.0.0

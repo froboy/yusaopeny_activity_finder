@@ -19,7 +19,7 @@ default_value:
     plugin_id: activity_finder_4
     plugin_configuration:
       id: activity_finder_4
-      label: 'Activity Finder'
+      label: 'Activity Finder v4'
       label_display: '0'
       provider: openy_activity_finder
       limit_by_category_daxko: null
