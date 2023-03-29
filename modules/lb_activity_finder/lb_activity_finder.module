@@ -44,15 +44,12 @@ function lb_activity_finder_form_alter(&$form, FormStateInterface $form_state) {
     $component = $form_object->getCurrentComponent();
     $plugin = $component->getPlugin();
     $block_id = $plugin->getDerivativeId() ?? $plugin->getBaseId();
-    // Hide title fields that related to inline block itself.
-    $form['settings']['admin_label']['#access'] = FALSE;
-    $form['settings']['label']['#access'] = FALSE;
-    $form['settings']['label_display']['#access'] = FALSE;
 
-    if (in_array($block_id,
-      [
-        'lb_activity_finder',
-      ])) {
+    if ($block_id === 'lb_activity_finder') {
+      // Hide title fields that related to inline block itself.
+      $form['settings']['admin_label']['#access'] = FALSE;
+      $form['settings']['label']['#access'] = FALSE;
+      $form['settings']['label_display']['#access'] = FALSE;
       if (isset($form['settings']['block_form'])) {
         $form['settings']['block_form']['#process'][] = '_inline_block_process';
       }
