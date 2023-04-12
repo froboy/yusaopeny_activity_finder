@@ -25,6 +25,11 @@ interface OpenyActivityFinderBackendInterface {
   public function getSortOptions();
 
   /**
+   * Get the relevance sort option.
+   */
+  public function getRelevanceSort();
+
+  /**
    * Get ages from configuration.
    */
   public function getAges();
