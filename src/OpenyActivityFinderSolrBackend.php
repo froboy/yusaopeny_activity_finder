@@ -844,8 +844,15 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       'af_time_of_day__DESC' => t('Sort by Start time (Z-A)'),
       'af_date_of_day__ACS' => t('Sort by Nearest Date (A-Z)'),
       'af_date_of_day__DESC' => t('Sort by Furthest Date (Z-A)'),
-      'search_api_relevance__DESC' => t('Sort by Relevance'),
+      $this->getRelevanceSort() => t('Sort by Relevance'),
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRelevanceSort() {
+    return 'search_api_relevance__DESC';
   }
 
   /**
