@@ -161,7 +161,7 @@ class ActivityFinderController extends ControllerBase {
     $host_patterns = Settings::get('activity_finder_trusted_redirect_host_patterns', []);
     $trusted = FALSE;
     if (empty($host_patterns)) {
-      $trusted = TRUE;
+      $trusted = FALSE;
     }
     else {
       $host = parse_url($url, PHP_URL_HOST);
