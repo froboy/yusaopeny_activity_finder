@@ -26,22 +26,22 @@ class ActivityFinderController extends ControllerBase {
   const CACHE_LIFETIME = 300;
 
   /**
-   * @var OpenyActivityFinderBackendInterface
+   * @var \Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface
    */
   protected $backend;
 
   /**
-   * @var CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
 
   /**
-   * @var TimeInterface
+   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected $time;
 
   /**
-   * @var ImmutableConfig
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $config;
 
@@ -111,7 +111,6 @@ class ActivityFinderController extends ControllerBase {
       $log_id = 0;
     }
 
-
     $parameters = $request->query->all();
 
     foreach ($parameters as &$value) {
@@ -127,7 +126,7 @@ class ActivityFinderController extends ControllerBase {
     else {
       $data = $this->backend->runProgramSearch($parameters, $log_id);
 
-      /* @var $expanderSectionsConfig \Drupal\Core\Config\Config */
+      /** @var \Drupal\Core\Config\Config $expanderSectionsConfig */
       $expanderSectionsConfig = $this->config('openy_activity_finder.settings');
       $data['expanderSectionsConfig'] = $expanderSectionsConfig->getRawData();
 
@@ -192,8 +191,9 @@ class ActivityFinderController extends ControllerBase {
   /**
    * Callback to retrieve programs full information.
    *
-   * @param Request $request
-   * @return JsonResponse
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function ajaxProgramsMoreInfo(Request $request) {
     $parameters = $request->query->all();

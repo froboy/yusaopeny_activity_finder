@@ -21,14 +21,14 @@ class SettingsForm extends ConfigFormBase {
   /**
    * The entity type manager.
    *
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
    * The module handler.
    *
-   * @var ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
@@ -42,22 +42,22 @@ class SettingsForm extends ConfigFormBase {
   /**
    * The cache backend.
    *
-   * @var CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
   /**
    * SettingsForm constructor.
    *
-   * @param ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
-   * @param EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param Client $http_client
+   * @param \GuzzleHttp\Client $http_client
    *   The http_client.
-   * @param CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache backend.
    */
   public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, Client $http_client, CacheBackendInterface $cache) {
@@ -110,7 +110,7 @@ class SettingsForm extends ConfigFormBase {
       $backend_options['openy_activity_finder.solr_backend'] = 'Solr Backend (local db)';
     }
 
-    if ($this->moduleHandler->moduleExists('openy_daxko2')){
+    if ($this->moduleHandler->moduleExists('openy_daxko2')) {
       $backend_options['openy_daxko2.openy_activity_finder_backend'] = $this->t('Daxko 2 (live API calls)');
     }
 
@@ -350,7 +350,8 @@ class SettingsForm extends ConfigFormBase {
       $response = $this->httpClient
         ->get($base_url . $url->toString());
       $data = $response->getBody();
-    } catch (RequestException $e) {
+    }
+    catch (RequestException $e) {
       watchdog_exception('error', $e, $e->getMessage());
     }
     if ($data) {
@@ -361,4 +362,5 @@ class SettingsForm extends ConfigFormBase {
     }
     return FALSE;
   }
+
 }

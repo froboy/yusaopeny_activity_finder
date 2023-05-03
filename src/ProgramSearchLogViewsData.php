@@ -4,7 +4,11 @@ namespace Drupal\openy_activity_finder;
 
 use Drupal\views\EntityViewsData;
 
+/**
+ *
+ */
 class ProgramSearchLogViewsData extends EntityViewsData {
+
   /**
    * {@inheritdoc}
    */
@@ -26,4 +30,5 @@ class ProgramSearchLogViewsData extends EntityViewsData {
     ];
     return $data;
   }
+
 }

@@ -38,7 +38,7 @@ function openy_activity_finder_theme() {
         'categories_type' => '',
         'activities' => [],
         'locations' => [],
-        'is_search_box_disabled' => ''
+        'is_search_box_disabled' => '',
       ],
     ],
     'openy_activity_finder_program_search_page' => [
@@ -112,7 +112,7 @@ function openy_activity_finder_entity_delete(EntityInterface $entity) {
 /**
  * Helper function for Activity Finder cache invalidation.
  *
- * @param $entity EntityInterface
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  */
 function _openy_activity_finder_invalidate_cache($entity) {
   if ($entity->getEntityTypeId() != 'node') {

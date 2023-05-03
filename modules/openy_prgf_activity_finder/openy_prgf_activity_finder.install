@@ -18,7 +18,7 @@ function openy_prgf_activity_finder_update_8001() {
     'field.field.paragraph.activity_finder.field_prgf_af_categ_excl',
     'field.field.paragraph.activity_finder.field_prgf_af_categ',
     'core.entity_view_display.paragraph.activity_finder.default',
-    'core.entity_form_display.paragraph.activity_finder.default'
+    'core.entity_form_display.paragraph.activity_finder.default',
   ]);
 }
 
@@ -32,7 +32,7 @@ function openy_prgf_activity_finder_update_8002() {
     'field.storage.paragraph.field_prgf_hide_program_block',
     'field.field.paragraph.activity_finder.field_prgf_hide_program_block',
     'core.entity_view_display.paragraph.activity_finder.default',
-    'core.entity_form_display.paragraph.activity_finder.default'
+    'core.entity_form_display.paragraph.activity_finder.default',
   ]);
 }
 

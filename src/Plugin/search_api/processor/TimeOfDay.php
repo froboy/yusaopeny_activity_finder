@@ -2,8 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
@@ -70,13 +68,13 @@ class TimeOfDay extends ProcessorPluginBase {
 
     $value = self::BASE_DATE . '00:00:00Z';
     foreach ($paragraphs as $paragraph) {
-      /** @var FieldItemListInterface $range */
+      /** @var \Drupal\Core\Field\FieldItemListInterface $range */
       $range = $paragraph->field_session_time_date;
       if ($range->isEmpty()) {
         continue;
       }
 
-      /** @var DateRangeItem $_period */
+      /** @var \Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem $_period */
       $_period = $range->get(0);
       if ($_period->isEmpty()) {
         continue;

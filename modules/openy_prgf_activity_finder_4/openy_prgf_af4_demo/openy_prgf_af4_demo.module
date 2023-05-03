@@ -8,39 +8,42 @@
 use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 
- function openy_prgf_af4_demo_install() {
-     // Make sure that blocks are available.
+/**
+ *
+ */
+function openy_prgf_af4_demo_install() {
+  // Make sure that blocks are available.
   openy_enable_module('openy_prgf_activity_finder_4');
   drupal_flush_all_caches();
 
   $af_node = Node::create(
-    [
-      'type' => 'landing_page',
-      'title' => 'Activity Finder v4',
-      'langcode' => 'en',
-      'uid' => '1',
-      'status' => 1,
-      'field_lp_layout' => ['value' => 'one_column_clean'],
-    ]
+   [
+     'type' => 'landing_page',
+     'title' => 'Activity Finder v4',
+     'langcode' => 'en',
+     'uid' => '1',
+     'status' => 1,
+     'field_lp_layout' => ['value' => 'one_column_clean'],
+   ]
   );
   $af_node->save();
 
   $af_paragraph = Paragraph::create(
-    [
-      'type' => 'activity_finder_4',
-      'parent_id' => $af_node->id(),
-      'parent_type' => 'node',
-      'parent_field_name' => 'field_content',
-      'status' => 1,
-      'field_prgf_block' => [
-        [
-          'plugin_id' => 'activity_finder_4',
-          'plugin_configuration' => [
-            'exclude_by_category' => [],
-          ],
-        ],
-      ]
-    ]
+   [
+     'type' => 'activity_finder_4',
+     'parent_id' => $af_node->id(),
+     'parent_type' => 'node',
+     'parent_field_name' => 'field_content',
+     'status' => 1,
+     'field_prgf_block' => [
+       [
+         'plugin_id' => 'activity_finder_4',
+         'plugin_configuration' => [
+           'exclude_by_category' => [],
+         ],
+       ],
+     ],
+   ]
   );
   $af_paragraph->save();
 
@@ -69,9 +72,9 @@ use Drupal\paragraphs\Entity\Paragraph;
           if ($paragraph->bundle == 'activity_finder_v4') {
             $data['id'] = 'activity_finder_v4_block';
           }
-        //   elseif ($paragraph->bundle == 'activity_finder_search') {
-        //     $data['id'] = 'activity_finder_search_block';
-        //   }
+          // Elseif ($paragraph->bundle == 'activity_finder_search') {
+          //     $data['id'] = 'activity_finder_search_block';
+          //   }.
           $query = $db->update($table);
           $query->fields([
             $plugin_id_field => $data['id'],
@@ -95,7 +98,6 @@ use Drupal\paragraphs\Entity\Paragraph;
       ],
       'plugin_id_field' => 'field_prgf_block_plugin_id',
       'config_field' => 'field_prgf_block_plugin_configuration',
-    ]
+    ],
   ]);
- }
- 
+}

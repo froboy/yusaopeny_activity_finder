@@ -2,8 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Plugin\Block;
 
-use Drupal\media\MediaInterface;
-use Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
@@ -30,14 +28,14 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
   /**
    * Config Factory definition.
    *
-   * @var ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $configFactory;
 
   /**
    * The entity type manager.
    *
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -50,9 +48,9 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The Config Factory.
-   * @param EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
   public function __construct(array $configuration,
@@ -99,12 +97,12 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function build() {
-    list($activity_finder_settings, $backend_service_id, $backend) = $this->getBackend();
+    [$activity_finder_settings, $backend_service_id, $backend] = $this->getBackend();
     $conf = $this->getConfiguration();
 
     $image_mobile = '';
     $image_desktop = '';
-    /** @var MediaInterface $media */
+    /** @var \Drupal\media\MediaInterface $media */
     if (!empty($conf['background_image']) && $media = static::loadEntityBrowserEntity($conf['background_image'])) {
       $image = $media->field_media_image->entity;
       $storage = $this->entityTypeManager->getStorage('image_style');
@@ -176,7 +174,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#disable_search_box' => (bool) $activity_finder_settings->get('disable_search_box'),
       '#disable_spots_available' => (bool) $activity_finder_settings->get('disable_spots_available'),
       '#sort_options' => $sort_options,
-      // TODO: make default sort option configurable.
+      // @todo make default sort option configurable.
       '#default_sort_option' => array_keys($sort_options)[0],
       '#relevance_sort_option' => $backend->getRelevanceSort(),
       '#filters_section_config' => $backend->getFiltersSectionConfig(),
@@ -213,7 +211,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    list($activity_finder_settings, $backend_service_id, $backend) = $this->getBackend();
+    [$activity_finder_settings, $backend_service_id, $backend] = $this->getBackend();
     $conf = $this->getConfiguration();
 
     // Store Daxko limit fields separately since they're strings and not references.
@@ -250,24 +248,24 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       ];
 
       $form['exclude_by_location'] = $base_by_location + [
-          '#title' => $this->t('Exclude by location'),
-          '#default_value' => $conf['exclude_by_location']
-            ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_location'])
-            : NULL,
-        ];
+        '#title' => $this->t('Exclude by location'),
+        '#default_value' => $conf['exclude_by_location']
+          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_location'])
+          : NULL,
+      ];
       $form['limit_by_category'] = $base_by_category + [
-          '#title' => $this->t('Limit by category'),
-          '#default_value' => $conf['limit_by_category']
-            ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_category'])
-            : NULL,
-        ];
+        '#title' => $this->t('Limit by category'),
+        '#default_value' => $conf['limit_by_category']
+          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_category'])
+          : NULL,
+      ];
 
       $form['exclude_by_category'] = $base_by_category + [
-          '#title' => $this->t('Exclude by category'),
-          '#default_value' => $conf['exclude_by_category']
-            ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_category'])
-            : NULL,
-        ];
+        '#title' => $this->t('Exclude by category'),
+        '#default_value' => $conf['exclude_by_category']
+          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_category'])
+          : NULL,
+      ];
     }
 
     $form['legacy_mode'] = [
@@ -328,13 +326,12 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
   /**
    * @return array
    */
-  public function getBackend(): array
-  {
+  public function getBackend(): array {
     $activity_finder_settings = $this->configFactory->get('openy_activity_finder.settings');
     $backend_service_id = $activity_finder_settings->get('backend');
-    /** @var OpenyActivityFinderBackendInterface $backend */
+    /** @var \Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface $backend */
     $backend = \Drupal::service($backend_service_id);
-    return array($activity_finder_settings, $backend_service_id, $backend);
+    return [$activity_finder_settings, $backend_service_id, $backend];
   }
 
 }

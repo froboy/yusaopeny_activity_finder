@@ -2,9 +2,6 @@
 
 namespace Drupal\openy_activity_finder;
 
-use Drupal\search_api\Item\Item;
-use Drupal\search_api\Query\Query;
-use DateTimeInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -36,68 +33,68 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   /**
    * Cache default.
    *
-   * @var CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
   /**
    * The Database connection.
    *
-   * @var Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
    * The EntityTypeManager.
    *
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
    * The date formatter service.
    *
-   * @var DateFormatterInterface
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
    * Time manager needed for calculating expire for caches.
    *
-   * @var TimeInterface
+   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected $time;
 
   /**
    * Logger channel.
    *
-   * @var LoggerChannelInterface
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected $loggerChannel;
 
   /**
    * Module Handler.
    *
-   * @var ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
    * Creates a new RepeatController.
    *
-   * @param CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache default.
-   * @param Connection $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The Database connection.
-   * @param EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The EntityTypeManager.
-   * @param DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The Date formatter.
-   * @param TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   Time service.
-   * @param LoggerChannelInterface $loggerChannel
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel
    *   Logger service.
-   * @param ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module Handler.
    */
   public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $cache, Connection $database, EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, TimeInterface $time, LoggerChannelInterface $loggerChannel, ModuleHandlerInterface $module_handler) {
@@ -146,7 +143,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     }
     $data['groupedLocations'] = $locations;
 
-    $data['sort'] = isset($parameters['sort']) ? $parameters['sort'] : 'title__ASC';
+    $data['sort'] = $parameters['sort'] ?? 'title__ASC';
 
     return $data;
   }
@@ -300,7 +297,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $query->range($offset, self::TOTAL_RESULTS_PER_PAGE);
     }
     // Set up default sort as relevance and expose if manual sort has been provided.
-    //$query->sort('search_api_relevance', 'DESC');
+    // $query->sort('search_api_relevance', 'DESC');.
     if (empty($parameters['sort'])) {
       $query->sort('title', 'ASC');
     }
@@ -328,7 +325,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   /**
    * Process results function.
    *
-   * @param ResultSet $results
+   * @param \Drupal\search_api\Query\ResultSet $results
    *   Search results to process.
    * @param string $log_id
    *   Id of the Search Log needed for tracking Register / Details actions.
@@ -341,7 +338,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   public function processResults(ResultSet $results, $log_id) {
     $data = [];
     $locations_info = $this->getLocationsInfo();
-    /** @var Item $result_item */
+    /** @var \Drupal\search_api\Item\Item $result_item */
     foreach ($results->getResultItems() as $result_item) {
       try {
         $entity = $result_item->getOriginalObject()->getValue();
@@ -424,7 +421,8 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
 
       if ($nmbr_price == "-1.00") {
         $price[] = '$' . $mbr_price . ' (Member Only)';
-      } elseif ($mbr_price == "0.00") {
+      }
+      elseif ($mbr_price == "0.00") {
         $price[] = 'Fee ' . '$' . $nmbr_price;
       }
 
@@ -447,11 +445,11 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         'availability_note' => $availability_note,
         'availability_status' => $availability_status,
         'activity_type' => $activity_type,
-        'dates' => isset($full_dates) ? $full_dates : '',
-        'weeks' => isset($weeks) ? $weeks : '',
+        'dates' => $full_dates ?? '',
+        'weeks' => $weeks ?? '',
         'schedule' => $schedule_items,
-        'days' => isset($schedule_items[0]['days']) ? $schedule_items[0]['days'] : '',
-        'times' => isset($schedule_items[0]['time']) ? $schedule_items[0]['time'] : '',
+        'days' => $schedule_items[0]['days'] ?? '',
+        'times' => $schedule_items[0]['time'] ?? '',
         'location' => $fields['field_session_location']->getValues()[0],
         'location_id' => $locations_info[$fields['field_session_location']->getValues()[0]]['nid'],
         'location_info' => $locations_info[$fields['field_session_location']->getValues()[0]],
@@ -495,7 +493,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   /**
    * Get facets.
    *
-   * @param ResultSet $results
+   * @param \Drupal\search_api\Query\ResultSet $results
    *   Search results.
    *
    * @return mixed
@@ -725,18 +723,18 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
                   [
                     0 => "Sat - Sun:",
                     1 => $sub_hours['hours_sat'],
-                  ]
+                  ],
                 ];
               }
             }
-            $data[$location->label()] =[
+            $data[$location->label()] = [
               'type' => $location->bundle(),
               'address' => $address,
               'days' => $days,
               'email' => $location->field_location_email->value,
               'nid' => $location->id(),
               'phone' => $location->field_location_phone->value,
-              'title' => $location->label()
+              'title' => $location->label(),
             ];
           }
         }
@@ -748,6 +746,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     return $data;
   }
 
+  /**
+   *
+   */
   public function getCategoriesTopLevel() {
     $categories = [];
     $programInfo = $this->getCategoryProgramInfo();
@@ -762,6 +763,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     return array_values($categories);
   }
 
+  /**
+   *
+   */
   public function getCategories() {
     $categories = [];
     $programInfo = $this->getCategoryProgramInfo();
@@ -781,7 +785,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getLocations() {
     // Array with predefined keys for sorting in application location filters.
@@ -802,7 +806,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getProgramsMoreInfo($request) {
     // Idea is that when we use Solr backend we have all the data
@@ -832,6 +836,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     return $pages;
   }
 
+  /**
+   *
+   */
   public function getSortOptions() {
     return [
       'title__ASC' => t('Sort by Title (A-Z)'),
@@ -904,14 +911,16 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   /**
    * Helper function to calculate weekday quantity in period.
    *
-   * @param string $dayName eg 'Mon', 'Tue' etc
-   * @param DateTimeInterface $start
-   * @param DateTimeInterface $end
+   * @param string $dayName
+   *   eg 'Mon', 'Tue' etc.
+   * @param \DateTimeInterface $start
+   * @param \DateTimeInterface $end
    *
    * @return int
+   *
    * @throws \Exception
    */
-  public function countDaysByName($dayName, DateTimeInterface $start, DateTimeInterface $end) {
+  public function countDaysByName($dayName, \DateTimeInterface $start, \DateTimeInterface $end) {
     $count = 0;
     $interval = new \DateInterval('P1D');
     $period = new \DatePeriod($start, $interval, $end);
@@ -933,7 +942,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    * @return array
    *   Data array with structure similar to search results.
    *
-   * @throws SearchApiException
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function getSessions($session_ids) {
     // Make a request to Search API to get sessions data.
@@ -950,15 +959,15 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    * @param array $session_ids
    *   Array session nids to get data.
    *
-   * @return ResultSet
+   * @return \Drupal\search_api\Query\ResultSet
    *   Search results set.
    *
-   * @throws SearchApiException
+   * @throws \Drupal\search_api\SearchApiException
    */
   private function doSessionsSearchRequest($session_ids) {
     $index_id = $this->config->get('index') ? $this->config->get('index') : 'default';
     $index = Index::load($index_id);
-    /** @var Query $query */
+    /** @var \Drupal\search_api\Query\Query $query */
     $query = $index->query();
     $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')->createInstance('direct');
     $query->getParseMode()->setConjunction('OR');

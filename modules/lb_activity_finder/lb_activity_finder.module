@@ -1,9 +1,9 @@
 <?php
 
 /**
-* @file
-* Contains lb_activity_finder module hooks.
-*/
+ * @file
+ * Contains lb_activity_finder module hooks.
+ */
 
 use Drupal\Core\Form\FormStateInterface;
 
@@ -15,7 +15,7 @@ function lb_activity_finder_theme() {
     'block__lb_activity_finder' => [
       'base hook' => 'block',
       'template' => 'block--lb-activity-finder',
-    ]
+    ],
   ];
 }
 

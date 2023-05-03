@@ -2,7 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Entity;
 
-
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
