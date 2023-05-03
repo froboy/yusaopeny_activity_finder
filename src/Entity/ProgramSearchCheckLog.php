@@ -84,7 +84,7 @@ class ProgramSearchCheckLog extends ContentEntityBase {
   }
 
   /**
-   *
+   * List of options.
    */
   public static function getTypeOptions() {
     return [
