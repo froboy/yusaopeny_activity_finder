@@ -3,7 +3,7 @@
 namespace Drupal\openy_activity_finder;
 
 /**
- *
+ * Interface for the backend. 
  */
 interface OpenyActivityFinderBackendInterface {
 
