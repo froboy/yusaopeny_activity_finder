@@ -2,10 +2,12 @@
 
 namespace Drupal\openy_activity_finder;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
+/**
+ * Implements interface.
+ */
 abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendInterface {
 
   use StringTranslationTrait;
@@ -13,7 +15,7 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
   /**
    * Activity Finder configuration.
    *
-   * @var Config
+   * @var \Drupal\Core\Config\Config
    */
   protected $config;
 
@@ -37,7 +39,7 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
   /**
    * OpenyActivityFinderBackend constructor.
    *
-   * @param ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
@@ -59,7 +61,7 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
 
     foreach (explode("\n", $ages_config) as $row) {
       $row = trim($row);
-      list($months, $label) = explode(',', $row);
+      [$months, $label] = explode(',', $row);
       $ages[] = [
         'label' => $label,
         'value' => $months,
@@ -83,7 +85,7 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
 
     foreach (explode("\n", $weeks_config) as $row) {
       $row = trim($row);
-      list($months, $label) = explode(',', $row);
+      [$months, $label] = explode(',', $row);
       $weeks[] = [
         'label' => $label,
         'value' => $months,
@@ -207,4 +209,5 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
     }
     return $config;
   }
+
 }

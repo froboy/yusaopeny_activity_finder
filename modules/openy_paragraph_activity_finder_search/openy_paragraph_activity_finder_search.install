@@ -14,7 +14,7 @@ function openy_paragraph_activity_finder_search_update_8002() {
   $cim->importConfigs([
     'field.field.paragraph.activity_finder_search.field_prgf_af_page_ref',
     'core.entity_view_display.paragraph.activity_finder_search.default',
-    'core.entity_form_display.paragraph.activity_finder_search.default'
+    'core.entity_form_display.paragraph.activity_finder_search.default',
   ]);
 }
 
@@ -28,7 +28,7 @@ function openy_paragraph_activity_finder_search_update_8003() {
     'field.field.paragraph.activity_finder_search.field_prgf_af_show_weeks_filter',
     'field.storage.paragraph.field_prgf_af_show_weeks_filter',
     'core.entity_form_display.paragraph.activity_finder_search.default',
-    'core.entity_view_display.paragraph.activity_finder_search.default'
+    'core.entity_view_display.paragraph.activity_finder_search.default',
   ]);
 }
 

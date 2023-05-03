@@ -2,7 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
-use Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
@@ -29,7 +28,7 @@ class AgesMinMax extends ProcessorPluginBase {
   /**
    * The config factory.
    *
-   * @var ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -48,7 +47,7 @@ class AgesMinMax extends ProcessorPluginBase {
   /**
    * Retrieves the config factory service.
    *
-   * @return ConfigFactoryInterface
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
    *   The config factory.
    */
   protected function getConfigFactory() {
@@ -58,7 +57,7 @@ class AgesMinMax extends ProcessorPluginBase {
   /**
    * Sets the config factory service.
    *
-   * @param ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    *
    * @return $this
@@ -71,7 +70,7 @@ class AgesMinMax extends ProcessorPluginBase {
   /**
    * Retrieves the AF backend service.
    *
-   * @return OpenyActivityFinderBackendInterface
+   * @return \Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface
    *   The AF backend service.
    */
   protected function getBackendService() {
@@ -150,7 +149,7 @@ class AgesMinMax extends ProcessorPluginBase {
     // Get only count of months.
     $ages = array_column($ages, 'value');
 
-    return array_values(array_filter($ages, function($value) use ($min_age, $max_age) {
+    return array_values(array_filter($ages, function ($value) use ($min_age, $max_age) {
       return $value >= $min_age && $value <= $max_age;
     }));
   }

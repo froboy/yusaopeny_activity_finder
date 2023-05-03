@@ -18,7 +18,7 @@ function openy_activity_finder_install() {
   ];
   $roles = Role::loadMultiple([
     RoleInterface::ANONYMOUS_ID,
-    RoleInterface::AUTHENTICATED_ID
+    RoleInterface::AUTHENTICATED_ID,
   ]);
   foreach ($roles as $role) {
     foreach ($permissions as $permission) {
@@ -42,8 +42,8 @@ function openy_activity_finder_update_dependencies() {
 }
 
 /**
-* Update configs.
-*/
+ * Update configs.
+ */
 function openy_activity_finder_update_8001() {
   $openy_activity_finder_dir = \Drupal::service('extension.list.module')->getPath('openy_activity_finder');
   $cim = \Drupal::service('config_import.importer');
@@ -187,7 +187,7 @@ function openy_activity_finder_update_8400() {
   ];
   $roles = Role::loadMultiple([
     RoleInterface::ANONYMOUS_ID,
-    RoleInterface::AUTHENTICATED_ID
+    RoleInterface::AUTHENTICATED_ID,
   ]);
   foreach ($roles as $role) {
     foreach ($permissions as $permission) {
@@ -248,7 +248,7 @@ function _af_config_import($import = ['optional' => ['search_api.index.default']
   $cim = \Drupal::service('config_import.importer');
   // Loop through keys as directories...
   foreach ($import as $dir => $configs) {
-    $cim->setDirectory(\Drupal::service('extension.list.module')->getPath('openy_activity_finder') . '/config/'. $dir);
+    $cim->setDirectory(\Drupal::service('extension.list.module')->getPath('openy_activity_finder') . '/config/' . $dir);
     // Now process each config to be imported.
     foreach ($configs as $name) {
       $config = \Drupal::config($name);

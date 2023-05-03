@@ -2,7 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Entity;
 
-
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -84,7 +83,10 @@ class ProgramSearchCheckLog extends ContentEntityBase {
     return $fields;
   }
 
-  static public function getTypeOptions() {
+  /**
+   * List of options.
+   */
+  public static function getTypeOptions() {
     return [
       self::TYPE_DETAILS => t('Details'),
       self::TYPE_REGISTER => t('Register'),

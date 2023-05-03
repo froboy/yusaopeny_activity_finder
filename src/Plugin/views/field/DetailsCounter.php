@@ -27,9 +27,11 @@ class DetailsCounter extends FieldPluginBase {
       ->condition('type', ProgramSearchCheckLog::TYPE_DETAILS)
       ->execute();
 
-    return ['counter' => [
-      '#markup' => count($details_ids),
-    ]];
+    return [
+      'counter' => [
+        '#markup' => count($details_ids),
+      ],
+    ];
   }
 
   /**

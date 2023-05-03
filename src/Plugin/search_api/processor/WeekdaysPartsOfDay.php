@@ -2,9 +2,6 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\options\Plugin\Field\FieldType\ListItemBase;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -33,7 +30,7 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
   /**
    * Config Factory definition.
    *
-   * @var ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $configFactory;
 
@@ -46,7 +43,7 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The Config Factory.
    */
   public function __construct(array $configuration,
@@ -115,18 +112,17 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
     $time12pm = strtotime('12:00:00Z');
     $time5pm = strtotime('17:00:00Z');
 
-
     $day_values = [];
     $time_values = [];
     $values = [];
     foreach ($paragraphs as $paragraph) {
-      /** @var FieldItemListInterface $days */
+      /** @var \Drupal\Core\Field\FieldItemListInterface $days */
       $days = $paragraph->field_session_time_days;
       if ($days->isEmpty()) {
         continue;
       }
 
-      /** @var ListItemBase $day */
+      /** @var \Drupal\options\Plugin\Field\FieldType\ListItemBase $day */
       $daylist = [];
       foreach ($days as $day) {
         if ($day) {
@@ -146,13 +142,13 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
         $values[] = $day_value . 0;
       }
 
-      /** @var FieldItemListInterface $range */
+      /** @var \Drupal\Core\Field\FieldItemListInterface $range */
       $range = $paragraph->field_session_time_date;
       if ($range->isEmpty()) {
         continue;
       }
 
-      /** @var DateRangeItem $_period */
+      /** @var \Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem $_period */
       $_period = $range->get(0);
       if ($_period->isEmpty()) {
         continue;
