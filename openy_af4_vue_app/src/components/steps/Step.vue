@@ -229,6 +229,7 @@ export default {
       position: fixed;
       bottom: 0;
       left: 0;
+      border-bottom: 50px solid $white;
     }
 
     .separator {
