@@ -6,7 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- *
+ * Implements interface.
  */
 abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendInterface {
 
