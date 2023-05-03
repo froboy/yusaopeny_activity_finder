@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 
 /**
- *
+ * Install demo content while module enabling is happening.
  */
 function openy_prgf_af4_demo_install() {
   // Make sure that blocks are available.
