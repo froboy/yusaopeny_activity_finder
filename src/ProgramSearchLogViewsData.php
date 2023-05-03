@@ -5,7 +5,7 @@ namespace Drupal\openy_activity_finder;
 use Drupal\views\EntityViewsData;
 
 /**
- *
+ * Implements EntityViewsData.
  */
 class ProgramSearchLogViewsData extends EntityViewsData {
 
