@@ -48,6 +48,7 @@ export default {
   border-bottom-left-radius: 5px;
   border: 2px solid $white;
   border-right: none;
+  z-index: 1;
 
   a {
     display: block;
