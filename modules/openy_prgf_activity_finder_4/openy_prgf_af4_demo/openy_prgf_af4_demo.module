@@ -72,9 +72,6 @@ function openy_prgf_af4_demo_install() {
           if ($paragraph->bundle == 'activity_finder_v4') {
             $data['id'] = 'activity_finder_v4_block';
           }
-          // Elseif ($paragraph->bundle == 'activity_finder_search') {
-          //     $data['id'] = 'activity_finder_search_block';
-          //   }.
           $query = $db->update($table);
           $query->fields([
             $plugin_id_field => $data['id'],
