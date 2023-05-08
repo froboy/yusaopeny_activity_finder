@@ -156,7 +156,6 @@ export default {
       left: 0;
       width: 100%;
       background-color: $white;
-      z-index: 1;
     }
 
     .controls {
@@ -231,6 +230,7 @@ export default {
       bottom: 0;
       left: 0;
       border-bottom: 50px solid $white;
+      z-index: 2;
     }
 
     .separator {
