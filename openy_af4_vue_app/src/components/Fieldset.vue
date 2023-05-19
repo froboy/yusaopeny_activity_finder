@@ -166,8 +166,8 @@ export default {
       padding: 0 8px;
     }
 
-    &.collapsed .fa-minus-circle,
-    &:not(.collapsed) .fa-plus-circle {
+    &.collapsed .fa-circle-minus,
+    &:not(.collapsed) .fa-circle-plus {
       display: none;
     }
 
