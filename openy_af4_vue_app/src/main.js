@@ -10,11 +10,13 @@ import {
   faClock,
   faChevronDown,
   faChevronUp,
-  faBookmark
+  faBookmark,
+  faPlusCircle,
+  faMinusCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add([faFilter, faCalendar, faMoneyBill, faClock, faChevronDown, faChevronUp, faBookmark])
+library.add([faFilter, faCalendar, faMoneyBill, faClock, faChevronDown, faChevronUp, faBookmark, faPlusCircle, faMinusCircle])
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // Listen to custom event to track events in Google Analytics.
