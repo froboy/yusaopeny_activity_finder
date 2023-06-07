@@ -25,6 +25,7 @@ class DetailsCounter extends FieldPluginBase {
     $details_ids = $query
       ->condition('log_id', $log->id())
       ->condition('type', ProgramSearchCheckLog::TYPE_DETAILS)
+      ->accessCheck(FALSE)
       ->execute();
 
     return [

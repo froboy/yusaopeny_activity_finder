@@ -63,6 +63,7 @@ function openy_prgf_af4_demo_install() {
         $query = $db->select($table, 'ptable');
         $query->fields('ptable');
         $query->condition('ptable.' . $plugin_id_field, 'broken');
+        $query->accessCheck(TRUE);
         $broken_paragraphs = $query->execute()->fetchAll();
 
         // Update to correct plugin_id based on data array.
@@ -81,6 +82,7 @@ function openy_prgf_af4_demo_install() {
           $query->condition('entity_id', $paragraph->entity_id);
           $query->condition('revision_id', $paragraph->revision_id);
           $query->condition('langcode', $paragraph->langcode);
+          $query->accessCheck(TRUE);
           $query->execute();
         }
       }

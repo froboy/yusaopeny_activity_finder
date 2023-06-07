@@ -108,6 +108,7 @@ class ActivityFinderBlock extends BlockBase implements ContainerFactoryPluginInt
           ->condition('type', ['branch', 'camp', 'facility'], 'IN')
           ->condition('status', 1)
           ->sort('title', 'ASC')
+          ->accessCheck(FALSE)
           ->execute();
         $locations = Node::loadMultiple($nids);
         $config_rows = explode("\n", $openy_daxko2_config->get('locations'));
