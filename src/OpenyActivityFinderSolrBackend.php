@@ -648,6 +648,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         ->getQuery()
         ->condition('type', 'program_subcategory')
         ->condition('status', '1')
+        ->accessCheck(FALSE)
         ->execute();
       $nids_chunked = array_chunk($nids, 20, TRUE);
       foreach ($nids_chunked as $chunked) {
@@ -691,6 +692,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         ->condition('status', 1)
         ->sort('title', 'ASC')
         ->addTag('af_locations')
+        ->accessCheck(FALSE)
         ->execute();
       $nids_chunked = array_chunk($nids, 20, TRUE);
       foreach ($nids_chunked as $chunked) {
@@ -974,6 +976,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     $query->setParseMode($parse_mode);
     $query->addCondition('status', 1);
     $query->addCondition('nid', $session_ids, 'IN');
+    $query->accessCheck(FALSE);
     return $query->execute();
   }
 
