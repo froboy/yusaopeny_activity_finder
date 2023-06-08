@@ -113,6 +113,7 @@ class SettingsForm extends ConfigFormBase {
     if ($this->moduleHandler->moduleExists('openy_daxko2')) {
       $backend_options['openy_daxko2.openy_activity_finder_backend'] = $this->t('Daxko 2 (live API calls)');
     }
+    $allowed_values = implode(PHP_EOL, $config->get('allowed_query_arguments'));
 
     $form['backend'] = [
       '#type' => 'select',
@@ -167,6 +168,13 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Ages'),
       '#default_value' => $config->get('ages'),
       '#description' => $this->t('Ages mapping. One per line. "<number of months>,<age display label>". Example: "660,55+"'),
+    ];
+  
+    $form['allowed_query_arguments'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Allowed Query Arguments'),
+      '#default_value' => $allowed_values,
+      '#description' => $this->t('Query arguments. One per line.'),
     ];
 
     $form['weeks'] = [
@@ -331,6 +339,9 @@ class SettingsForm extends ConfigFormBase {
     $config->set('locations_collapse_group', $form_state->getValue('locations_collapse_group'))->save();
     $config->set('disable_program_search_log', $form_state->getValue('disable_program_search_log'))->save();
     $config->set('disable_cache_debug_log', $form_state->getValue('disable_cache_debug_log'))->save();
+    $allowed_values = explode(PHP_EOL, $form_state->getValue('allowed_query_arguments'));
+    $allowed_values = array_filter(array_map('trim', $allowed_values));
+    $config->set('allowed_query_arguments', $allowed_values)->save();
     $this->cache->deleteAll();
 
     parent::submitForm($form, $form_state);

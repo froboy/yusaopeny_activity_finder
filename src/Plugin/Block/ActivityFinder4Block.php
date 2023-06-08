@@ -191,6 +191,9 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#bs_version' => (int) $activity_finder_settings->get('bs_version'),
       '#attached' => [
         'library' => 'openy_activity_finder/activity_finder_4',
+        'drupalSettings' => [
+          'utm' => $activity_finder_settings->get('allowed_query_arguments'),
+        ],
       ],
       '#cache' => [
         'tags' => $this->getCacheTags(),

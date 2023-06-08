@@ -731,6 +731,14 @@ export default {
     },
     getDataFromUrl() {
       const query = this.$route.query
+      const allowed_queries_array = window.drupalSettings?.utm
+      if (allowed_queries_array && allowed_queries_array.length > 0) {
+        const allowed_queries = allowed_queries_array
+          .reduce((collection, key) => (
+            { ...collection, [key]: ''}), {}
+          )
+        this.defaults = {...this.defaults, ...allowed_queries}
+      }
       for (let key in this.defaults) {
         if (query.hasOwnProperty(key) && query[key] !== '') {
           if (Array.isArray(this.defaults[key])) {

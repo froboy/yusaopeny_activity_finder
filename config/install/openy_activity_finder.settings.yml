@@ -14,3 +14,9 @@ hb_modal_text4: "View available locations"
 hb_modal_text5: "Adjust my filters"
 disable_program_search_log: 1
 disable_cache_debug_log: 1
+allowed_query_arguments:
+  - utm_source
+  - utm_medium
+  - utm_campaign
+  - utm_content
+  
