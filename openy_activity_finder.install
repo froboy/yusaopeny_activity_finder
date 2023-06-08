@@ -259,3 +259,16 @@ function _af_config_import($import = ['optional' => ['search_api.index.default']
     }
   }
 }
+
+/**
+ * Update config.
+ */
+function openy_activity_finder_update_8405() {
+  $cim = \Drupal::service('config_import.importer');
+  $cim->setDirectory(drupal_get_path('module', 'openy_activity_finder') . '/config/install');
+  $config = \Drupal::config('openy_activity_finder.settings');
+  if (!$config->isNew()) {
+    // Import config only in case it already exists.
+    $cim->importConfigs(['openy_activity_finder.settings']);
+  }
+}
