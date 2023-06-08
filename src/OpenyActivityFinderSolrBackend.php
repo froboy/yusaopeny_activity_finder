@@ -901,7 +901,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
           $ages_y[$i] = $ages[$i] . \Drupal::translation()->formatPlural($ages[$i], ' month', ' months' . $plus);
         }
         else {
-          if ($ages[$i] == 0 && isset($ages[$i + 1])) {
+          if (isset($ages[$i + 1]) && $ages[$i] == 0) {
             $ages_y[$i] = $ages[$i];
           }
         }
