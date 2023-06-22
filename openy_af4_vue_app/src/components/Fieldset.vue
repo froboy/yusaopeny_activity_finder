@@ -20,7 +20,7 @@
           <font-awesome-icon icon="minus-circle" />
         </span>
         <span v-else-if="collapsible && counter && hideCounter" class="icon">
-          <font-awesome-icon icon="minus" />
+          <font-awesome-icon icon="minus-circle" />
         </span>
         <span v-if="counter" class="counter" :class="{ 'hide-counter': hideCounter }">
           {{ counter }}
