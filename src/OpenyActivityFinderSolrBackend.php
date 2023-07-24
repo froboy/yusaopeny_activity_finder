@@ -36,7 +36,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
-  if (isset($data['facets']['locations'])) {
+
   /**
    * The Database connection.
    *
