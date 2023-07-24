@@ -36,7 +36,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
-
+  if (isset($data['facets']['locations'])) {
   /**
    * The Database connection.
    *
@@ -134,9 +134,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     foreach ($locations as $key => $group) {
       $locations[$key]['count'] = 0;
       foreach ($group['value'] as $location) {
-        foreach ($data['facets']['locations'] as $fl) {
-          if (isset($fl['id']) && isset($location['value']) && $fl['id'] == $location['value']) {
-            $locations[$key]['count'] += $fl['count'];
+        if (isset($data['facets']['locations'])) {
+          if (is_array($data['facets']['locations']) || is_object($data['facets']['locations'])) {
+            foreach ($data['facets']['locations'] as $fl) {
+              if (isset($fl['id']) && isset($location['value']) && $fl['id'] == $location['value']) {
+                $locations[$key]['count'] += $fl['count'];
+              }
+            }
           }
         }
       }
