@@ -538,9 +538,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         }
         // Pass counters to static ages filter.
         if ($f == 'static_age_filter') {
-          foreach ($facets['af_ages_min_max'] as $info) {
-            if ('"' . $item['value'] . '"' == $info['filter']) {
-              $facets_m[$f][$i]['count'] = $info['count'];
+          if (isset($facets['af_ages_min_max'])) {
+            if (is_array($facets['af_ages_min_max']) || is_object($facets['af_ages_min_max'])) {
+              foreach ($facets['af_ages_min_max'] as $info) {
+                if ('"' . $item['value'] . '"' == $info['filter']) {
+                  $facets_m[$f][$i]['count'] = $info['count'];
+                }
+              }
             }
           }
         }
