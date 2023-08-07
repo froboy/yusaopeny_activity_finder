@@ -134,9 +134,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     foreach ($locations as $key => $group) {
       $locations[$key]['count'] = 0;
       foreach ($group['value'] as $location) {
-        foreach ($data['facets']['locations'] as $fl) {
-          if (isset($fl['id']) && isset($location['value']) && $fl['id'] == $location['value']) {
-            $locations[$key]['count'] += $fl['count'];
+        if (isset($data['facets']['locations'])) {
+          if (is_array($data['facets']['locations']) || is_object($data['facets']['locations'])) {
+            foreach ($data['facets']['locations'] as $fl) {
+              if (isset($fl['id']) && isset($location['value']) && $fl['id'] == $location['value']) {
+                $locations[$key]['count'] += $fl['count'];
+              }
+            }
           }
         }
       }
@@ -534,9 +538,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         }
         // Pass counters to static ages filter.
         if ($f == 'static_age_filter') {
-          foreach ($facets['af_ages_min_max'] as $info) {
-            if ('"' . $item['value'] . '"' == $info['filter']) {
-              $facets_m[$f][$i]['count'] = $info['count'];
+          if (isset($facets['af_ages_min_max'])) {
+            if (is_array($facets['af_ages_min_max']) || is_object($facets['af_ages_min_max'])) {
+              foreach ($facets['af_ages_min_max'] as $info) {
+                if ('"' . $item['value'] . '"' == $info['filter']) {
+                  $facets_m[$f][$i]['count'] = $info['count'];
+                }
+              }
             }
           }
         }
