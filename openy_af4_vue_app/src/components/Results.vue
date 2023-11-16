@@ -38,7 +38,16 @@
           </div>
 
           <ResultsList
-            :results="data.table"
+            :results="data.table.slice(0, 2)"
+            :ages="ages"
+            :selected-ages="selectedAges"
+            :legacy-mode="legacyMode"
+            :disable-spots-available="disableSpotsAvailable"
+            @showActivityDetailsModal="showActivityDetailsModal($event)"
+          />
+            <div class="placeholder__insert_adjacent_promo"></div>
+          <ResultsList
+            :results="data.table.slice(2)"
             :ages="ages"
             :selected-ages="selectedAges"
             :legacy-mode="legacyMode"
