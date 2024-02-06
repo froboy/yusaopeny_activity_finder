@@ -81,7 +81,6 @@ function openy_prgf_af4_demo_install() {
           $query->condition('entity_id', $paragraph->entity_id);
           $query->condition('revision_id', $paragraph->revision_id);
           $query->condition('langcode', $paragraph->langcode);
-          $query->accessCheck(TRUE);
           $query->execute();
         }
       }
