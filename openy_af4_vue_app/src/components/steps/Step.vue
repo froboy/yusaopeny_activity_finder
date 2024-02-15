@@ -196,6 +196,7 @@ export default {
 
         &.btn-next {
           background-color: $af-violet;
+          color: $white;
           border: 2px solid $af-violet;
         }
       }
@@ -252,6 +253,7 @@ export default {
 
       &.btn-next {
         background-color: $af-violet;
+        color: $white;
         border: 2px solid $af-violet;
       }
     }

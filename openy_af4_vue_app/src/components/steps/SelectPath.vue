@@ -209,6 +209,7 @@ export default {
 
     &:hover {
       background-color: $af-blue;
+      color: $af-lighter-gray;
     }
 
     @include media-breakpoint-up('lg') {

@@ -165,6 +165,7 @@ export default {
       border-radius: 5px;
       width: 100%;
       background-color: $af-violet;
+      color: $white;
       font-weight: bold;
       line-height: 50px;
       padding: 0;
