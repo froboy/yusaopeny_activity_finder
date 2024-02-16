@@ -56,6 +56,7 @@ export default {
 
   .btn {
     background-color: $af-violet;
+    color: $white;
     width: 40px;
     padding: 6px 12px;
     border: none;

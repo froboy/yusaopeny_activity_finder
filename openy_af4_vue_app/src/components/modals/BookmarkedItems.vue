@@ -349,6 +349,7 @@ export default {
 
         .register {
           background-color: $af-violet;
+          color: $white;
           flex-grow: 1;
           border-radius: 5px;
           font-size: 18px;
