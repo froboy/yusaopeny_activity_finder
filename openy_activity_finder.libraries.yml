@@ -16,7 +16,7 @@ openy_activity_finder:
     - openy_system/vue
     - openy_system/vue-router
     - openy_system/moment
-    - core/jquery.cookie
+    - core/js-cookie
 
 openy_camp_finder:
   version: 0.1
