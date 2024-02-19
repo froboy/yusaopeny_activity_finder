@@ -66,6 +66,21 @@
       setInitialStep: function (stepName) {
         this.initialStep = stepName;
       },
+      getCookie: function (cname) {
+        const name = cname + '='
+        const decodedCookie = decodeURIComponent(document.cookie)
+        const ca = decodedCookie.split(';')
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i]
+          while (c[0] === ' ') {
+            c = c.slice(1)
+          }
+          if (c.startsWith(name)) {
+            return c.slice(name.length, c.length)
+          }
+        }
+        return ''
+      },
       skip: function(stepName) {
         // Lets found next step based on initial step.
         var nextStep = '';
@@ -403,15 +418,17 @@
       component.runAjaxRequest();
 
       // Initial run of ajax request if Home Branch set.
-      if (typeof jQuery.cookie('home_branch') !== 'undefined' && JSON.parse(jQuery.cookie('home_branch')).id) {
-        var homeBranchId = JSON.parse(jQuery.cookie('home_branch')).id;
-        if (typeof drupalSettings.activityFinder.locationsNidToDaxkoIdMapping !== 'undefined') {
-          if (typeof drupalSettings.activityFinder.locationsNidToDaxkoIdMapping[homeBranchId] !== 'undefined') {
-            homeBranchId = drupalSettings.activityFinder.locationsNidToDaxkoIdMapping[homeBranchId];
+      if (typeof this.getCookie('home_branch') !== 'undefined' && (this.getCookie('home_branch') !== '')) {
+        if (JSON.parse(this.getCookie('home_branch')).id) {
+          var homeBranchId = JSON.parse(this.getCookie('home_branch')).id;
+          if (typeof drupalSettings.activityFinder.locationsNidToDaxkoIdMapping !== 'undefined') {
+            if (typeof drupalSettings.activityFinder.locationsNidToDaxkoIdMapping[homeBranchId] !== 'undefined') {
+              homeBranchId = drupalSettings.activityFinder.locationsNidToDaxkoIdMapping[homeBranchId];
+            }
           }
+          component.homeBranchId = homeBranchId;
+          component.runAjaxRequest({'locations': [component.homeBranchId]});
         }
-        component.homeBranchId = homeBranchId;
-        component.runAjaxRequest({'locations': [component.homeBranchId]});
       }
 
       // Listen for events from components.
