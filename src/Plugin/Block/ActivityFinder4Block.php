@@ -238,13 +238,19 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
         '#size' => 100,
         '#maxlength' => 2048,
       ];
+
+      // Use the allowed location types.
+      $location_types = array_keys(array_filter($activity_finder_settings->get('location_types')));
       $base_by_location = [
         '#type' => 'entity_autocomplete',
-        '#description' => $this->t('Separate multiple values by comma. Search for title from Branch, Camp, Facility types.'),
+        '#description' => $this->t(
+          'Separate multiple values by comma. Search for title from %types types.',
+          ['%types' => join(', ', $location_types)]
+        ),
         '#target_type' => 'node',
         '#tags' => TRUE,
         '#selection_settings' => [
-          'target_bundles' => ['branch', 'camp', 'facility'],
+          'target_bundles' => $location_types,
         ],
         '#size' => 100,
         '#maxlength' => 2048,

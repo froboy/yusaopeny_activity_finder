@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\openy_map\Form\SettingsForm as OpenYMapSettingsForm;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -115,6 +116,15 @@ class SettingsForm extends ConfigFormBase {
     }
     $allowed_values = implode(PHP_EOL, $config->get('allowed_query_arguments'));
 
+    // Build the list of possible node types in AF.
+    $node_types = OpenYMapSettingsForm::getNodeTypes() ?? [];
+    $node_type_options = [];
+    foreach ($node_types as $node_type) {
+      $id = $node_type->id();
+      $label = $node_type->label();
+      $node_type_options[$id] = $label;
+    }
+
     $form['backend'] = [
       '#type' => 'select',
       '#options' => $backend_options,
@@ -169,12 +179,20 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('ages'),
       '#description' => $this->t('Ages mapping. One per line. "<number of months>,<age display label>". Example: "660,55+"'),
     ];
-  
+
     $form['allowed_query_arguments'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Allowed Query Arguments'),
       '#default_value' => $allowed_values,
       '#description' => $this->t('Query arguments. One per line.'),
+    ];
+
+    $form['location_types'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Allowed location types'),
+      '#options' => $node_type_options,
+      '#default_value' => $config->get('location_types') ?? ['branch', 'camp', 'facility'],
+      '#description' => $this->t('Select which location content types should be used in Activity Finder. This will limit ALL Activity Finder blocks on the site. To limit by specific locations, use the "Exclude Locations" field on each block.')
     ];
 
     $form['weeks'] = [
@@ -325,6 +343,7 @@ class SettingsForm extends ConfigFormBase {
     $config->set('bs_version', $form_state->getValue('bs_version'))->save();
     $config->set('ages', $form_state->getValue('ages'))->save();
     $config->set('weeks', $form_state->getValue('weeks'))->save();
+    $config->set('location_types', $form_state->getValue('location_types'))->save();
     $config->set('exclude', $form_state->getValue('exclude'))->save();
     $config->set('disable_search_box', $form_state->getValue('disable_search_box'))->save();
     $config->set('disable_spots_available', $form_state->getValue('disable_spots_available'))->save();

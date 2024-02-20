@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\node\Entity\NodeType;
 use Drupal\search_api\Entity\Index;
 use Drupal\Core\Url;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -282,17 +283,24 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $query->addCondition('field_activity_category', $exclude_categories, 'NOT IN');
     }
 
+    // Select locations based on filters.
+    $locations_info = $this->getLocationsInfo();
+    // Only use locations selected in parameters, if specified.
     if (!empty($parameters['locations'])) {
       $locations_nids = explode(',', rawurldecode($parameters['locations']));
-      // Map nids to titles.
-      $locations_info = $this->getLocationsInfo();
       foreach ($locations_info as $key => $item) {
         if (in_array($item['nid'], $locations_nids)) {
           $locations[] = $key;
         }
       }
-      $query->addCondition('field_session_location', $locations, 'IN');
     }
+    // Otherwise filter on all locations configured in settings.
+    else {
+      foreach ($locations_info as $key => $item) {
+        $locations[] = $key;
+      }
+    }
+    $query->addCondition('field_session_location', $locations, 'IN');
 
     $query->range(0, self::TOTAL_RESULTS_PER_PAGE);
     // Use pager if parameter has been provided.
@@ -689,6 +697,8 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   public function getLocationsInfo() {
     $data = [];
     $cid = 'openy_activity_finder:locations_info';
+    $location_types = $this->config->get('location_types');
+
     if ($cache = $this->cache->get($cid)) {
       $data = $cache->data;
     }
@@ -696,7 +706,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $nids = $this->entityTypeManager
         ->getStorage('node')
         ->getQuery()
-        ->condition('type', ['branch', 'camp', 'facility'], 'IN')
+        ->condition('type', $location_types, 'IN')
         ->condition('status', 1)
         ->sort('title', 'ASC')
         ->addTag('af_locations')
@@ -741,9 +751,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
               'type' => $location->bundle(),
               'address' => $address,
               'days' => $days,
-              'email' => $location->field_location_email->value,
+              'email' => $location->field_location_email->value ?? '',
               'nid' => $location->id(),
-              'phone' => $location->field_location_phone->value,
+              'phone' => $location->field_location_phone->value ?? '',
               'title' => $location->label(),
             ];
           }
@@ -799,18 +809,21 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    */
   public function getLocations() {
     // Array with predefined keys for sorting in application location filters.
-    $locations = [
-      'branch' => [],
-      'camp' => [],
-      'facility' => [],
-    ];
+    // $locations = ['branch' => [], 'camp' => [], 'facility' => [], ...];
+    $location_types = $this->config->get('location_types');
+    $locations = array_map(fn($value): array => [], array_filter($location_types));
+
     $locationsInfo = $this->getLocationsInfo();
+
+    // Build a lookup array of content types and their labels.
+    $content_types = array_map(fn($value): string => $value->label(), NodeType::loadMultiple());
+
     foreach ($locationsInfo as $key => $item) {
       $locations[$item['type']]['value'][] = [
         'value' => $item['nid'],
         'label' => $key,
       ];
-      $locations[$item['type']]['label'] = ucfirst($item['type']);
+      $locations[$item['type']]['label'] = $content_types[$item['type']];
     }
     return array_filter(array_values($locations));
   }
