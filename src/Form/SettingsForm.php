@@ -6,9 +6,12 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\openy_activity_finder\OpenyActivityFinderSolrBackend;
+use Drupal\openy_map\OpenyMapManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,6 +50,13 @@ class SettingsForm extends ConfigFormBase {
   protected $cache;
 
   /**
+   * The cache tag invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
    * SettingsForm constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -59,13 +69,16 @@ class SettingsForm extends ConfigFormBase {
    *   The http_client.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache backend.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
+   *   Cache tags invalidator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, Client $http_client, CacheBackendInterface $cache) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, Client $http_client, CacheBackendInterface $cache, CacheTagsInvalidatorInterface $cacheTagsInvalidator) {
     parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->httpClient = $http_client;
     $this->cache = $cache;
+    $this->cacheTagsInvalidator = $cacheTagsInvalidator;
   }
 
   /**
@@ -77,7 +90,8 @@ class SettingsForm extends ConfigFormBase {
       $container->get('module_handler'),
       $container->get('entity_type.manager'),
       $container->get('http_client'),
-      $container->get('cache.render')
+      $container->get('cache.render'),
+      $container->get('cache_tags.invalidator')
     );
   }
 
@@ -114,6 +128,15 @@ class SettingsForm extends ConfigFormBase {
       $backend_options['openy_daxko2.openy_activity_finder_backend'] = $this->t('Daxko 2 (live API calls)');
     }
     $allowed_values = implode(PHP_EOL, $config->get('allowed_query_arguments'));
+
+    // Build the list of possible node types in AF.
+    $node_types = OpenyMapManager::getLocationNodeTypes() ?? [];
+    $node_type_options = [];
+    foreach ($node_types as $node_type) {
+      $id = $node_type->id();
+      $label = $node_type->label();
+      $node_type_options[$id] = $label;
+    }
 
     $form['backend'] = [
       '#type' => 'select',
@@ -169,12 +192,20 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('ages'),
       '#description' => $this->t('Ages mapping. One per line. "<number of months>,<age display label>". Example: "660,55+"'),
     ];
-  
+
     $form['allowed_query_arguments'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Allowed Query Arguments'),
       '#default_value' => $allowed_values,
       '#description' => $this->t('Query arguments. One per line.'),
+    ];
+
+    $form['location_types'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Allowed location types'),
+      '#options' => $node_type_options,
+      '#default_value' => $config->get('location_types') ?? ['branch', 'camp', 'facility'],
+      '#description' => $this->t('Select which location content types should be used in Activity Finder. This will limit ALL Activity Finder blocks on the site. To limit by specific locations, use the "Exclude Locations" field on each block.')
     ];
 
     $form['weeks'] = [
@@ -325,6 +356,7 @@ class SettingsForm extends ConfigFormBase {
     $config->set('bs_version', $form_state->getValue('bs_version'))->save();
     $config->set('ages', $form_state->getValue('ages'))->save();
     $config->set('weeks', $form_state->getValue('weeks'))->save();
+    $config->set('location_types', $form_state->getValue('location_types'))->save();
     $config->set('exclude', $form_state->getValue('exclude'))->save();
     $config->set('disable_search_box', $form_state->getValue('disable_search_box'))->save();
     $config->set('disable_spots_available', $form_state->getValue('disable_spots_available'))->save();
@@ -343,6 +375,7 @@ class SettingsForm extends ConfigFormBase {
     $allowed_values = array_filter(array_map('trim', $allowed_values));
     $config->set('allowed_query_arguments', $allowed_values)->save();
     $this->cache->deleteAll();
+    $this->cacheTagsInvalidator->invalidateTags([OpenyActivityFinderSolrBackend::ACTIVITY_FINDER_CACHE_TAG]);
 
     parent::submitForm($form, $form_state);
   }
