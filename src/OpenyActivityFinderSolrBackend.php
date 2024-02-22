@@ -31,6 +31,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   // Cache ID for locations info.
   const ACTIVITY_FINDER_CACHE_TAG = 'openy_activity_finder:default';
 
+  // Default location types.
+  const DEFAULT_LOCATION_TYPES = ['branch' => 'branch', 'camp' => 'camp', 'facility' => 'facility'];
+
   /**
    * Cache default.
    *
@@ -697,7 +700,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   public function getLocationsInfo() {
     $data = [];
     $cid = 'openy_activity_finder:locations_info';
-    $location_types = $this->config->get('location_types');
+    $location_types = $this->config->get('location_types') ?? self::DEFAULT_LOCATION_TYPES;
 
     if ($cache = $this->cache->get($cid)) {
       $data = $cache->data;
@@ -810,7 +813,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   public function getLocations() {
     // Array with predefined keys for sorting in application location filters.
     // $locations = ['branch' => [], 'camp' => [], 'facility' => [], ...];
-    $location_types = $this->config->get('location_types');
+    $location_types = $this->config->get('location_types') ?? self::DEFAULT_LOCATION_TYPES;
     $locations = array_map(fn($value): array => [], array_filter($location_types));
 
     $locationsInfo = $this->getLocationsInfo();
