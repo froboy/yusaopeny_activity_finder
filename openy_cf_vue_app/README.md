@@ -4,6 +4,8 @@ This is an Activity Finder app for OpenY platform.
 
 ## Development
 
+Installation currently requires node v16. Use `nvm install 16` if necessary.
+
 Install dependencies:
 
 ```bash
