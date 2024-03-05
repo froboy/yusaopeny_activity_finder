@@ -57,6 +57,13 @@ class SettingsForm extends ConfigFormBase {
   protected $cacheTagsInvalidator;
 
   /**
+   * The openy map manager.
+   * 
+   * @var \Drupal\openy_map\OpenyMapManager
+   */
+  protected $openyMapManager;
+
+  /**
    * SettingsForm constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -72,13 +79,22 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   Cache tags invalidator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, Client $http_client, CacheBackendInterface $cache, CacheTagsInvalidatorInterface $cacheTagsInvalidator) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    ModuleHandlerInterface $module_handler,
+    EntityTypeManagerInterface $entity_type_manager,
+    Client $http_client,
+    CacheBackendInterface $cache,
+    CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    OpenyMapManager $openyMapManager
+  ) {
     parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->httpClient = $http_client;
     $this->cache = $cache;
     $this->cacheTagsInvalidator = $cacheTagsInvalidator;
+    $this->openyMapManager = $openyMapManager;
   }
 
   /**
@@ -91,7 +107,8 @@ class SettingsForm extends ConfigFormBase {
       $container->get('entity_type.manager'),
       $container->get('http_client'),
       $container->get('cache.render'),
-      $container->get('cache_tags.invalidator')
+      $container->get('cache_tags.invalidator'),
+      $container->get('openy_map.manager')
     );
   }
 
@@ -130,7 +147,7 @@ class SettingsForm extends ConfigFormBase {
     $allowed_values = implode(PHP_EOL, $config->get('allowed_query_arguments'));
 
     // Build the list of possible node types in AF.
-    $node_types = OpenyMapManager::getLocationNodeTypes() ?? [];
+    $node_types = $this->openyMapManager->getLocationNodeTypes() ?? [];
     $node_type_options = [];
     foreach ($node_types as $node_type) {
       $id = $node_type->id();
