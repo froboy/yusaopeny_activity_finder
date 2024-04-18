@@ -90,6 +90,9 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'weeks_filter' => 0,
       'hide_home_branch_block' => 0,
       'background_image' => NULL,
+      'in_memberships_filter' => 0,
+      'duration_filter' => 0,
+      'start_month_filter' => 0,
     ];
   }
 
@@ -166,6 +169,8 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#days' => $backend->getDaysOfWeek(),
       '#times' => $backend->getPartsOfDay(),
       '#days_times' => $backend->getDaysTimes(),
+      '#start_months' => $backend->getStartMonths(),
+      '#durations' => $backend->getDurations(),
       '#weeks' => $backend->getWeeks(),
       '#categories' => $backend->getCategories(),
       '#categories_type' => $backend->getCategoriesType(),
@@ -183,6 +188,9 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#exclude_by_location' => $conf['exclude_by_location'],
       '#legacy_mode' => (bool) $conf['legacy_mode'],
       '#weeks_filter' => (bool) $conf['weeks_filter'],
+      '#start_month_filter' => (bool) $conf['start_month_filter'],
+      '#duration_filter' => (bool) $conf['duration_filter'],
+      '#in_memberships_filter' => (bool) $conf['in_memberships_filter'],
       '#hide_home_branch_block' => (bool) $conf['hide_home_branch_block'],
       '#background_image' => [
         'mobile' => $image_mobile,
@@ -292,6 +300,32 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#default_value' => $conf['weeks_filter'],
     ];
 
+    $form['additional'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Additional filters'),
+      '#open' => TRUE,
+      // Open if not set to defaults.
+      //      '#open' => $defaults['primary'] !== $config['primary'] || $defaults['secondary'] !== $config['secondary'],
+    ];
+
+    $form['additional']['start_month_filter'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Start month'),
+      '#default_value' => $conf['start_month_filter'],
+    ];
+
+    $form['additional']['in_memberships_filter'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('In Membership'),
+      '#default_value' => $conf['in_memberships_filter'],
+    ];
+
+    $form['additional']['duration_filter'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Duration'),
+      '#default_value' => $conf['duration_filter'],
+    ];
+
     $form['hide_home_branch_block'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide Home Branch info block'),
@@ -329,6 +363,10 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       : [];
     $this->configuration['legacy_mode'] = $form_state->getValue('legacy_mode');
     $this->configuration['weeks_filter'] = $form_state->getValue('weeks_filter');
+    $additional_filters = $form_state->getValue('additional');
+    $this->configuration['start_month_filter'] = $additional_filters['start_month_filter'];
+    $this->configuration['duration_filter'] = $additional_filters['duration_filter'];
+    $this->configuration['in_memberships_filter'] = $additional_filters['in_memberships_filter'];
     $this->configuration['hide_home_branch_block'] = $form_state->getValue('hide_home_branch_block');
     $this->configuration['background_image'] = $this->getEntityBrowserValue($form_state, 'background_image');
   }

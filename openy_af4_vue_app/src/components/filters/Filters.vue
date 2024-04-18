@@ -79,6 +79,35 @@
           :exclude-by-location="excludeByLocation"
         />
       </Fieldset>
+      <Fieldset
+        v-if="inMembershipsFilter || durationFilter || startMonthFilter"
+        :label="'Additional' | t"
+        :collapse-id="id + '-toggle-additional'"
+        :collapsed="fieldsetCollapseState('additional')"
+        :counter="additionalFiltersCount"
+        :hide-counter="true"
+      >
+        <InMembershipsFilter
+          v-if="inMembershipsFilter"
+          :id="id + '-in-memberships-filter'"
+          v-model="selectedInMemberships"
+          :facets="data.facets.field_session_in_mbrsh"
+        />
+        <DurationsFilter
+          v-if="durationFilter"
+          :id="id + '-duration-filter'"
+          v-model="selectedDurations"
+          :durations="durations"
+          :facets="data.facets.durations"
+        />
+        <StartMonthsFilter
+          v-if="startMonthFilter"
+          :id="id + '-start-months-filter'"
+          v-model="selectedStartMonths"
+          :start-months="startMonths"
+          :facets="data.facets.start_months"
+        />
+      </Fieldset>
     </div>
     <div class="filters-footer" :class="footerClasses">
       <div class="buttons">
@@ -102,6 +131,9 @@ import DaysTimesFilter from '@/components/filters/DaysTimes.vue'
 import WeeksFilter from '@/components/filters/Weeks.vue'
 import LocationsFilter from '@/components/filters/Locations.vue'
 import ActivitiesFilter from '@/components/filters/Activities.vue'
+import InMembershipsFilter from '@/components/filters/InMemberships.vue'
+import DurationsFilter from '@/components/filters/Durations.vue'
+import StartMonthsFilter from '@/components/filters/StartMonths.vue'
 
 export default {
   name: 'Filters',
@@ -112,7 +144,10 @@ export default {
     DaysTimesFilter,
     WeeksFilter,
     LocationsFilter,
-    ActivitiesFilter
+    ActivitiesFilter,
+    InMembershipsFilter,
+    DurationsFilter,
+    StartMonthsFilter
   },
   props: {
     id: {
@@ -136,6 +171,14 @@ export default {
       required: true
     },
     weeks: {
+      type: Array,
+      required: true
+    },
+    startMonths: {
+      type: Array,
+      required: true
+    },
+    durations: {
       type: Array,
       required: true
     },
@@ -167,6 +210,19 @@ export default {
       type: Array,
       required: true
     },
+    initialDurations: {
+      type: Array,
+      required: true
+    },
+    initialStartMonths: {
+      type: Array,
+      required: true
+    },
+    initialInMemberships: {
+      type: Number,
+      required: true,
+      default: 0
+    },
     initialActivities: {
       type: Array,
       required: true
@@ -180,6 +236,18 @@ export default {
       required: true
     },
     weeksFilter: {
+      type: Boolean,
+      required: true
+    },
+    startMonthFilter: {
+      type: Boolean,
+      required: true
+    },
+    durationFilter: {
+      type: Boolean,
+      required: true
+    },
+    inMembershipsFilter: {
       type: Boolean,
       required: true
     },
@@ -219,7 +287,10 @@ export default {
       selectedDaysTimes: this.initialDaysTimes,
       selectedWeeks: this.initialWeeks,
       selectedLocations: this.initialLocations,
-      selectedActivities: this.initialActivities
+      selectedActivities: this.initialActivities,
+      selectedInMemberships: this.initialInMemberships,
+      selectedDurations: this.initialDurations,
+      selectedStartMonths: this.initialStartMonths
     }
   },
   computed: {
@@ -237,6 +308,12 @@ export default {
     locationFiltersCount() {
       return this.selectedLocations.length
     },
+    additionalFiltersCount() {
+      let inMembershipQuantity = this.inMembershipsFilter ? +this.selectedInMemberships > 0 : 0
+      let durationsQuantity = this.durationFilter ? this.selectedDurations.length : 0
+      let startMonthQuantity = this.startMonthFilter ? this.selectedStartMonths.length : 0
+      return inMembershipQuantity + durationsQuantity + startMonthQuantity
+    },
     hasChanges() {
       if (this.filtersMode === 'instant') {
         return false
@@ -248,7 +325,10 @@ export default {
         !this.isEqual(this.selectedDaysTimes, this.initialDaysTimes) ||
         !this.isEqual(this.selectedWeeks, this.initialWeeks) ||
         !this.isEqual(this.selectedLocations, this.initialLocations) ||
-        !this.isEqual(this.selectedActivities, this.initialActivities)
+        !this.isEqual(this.selectedActivities, this.initialActivities) ||
+        !this.isEqual(this.selectedInMemberships, this.initialInMemberships) ||
+        !this.isEqual(this.selectedDurations, this.initialDurations) ||
+        !this.isEqual(this.selectedStartMonths, this.initialStartMonths)
       )
     },
     headerClasses() {
@@ -277,6 +357,15 @@ export default {
     initialActivities() {
       this.selectedActivities = this.initialActivities
     },
+    initialDurations() {
+      this.selectedDurations = this.initialDurations
+    },
+    initialInMemberships() {
+      this.selectedInMemberships = this.initialInMemberships
+    },
+    initialStartMonths() {
+      this.selectedStartMonths = this.initialStartMonths
+    },
     selectedAges() {
       this.filterChange({ filter: 'selectedAges', value: this.selectedAges })
     },
@@ -294,6 +383,15 @@ export default {
     },
     selectedActivities() {
       this.filterChange({ filter: 'selectedActivities', value: this.selectedActivities })
+    },
+    selectedInMemberships() {
+      this.filterChange({ filter: 'selectedInMemberships', value: this.selectedInMemberships })
+    },
+    selectedDurations() {
+      this.filterChange({ filter: 'selectedDurations', value: this.selectedDurations })
+    },
+    selectedStartMonths() {
+      this.filterChange({ filter: 'selectedStartMonths', value: this.selectedStartMonths })
     }
   },
   methods: {
@@ -306,14 +404,29 @@ export default {
       }
     },
     applyFilters() {
-      for (let key of ['Ages', 'Days', 'DaysTimes', 'Weeks', 'Locations', 'Activities']) {
+      for (let key of [
+        'Ages',
+        'Days',
+        'DaysTimes',
+        'Weeks',
+        'Locations',
+        'Activities',
+        'InMemberships',
+        'Durations',
+        'StartMonths'
+      ]) {
         if (!this.isEqual(this['selected' + key], this['initial' + key])) {
           this.$emit('filterChange', { filter: 'selected' + key, value: this['selected' + key] })
         }
       }
     },
     isEqual(array1, array2) {
-      return array1.length === array2.length && array1.every(value => array2.includes(value))
+      let length = array1.length === array2.length
+      let includes =
+        array1 instanceof Array && array2 instanceof Array
+          ? array1.every(value => array2.includes(value))
+          : array1 === array2
+      return length && includes
     },
     fieldsetCollapseState(type) {
       return this.filtersSectionConfig[type]

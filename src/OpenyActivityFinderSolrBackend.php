@@ -213,9 +213,23 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $query->addCondition('af_weekdays_parts_of_day', $daystimes, 'IN');
     }
 
+    if (isset($parameters['in_membership'])) {
+      $in_membership = rawurldecode($parameters['in_membership']);
+      $query->addCondition('field_session_in_mbrsh', $in_membership);
+    }
+
+    if (!empty($parameters['durations'])) {
+      $durations = explode(',', rawurldecode($parameters['durations']));
+      $query->addCondition('af_duration', $durations, 'IN');
+    }
+
+    if (!empty($parameters['start_months'])) {
+      $start_months = explode(',', rawurldecode($parameters['start_months']));
+      $query->addCondition('af_start_month', $start_months, 'IN');
+    }
+
     if (!empty($parameters['program_types'])) {
       $program_types = explode(',', rawurldecode($parameters['program_types']));
-
     }
 
     $category_program_info = $this->getCategoryProgramInfo();
@@ -568,6 +582,12 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
             }
           }
         }
+        if ($f == 'field_session_in_mbrsh') {
+          // Let's remove results
+          //          if ($item['filter'] === '"0"') {
+          //            unset($facets_m[$f][$i]);
+          //          }
+        }
       }
     }
     return $facets_m;
@@ -601,6 +621,27 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       ],
       'field_activity_category' => [
         'field' => 'field_activity_category',
+        'limit' => 0,
+        'operator' => 'AND',
+        'min_count' => 1,
+        'missing' => TRUE,
+      ],
+      'field_session_in_mbrsh' => [
+        'field' => 'field_session_in_mbrsh',
+        'limit' => 0,
+        'operator' => 'AND',
+        'min_count' => 1,
+        'missing' => TRUE,
+      ],
+      'af_duration' => [
+        'field' => 'af_duration',
+        'limit' => 0,
+        'operator' => 'AND',
+        'min_count' => 1,
+        'missing' => TRUE,
+      ],
+      'af_start_month' => [
+        'field' => 'af_start_month',
         'limit' => 0,
         'operator' => 'AND',
         'min_count' => 1,

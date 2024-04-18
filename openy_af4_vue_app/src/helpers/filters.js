@@ -113,3 +113,34 @@ export function weeksList(src, weeks) {
   src.forEach(week => filters.push(weekDetails(week)))
   return filters.filter(x => x !== '')
 }
+
+export function durationsList(src, durations) {
+  let filters = [];
+  let durationDetails = value => {
+    let result = '';
+
+    let duration = durations.find(item => item.value === value);
+    if (duration) {
+      result = duration.label;
+    }
+    return result;
+  };
+
+  src.forEach(duration => filters.push(durationDetails(duration)));
+  return filters.filter(x => x !== '');
+}
+
+export function startMonthsList(src, startMonths) {
+  let filters = [];
+  let startMonthsDetails = value => {
+    let result = '';
+    let startMonth = startMonths.find(item => item.value === value);
+    if (startMonths) {
+      result = startMonth.label;
+    }
+    return result;
+  };
+
+  src.forEach(startMonth => filters.push(startMonthsDetails(startMonth)));
+  return filters.filter(x => x !== '');
+}

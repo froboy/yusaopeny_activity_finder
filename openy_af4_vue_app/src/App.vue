@@ -9,6 +9,8 @@
       :weeks="weeks"
       :locations="locations"
       :activities="activities"
+      :durations="durations"
+      :start-months="startMonths"
       :selected-ages="selectedAges"
       :selected-days="selectedDays"
       :selected-times="selectedTimes"
@@ -16,6 +18,8 @@
       :selected-weeks="selectedWeeks"
       :selected-locations="selectedLocations"
       :selected-activities="selectedActivities"
+      :selected-durations="selectedDurations"
+      :selected-start-months="selectedStartMonths"
       @startOver="startOver()"
       @viewResults="viewResults()"
     />
@@ -36,15 +40,23 @@
           :weeks="weeks"
           :locations="locations"
           :activities="activities"
+          :durations="durations"
+          :start-months="startMonths"
           :initial-ages="selectedAges"
           :initial-days="selectedDays"
           :initial-days-times="selectedDaysTimes"
           :initial-weeks="selectedWeeks"
           :initial-locations="selectedLocations"
           :initial-activities="selectedActivities"
+          :initial-in-memberships="selectedInMemberships"
+          :initial-durations="selectedDurations"
+          :initial-start-months="selectedStartMonths"
           :max-ages="maxAges"
           :legacy-mode="legacyMode"
           :weeks-filter="weeksFilter"
+          :start-month-filter="startMonthFilter"
+          :duration-filter="durationFilter"
+          :in-memberships-filter="inMembershipsFilter"
           :filters-section-config="filtersSectionConfig"
           :daxko="daxko"
           :bs-version="bsVersion"
@@ -175,15 +187,23 @@
           :weeks="weeks"
           :locations="locations"
           :activities="activities"
+          :durations="durations"
+          :start-months="startMonths"
           :initial-ages="selectedAges"
           :initial-days="selectedDays"
           :initial-days-times="selectedDaysTimes"
           :initial-weeks="selectedWeeks"
           :initial-locations="selectedLocations"
           :initial-activities="selectedActivities"
+          :initial-in-memberships="selectedInMemberships"
+          :initial-durations="selectedDurations"
+          :initial-start-months="selectedStartMonths"
           :max-ages="maxAges"
           :legacy-mode="legacyMode"
           :weeks-filter="weeksFilter"
+          :start-month-filter="startMonthFilter"
+          :duration-filter="durationFilter"
+          :in-memberships-filter="inMembershipsFilter"
           :filters-section-config="filtersSectionConfig"
           :daxko="daxko"
           :bs-version="bsVersion"
@@ -297,6 +317,14 @@ export default {
       type: Array,
       required: true
     },
+    startMonths: {
+      type: Array,
+      required: true
+    },
+    durations: {
+      type: Array,
+      required: true
+    },
     categories: {
       type: Array,
       required: true
@@ -342,6 +370,18 @@ export default {
       required: true
     },
     weeksFilter: {
+      type: Boolean,
+      required: true
+    },
+    startMonthFilter: {
+      type: Boolean,
+      required: true
+    },
+    durationFilter: {
+      type: Boolean,
+      required: true
+    },
+    inMembershipsFilter: {
       type: Boolean,
       required: true
     },
@@ -433,6 +473,9 @@ export default {
         selectedWeeks: [],
         selectedLocations: [],
         selectedActivities: [],
+        selectedInMemberships: 0,
+        selectedStartMonths: [],
+        selectedDurations: [],
         selectedPage: 1,
         selectedSort: this.defaultSortOption,
         searchKeywords: ''
@@ -514,7 +557,13 @@ export default {
         keywords: this.searchKeywords,
         limit: this.limitByCategory.join(','),
         exclude: this.excludeByCategory.join(','),
-        excludeloc: this.excludeByLocation.join(',')
+        excludeloc: this.excludeByLocation.join(','),
+        durations: this.selectedDurations.join(','),
+        start_months: this.selectedStartMonths.join(',')
+      }
+
+      if (this.selectedInMemberships === 1) {
+        params.in_membership = this.selectedInMemberships
       }
 
       if (this.daxko && this.selectedPage > 1 && this.daxkoPages[this.selectedPage]) {
@@ -537,6 +586,9 @@ export default {
         ...this.selectedWeeks,
         ...this.selectedLocations,
         ...this.selectedActivities,
+        ...this.selectedDurations,
+        ...this.selectedStartMonths,
+        this.selectedInMemberships,
         this.selectedSort,
         this.searchKeywords
       ].join('_')
@@ -552,6 +604,9 @@ export default {
         ...this.selectedWeeks,
         ...this.selectedLocations,
         ...this.selectedActivities,
+        ...this.selectedDurations,
+        ...this.selectedStartMonths,
+        this.selectedInMemberships,
         this.selectedPage,
         this.selectedSort,
         this.searchKeywords
@@ -806,6 +861,9 @@ export default {
         this[key] = Array.isArray(this.defaults[key])
           ? this.defaults[key].slice()
           : this.defaults[key]
+        if (key === 'selectedInMemberships') {
+          this[key] = 0
+        }
       }
     },
     startOver() {

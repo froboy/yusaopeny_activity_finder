@@ -272,3 +272,17 @@ function openy_activity_finder_update_8405() {
     $cim->importConfigs(['openy_activity_finder.settings']);
   }
 }
+
+/**
+ * Update configs for search index.
+ */
+function openy_activity_finder_update_9001() {
+  _af_config_import();
+}
+
+/**
+ * Update config.
+ */
+function openy_activity_finder_update_9002() {
+  openy_activity_finder_update_8405();
+}

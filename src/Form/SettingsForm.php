@@ -58,7 +58,7 @@ class SettingsForm extends ConfigFormBase {
 
   /**
    * The openy map manager.
-   * 
+   *
    * @var \Drupal\openy_map\OpenyMapManager
    */
   protected $openyMapManager;
@@ -232,6 +232,13 @@ class SettingsForm extends ConfigFormBase {
       '#description' => t('Weeks mapping. One per line. Example: "8-6-2020,Week 1: June 8,8-24-2020,Week 11: August 24"'),
     ];
 
+    $form['durations'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Durations'),
+      '#default_value' => $config->get('durations'),
+      '#description' => t('Durations mapping. Enter one value per line, in the format {duration_in_days}|label.'),
+    ];
+
     $form['exclude'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Exclude category -- so we do not display Group Exercises'),
@@ -342,6 +349,18 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('locations_collapse_group') ? $config->get('locations_collapse_group') : 'disabled',
       '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
     ];
+    $form['collapse']['additional'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Additional filters preferences'),
+      '#open' => TRUE,
+    ];
+    $form['collapse']['additional']['additional_collapse_group'] = [
+      '#title' => $this->t('Settings for whole group.'),
+      '#type' => 'radios',
+      '#options' => $options,
+      '#default_value' => $config->get('additional_collapse_group') ? $config->get('additional_collapse_group') : 'disabled',
+      '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
+    ];
 
     $form['logging'] = [
       '#type' => 'details',
@@ -373,6 +392,7 @@ class SettingsForm extends ConfigFormBase {
     $config->set('bs_version', $form_state->getValue('bs_version'))->save();
     $config->set('ages', $form_state->getValue('ages'))->save();
     $config->set('weeks', $form_state->getValue('weeks'))->save();
+    $config->set('durations', $form_state->getValue('durations'))->save();
     $config->set('location_types', $form_state->getValue('location_types'))->save();
     $config->set('exclude', $form_state->getValue('exclude'))->save();
     $config->set('disable_search_box', $form_state->getValue('disable_search_box'))->save();
@@ -386,6 +406,8 @@ class SettingsForm extends ConfigFormBase {
     $config->set('schedule_collapse_group', $form_state->getValue('schedule_collapse_group'))->save();
     $config->set('category_collapse_group', $form_state->getValue('category_collapse_group'))->save();
     $config->set('locations_collapse_group', $form_state->getValue('locations_collapse_group'))->save();
+    $config->set('additional_collapse_group', $form_state->getValue('additional_collapse_group'))
+      ->save();
     $config->set('disable_program_search_log', $form_state->getValue('disable_program_search_log'))->save();
     $config->set('disable_cache_debug_log', $form_state->getValue('disable_cache_debug_log'))->save();
     $allowed_values = explode(PHP_EOL, $form_state->getValue('allowed_query_arguments'));
