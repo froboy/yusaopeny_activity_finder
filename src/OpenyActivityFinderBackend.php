@@ -189,56 +189,16 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
    * {@inheritdoc}
    */
   public function getStartMonths() {
-    return [
-      [
-        'label' => $this->t('January'),
-        'value' => '1',
-      ],
-      [
-        'label' => $this->t('February'),
-        'value' => '2',
-      ],
-      [
-        'label' => $this->t('March'),
-        'value' => '3',
-      ],
-      [
-        'label' => $this->t('April'),
-        'value' => '4',
-      ],
-      [
-        'label' => $this->t('May'),
-        'value' => '5',
-      ],
-      [
-        'label' => $this->t('June'),
-        'value' => '6',
-      ],
-      [
-        'label' => $this->t('July'),
-        'value' => '7',
-      ],
-      [
-        'label' => $this->t('August'),
-        'value' => '8',
-      ],
-      [
-        'label' => $this->t('September'),
-        'value' => '9',
-      ],
-      [
-        'label' => $this->t('October'),
-        'value' => '10',
-      ],
-      [
-        'label' => $this->t('November'),
-        'value' => '11',
-      ],
-      [
-        'label' => $this->t('December'),
-        'value' => '12',
-      ],
-    ];
+    $months = [];
+
+    for ($month = 1; $month <= 12; $month++) {
+      $months[] = [
+        'label' => $this->t(date('F', mktime(0, 0, 0, $month, 1))),
+        'value' => (string) $month,
+      ];
+    }
+
+    return $months;
   }
 
   /**

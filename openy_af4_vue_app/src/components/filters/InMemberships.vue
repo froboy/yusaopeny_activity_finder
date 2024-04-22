@@ -37,12 +37,12 @@ export default {
   },
   data() {
     return {
-      selectedInMemberships: +this.value
+      selectedInMemberships: this.value
     }
   },
   watch: {
     value() {
-      this.selectedInMemberships = +this.value
+      this.selectedInMemberships = this.value
     },
     selectedInMemberships() {
       this.$emit('input', this.selectedInMemberships)

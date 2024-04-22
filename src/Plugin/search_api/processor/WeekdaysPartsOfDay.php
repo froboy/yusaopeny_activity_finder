@@ -35,7 +35,7 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
   protected $configFactory;
 
   /**
-   * Constructs a Block object.
+   * Constructs a Facet object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -98,7 +98,7 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
       return;
     }
 
-    $paragraphs = $entity->field_session_time ? $entity->field_session_time->referencedEntities() : [];
+    $paragraphs = $entity->field_session_time?->referencedEntities() ?? [];
     if (empty($paragraphs)) {
       return;
     }

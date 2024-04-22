@@ -323,7 +323,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#options' => $options,
       '#default_value' => $config->get('schedule_collapse_group') ? $config->get('schedule_collapse_group') : 'disabled',
-      '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
+      '#description' => $this->t('Check this if you want default "Collapsed" state for whole this group'),
     ];
     $form['collapse']['category'] = [
       '#type' => 'details',
@@ -335,7 +335,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#options' => $options,
       '#default_value' => $config->get('category_collapse_group') ? $config->get('category_collapse_group') : 'disabled',
-      '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
+      '#description' => $this->t('Check this if you want default "Collapsed" state for whole this group'),
     ];
     $form['collapse']['locations'] = [
       '#type' => 'details',
@@ -347,7 +347,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#options' => $options,
       '#default_value' => $config->get('locations_collapse_group') ? $config->get('locations_collapse_group') : 'disabled',
-      '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
+      '#description' => $this->t('Check this if you want default "Collapsed" state for whole this group'),
     ];
     $form['collapse']['additional'] = [
       '#type' => 'details',
@@ -359,7 +359,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#options' => $options,
       '#default_value' => $config->get('additional_collapse_group') ? $config->get('additional_collapse_group') : 'disabled',
-      '#description' => $this->t('Check this if you want default state for whole this group is "Collapsed"'),
+      '#description' => $this->t('Check this if you want default "Collapsed" state for whole this group'),
     ];
 
     $form['logging'] = [

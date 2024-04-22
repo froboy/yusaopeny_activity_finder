@@ -2,11 +2,15 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Adds the Weeks to the indexed data.
@@ -22,7 +26,60 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   hidden = false,
  * )
  */
-class Week extends ProcessorPluginBase {
+class Week extends ProcessorPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Config Factory definition.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Constructs a Facet object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The Config Factory.
+   */
+  public function __construct(array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactory $config_factory
+  ) {
+    $this->configFactory = $config_factory;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * Sets the config factory service.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   *
+   * @return $this
+   */
+  protected function setConfigFactory(ConfigFactoryInterface $config_factory) {
+    $this->configFactory = $config_factory;
+    return $this;
+  }
 
   /**
    * {@inheritdoc}
@@ -64,7 +121,9 @@ class Week extends ProcessorPluginBase {
         $_period = $date->field_session_time_date->getValue()[0];
         $week_start_date = DrupalDateTime::createFromTimestamp(strtotime($_period['value'] . 'Z'))->format('n-j-Y');
         // Check if date is in the list of camp weeks listed in config.
-        $weeks = \Drupal::config('openy_activity_finder.settings')->get('weeks');
+        $weeks = $this->configFactory
+          ->get('openy_activity_finder.settings')
+          ->get('weeks');
         preg_match('/' . $week_start_date . '/', $weeks, $matched_weeks);
       }
 

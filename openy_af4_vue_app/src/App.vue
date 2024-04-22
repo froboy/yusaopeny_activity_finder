@@ -473,7 +473,7 @@ export default {
         selectedWeeks: [],
         selectedLocations: [],
         selectedActivities: [],
-        selectedInMemberships: 0,
+        selectedInMemberships: false,
         selectedStartMonths: [],
         selectedDurations: [],
         selectedPage: 1,
@@ -562,8 +562,8 @@ export default {
         start_months: this.selectedStartMonths.join(',')
       }
 
-      if (this.selectedInMemberships === 1) {
-        params.in_membership = this.selectedInMemberships
+      if (this.selectedInMemberships) {
+        params.in_membership = +this.selectedInMemberships
       }
 
       if (this.daxko && this.selectedPage > 1 && this.daxkoPages[this.selectedPage]) {
@@ -862,7 +862,7 @@ export default {
           ? this.defaults[key].slice()
           : this.defaults[key]
         if (key === 'selectedInMemberships') {
-          this[key] = 0
+          this[key] = false
         }
       }
     },

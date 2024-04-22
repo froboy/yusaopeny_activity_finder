@@ -309,7 +309,7 @@ export default {
       return this.selectedLocations.length
     },
     additionalFiltersCount() {
-      let inMembershipQuantity = this.inMembershipsFilter ? +this.selectedInMemberships > 0 : 0
+      let inMembershipQuantity = this.inMembershipsFilter ? +this.selectedInMemberships : 0
       let durationsQuantity = this.durationFilter ? this.selectedDurations.length : 0
       let startMonthQuantity = this.startMonthFilter ? this.selectedStartMonths.length : 0
       return inMembershipQuantity + durationsQuantity + startMonthQuantity

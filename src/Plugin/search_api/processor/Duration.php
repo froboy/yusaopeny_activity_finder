@@ -2,11 +2,14 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Adds the duration to the indexed data.
@@ -22,13 +25,53 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   hidden = false,
  * )
  */
-class Duration extends ProcessorPluginBase {
+class Duration extends ProcessorPluginBase implements ContainerFactoryPluginInterface {
 
   const PROPERTY_NAME = 'search_api_af_duration';
 
   const BASE_DATE = '1970-01-01T';
 
   const FULL_YEAR_DURATION = 365;
+
+  /**
+   * Config Factory definition.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Constructs a Facet object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The Config Factory.
+   */
+  public function __construct(array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactory $config_factory
+  ) {
+    $this->configFactory = $config_factory;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -66,7 +109,7 @@ class Duration extends ProcessorPluginBase {
       return;
     }
 
-    $timezone = new \DateTimeZone(\Drupal::config('system.date')->get('timezone')['default']);
+    $timezone = $this->getSystemTimezone();
 
     $value = self::BASE_DATE . '00:00:00Z';
     // Check if date is in the list of durations in config.
@@ -107,7 +150,9 @@ class Duration extends ProcessorPluginBase {
    */
   private function getDurationsFromConfig(): array {
     $values = [];
-    $durations_config = \Drupal::config('openy_activity_finder.settings')->get('durations');
+    $durations_config = $this->configFactory
+      ->get('openy_activity_finder.settings')
+      ->get('durations');
     foreach (explode(PHP_EOL, $durations_config) as $row) {
       $row = trim($row);
       [$duration, ] = explode('|', $row);
@@ -135,6 +180,18 @@ class Duration extends ProcessorPluginBase {
     }
     // Set full year by default.
     return self::FULL_YEAR_DURATION;
+  }
+
+  /**
+   * Get the system timezone from the site config.
+   *
+   * @return \DateTimeZone
+   * @throws \Exception
+   */
+  private function getSystemTimezone(): \DateTimeZone {
+    return
+      new \DateTimeZone($this->configFactory->get('system.date')
+        ->get('timezone')['default']);
   }
 
 }

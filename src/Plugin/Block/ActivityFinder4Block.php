@@ -304,8 +304,6 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#type' => 'details',
       '#title' => $this->t('Additional filters'),
       '#open' => TRUE,
-      // Open if not set to defaults.
-      //      '#open' => $defaults['primary'] !== $config['primary'] || $defaults['secondary'] !== $config['secondary'],
     ];
 
     $form['additional']['start_month_filter'] = [

@@ -576,17 +576,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         // Pass counters to static week filter.
         if ($f == 'static_weeks_filter') {
           $facets_m[$f][$i]['count'] = 0;
-          foreach ($facets['af_weeks'] as $info) {
-            if ('"' . $item['value'] . '"' == $info['filter']) {
-              $facets_m[$f][$i]['count'] = $info['count'];
+          if (isset($facets['af_weeks'])) {
+            foreach ($facets['af_weeks'] as $info) {
+              if ('"' . $item['value'] . '"' == $info['filter']) {
+                $facets_m[$f][$i]['count'] = $info['count'];
+              }
             }
           }
-        }
-        if ($f == 'field_session_in_mbrsh') {
-          // Let's remove results
-          //          if ($item['filter'] === '"0"') {
-          //            unset($facets_m[$f][$i]);
-          //          }
         }
       }
     }
