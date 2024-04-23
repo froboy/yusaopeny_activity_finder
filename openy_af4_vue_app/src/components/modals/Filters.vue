@@ -33,7 +33,9 @@ import {
   daysList,
   timesList,
   daysTimesList,
-  weeksList
+  weeksList,
+  durationsList,
+  startMonthsList
 } from '@/helpers/filters'
 
 export default {
@@ -101,6 +103,22 @@ export default {
     selectedLocations: {
       type: Array,
       required: true
+    },
+    durations: {
+      type: Array,
+      required: true
+    },
+    selectedDurations: {
+      type: Array,
+      required: true
+    },
+    startMonths: {
+      type: Array,
+      required: true
+    },
+    selectedStartMonths: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -117,7 +135,9 @@ export default {
         ...daysList(this.selectedDays, this.days),
         ...timesList(this.selectedTimes, this.times),
         ...daysTimesList(this.selectedDaysTimes, this.daysTimes),
-        ...weeksList(this.selectedWeeks, this.weeks)
+        ...weeksList(this.selectedWeeks, this.weeks),
+        ...durationsList(this.selectedDurations, this.durations),
+        ...startMonthsList(this.selectedStartMonths, this.startMonths)
       ].sort()
     }
   },

@@ -32,6 +32,10 @@
         :selected-locations="selectedLocations"
         :activities="activities"
         :selected-activities="selectedActivities"
+        :durations="duration"
+        :selected-durations="selectedDurations"
+        :start-months="startMonths"
+        :selected-start-months="selectedStartMonths"
         @viewResults="viewResults"
       />
     </div>
@@ -100,6 +104,22 @@ export default {
       required: true
     },
     selectedActivities: {
+      type: Array,
+      required: true
+    },
+    durations: {
+      type: Array,
+      required: true
+    },
+    selectedDurations: {
+      type: Array,
+      required: true
+    },
+    startMonths: {
+      type: Array,
+      required: true
+    },
+    selectedStartMonths: {
       type: Array,
       required: true
     }

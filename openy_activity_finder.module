@@ -66,6 +66,8 @@ function openy_activity_finder_theme() {
         'days_times' => [],
         'weeks' => [],
         'categories' => [],
+        'start_months' => [],
+        'durations' => [],
         'categories_type' => '',
         'activities' => [],
         'locations' => [],
@@ -83,6 +85,9 @@ function openy_activity_finder_theme() {
         'hide_home_branch_block' => FALSE,
         'background_image' => [],
         'bs_version' => NULL,
+        'in_memberships_filter' => FALSE,
+        'start_month_filter' => FALSE,
+        'duration_filter' => FALSE,
       ],
     ],
   ];

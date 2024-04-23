@@ -98,6 +98,30 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
   /**
    * {@inheritdoc}
    */
+  public function getDurations() {
+    $durations = [];
+
+    $durations_config = $this->config->get('durations');
+
+    if (!$durations_config) {
+      return [];
+    }
+
+    foreach (explode(PHP_EOL, $durations_config) as $row) {
+      $row = trim($row);
+      [$duration, $label] = explode('|', $row);
+      $durations[] = [
+        'label' => $label,
+        'value' => $duration,
+      ];
+    }
+
+    return $durations;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDaysOfWeek() {
     return [
       [
@@ -164,6 +188,22 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
   /**
    * {@inheritdoc}
    */
+  public function getStartMonths() {
+    $months = [];
+
+    for ($month = 1; $month <= 12; $month++) {
+      $months[] = [
+        'label' => $this->t(date('F', mktime(0, 0, 0, $month, 1))),
+        'value' => (string) $month,
+      ];
+    }
+
+    return $months;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDaysTimes() {
     $weekdays = $this->getDaysOfWeek();
     $parts_of_day = $this->getPartsOfDay();
@@ -200,7 +240,7 @@ abstract class OpenyActivityFinderBackend implements OpenyActivityFinderBackendI
    */
   public function getFiltersSectionConfig() {
     $config = [];
-    foreach (['schedule', 'category', 'locations'] as $name) {
+    foreach (['schedule', 'category', 'locations', 'additional'] as $name) {
       $config[$name] = TRUE;
       $value = $this->config->get("{$name}_collapse_group");
       if ($value) {

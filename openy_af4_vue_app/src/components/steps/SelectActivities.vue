@@ -111,7 +111,7 @@ export default {
         if (this.firstStep && !this.optionsCount(key)) {
           return
         }
-        
+
         // Filter out excluded or limited categories.
         if (!this.excludeByCategory.length || !this.limitByCategory.length) {
           filteredActivities[key] = activityGroup

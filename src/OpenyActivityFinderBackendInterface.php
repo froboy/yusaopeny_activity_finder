@@ -3,7 +3,7 @@
 namespace Drupal\openy_activity_finder;
 
 /**
- * Interface for the backend. 
+ * Interface for the backend.
  */
 interface OpenyActivityFinderBackendInterface {
 
@@ -51,5 +51,15 @@ interface OpenyActivityFinderBackendInterface {
    * Get list of days with parts of day.
    */
   public function getDaysTimes();
+
+  /**
+   * Get list of start session month.
+   */
+  public function getStartMonths();
+
+  /**
+   * Get list of durations.
+   */
+  public function getDurations();
 
 }

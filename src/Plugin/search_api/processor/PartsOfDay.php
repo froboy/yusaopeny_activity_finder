@@ -2,11 +2,14 @@
 
 namespace Drupal\openy_activity_finder\Plugin\search_api\processor;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Adds the parts of day to the indexed data.
@@ -22,7 +25,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   hidden = false,
  * )
  */
-class PartsOfDay extends ProcessorPluginBase {
+class PartsOfDay extends ProcessorPluginBase implements ContainerFactoryPluginInterface {
 
   const PROPERTY_NAME = 'search_api_af_parts_of_day';
 
@@ -31,6 +34,46 @@ class PartsOfDay extends ProcessorPluginBase {
   const AFTERNOON = 2;
 
   const EVENING = 3;
+
+  /**
+   * Config Factory definition.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Constructs a Facet object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The Config Factory.
+   */
+  public function __construct(array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactory $config_factory
+  ) {
+    $this->configFactory = $config_factory;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -62,12 +105,12 @@ class PartsOfDay extends ProcessorPluginBase {
       return;
     }
 
-    $paragraphs = $entity->field_session_time ? $entity->field_session_time->referencedEntities() : [];
+    $paragraphs = $entity->field_session_time?->referencedEntities() ?? [];
     if (empty($paragraphs)) {
       return;
     }
 
-    $timezone = new \DateTimeZone(\Drupal::config('system.date')->get('timezone')['default']);
+    $timezone = $this->getSystemTimezone();
     $time12pm = strtotime('12:00:00Z');
     $time5pm = strtotime('17:00:00Z');
 
@@ -107,6 +150,18 @@ class PartsOfDay extends ProcessorPluginBase {
         $field->addValue($value);
       }
     }
+  }
+
+  /**
+   * Get the system timezone from the site config.
+   *
+   * @return \DateTimeZone
+   * @throws \Exception
+   */
+  private function getSystemTimezone(): \DateTimeZone {
+    return
+      new \DateTimeZone($this->configFactory->get('system.date')
+        ->get('timezone')['default']);
   }
 
 }

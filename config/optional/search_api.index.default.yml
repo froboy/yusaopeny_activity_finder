@@ -10,6 +10,7 @@ dependencies:
     - field.storage.paragraph.field_session_time_date
     - field.storage.paragraph.field_session_time_days
     - field.storage.node.field_session_description
+    - field.storage.node.field_session_in_mbrsh
     - field.storage.node.field_session_location
     - field.storage.node.field_session_max_age
     - field.storage.node.field_session_mbr_price
@@ -88,10 +89,18 @@ field_settings:
     label: 'Date of day'
     property_path: search_api_af_date_of_day
     type: date
+  af_duration:
+    label: Duration
+    property_path: search_api_af_duration
+    type: date
   af_parts_of_day:
     label: 'Parts of day'
     property_path: search_api_af_parts_of_day
     type: string
+  af_start_month:
+    label: 'Start Month'
+    property_path: search_api_af_start_month
+    type: date
   af_time_of_day:
     label: 'Time of day'
     property_path: search_api_af_time_of_day
@@ -215,6 +224,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_session_description
+  field_session_in_mbrsh:
+    label: 'In membership'
+    datasource_id: 'entity:node'
+    property_path: field_session_in_mbrsh
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_session_in_mbrsh
   field_session_location:
     label: Location
     datasource_id: 'entity:node'
@@ -300,7 +317,7 @@ field_settings:
     type: text
     configuration:
       roles:
-        anonymous: anonymous
+        - anonymous
       view_mode:
         'entity:node':
           session: default
@@ -362,7 +379,9 @@ processor_settings:
   language_with_fallback: {  }
   openy_af_ages_min_max: {  }
   openy_af_date_of_day: {  }
+  openy_af_duration: {  }
   openy_af_parts_of_day: {  }
+  openy_af_start_month: {  }
   openy_af_time_of_day: {  }
   openy_af_week: {  }
   openy_af_weekdays_parts_of_day: {  }
