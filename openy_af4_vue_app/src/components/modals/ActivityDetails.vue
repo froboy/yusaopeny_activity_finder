@@ -420,7 +420,7 @@ export default {
     justify-content: space-between;
     width: 100%;
 
-    @include media-breakpoint-up('lg') {
+    @media (min-width: 1060px) {
       margin-left: 0;
     }
 
