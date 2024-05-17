@@ -1,0 +1,392 @@
+@import "_functions";
+@import "_mixins";
+@import "_variables";
+
+.lb-activity-finder {
+  p,
+  span,
+  .title,
+  a {
+    font-family: var(--ylb-font-family), serif;
+  }
+
+  .select-path-component {
+    .path {
+      border-radius: var(--wsBorderRadius, unset);
+      background-color: var(--ylb-color-light-grey-1, lightgrey);
+
+      &:active,
+      &:focus,
+      &:hover {
+        color: var(--ylb-color-white, #fff);
+        background-color: var(--wsPrimaryColor, lightgrey);
+
+        .text {
+          color: var(--ylb-color-white, #fff);
+        }
+      }
+    }
+
+    .homebranch {
+      a {
+        color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+
+  .step-component {
+    .controls {
+      .buttons-desktop {
+        .btn {
+          border-radius: var(--wsBorderRadius, unset);
+
+          &.btn-skip {
+            color: var(--wsPrimaryColor, lightgrey);
+            border-color: var(--wsPrimaryColor, lightgrey);
+          }
+
+          &.btn-next {
+            background-color: var(--wsPrimaryColor, lightgrey);
+            border-color: var(--wsPrimaryColor, lightgrey);
+            color:  var(--ylb-color-white, #fff);
+          }
+        }
+      }
+    }
+
+    .container {
+      .row > div {
+        .fieldset-component {
+          &:first-child {
+            .fieldset-title {
+              border-top-left-radius: var(--wsBorderRadius, unset);
+              border-top-right-radius: var(--wsBorderRadius, unset);
+            }
+          }
+
+          &:last-child {
+            .fieldset-title {
+              &.collapsed {
+                border-bottom-left-radius: var(--wsBorderRadius, unset);
+                border-bottom-right-radius: var(--wsBorderRadius, unset);
+              }
+            }
+
+            .fieldset-content {
+              .options {
+                border-bottom-left-radius: var(--wsBorderRadius, unset);
+                border-bottom-right-radius: var(--wsBorderRadius, unset);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .buttons {
+      .btn {
+        &.btn-skip {
+          color: var(--wsPrimaryColor, lightgrey);
+          border-color: var(--wsPrimaryColor, lightgrey);
+        }
+
+        &.btn-next {
+          color:  var(--ylb-color-white, #fff);
+          border-color: var(--wsPrimaryColor, lightgrey);
+          background-color: var(--wsPrimaryColor, lightgrey);
+        }
+      }
+    }
+  }
+
+  .select-ages-component {
+    .container {
+      .row > div {
+        .fieldset-component {
+          &:last-child {
+            .fieldset-title {
+              border-bottom-left-radius: unset;
+              border-bottom-right-radius: unset;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .foldable-component {
+    .foldable-title {
+      .counter {
+        background-color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+
+  .fieldset-component {
+    .fieldset-title {
+      .counter {
+        background-color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+
+    .fieldset-content {
+      .options {
+        border: 1px solid var(--ylb-color-light-grey-3, #ccc);
+        border-top: none;
+
+        .option {
+          input[type=radio] + label,
+          input[type=checkbox] + label {
+            .title {
+              color: var(--wsPrimaryColor, lightgrey);
+            }
+          }
+
+          &.check {
+            input[type=radio]:checked + label,
+            input[type=checkbox]:checked + label {
+              &::before {
+                background-color: var(--wsPartnerColor, lightgrey);
+                border-color: var(--wsPartnerColor, lightgrey);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .results-list-component {
+    .result {
+      .title {
+        color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+
+  .bookmark-toggle {
+    background-color: var(--wsPrimaryColor, lightgrey);
+  }
+}
+
+.results-component {
+  .container {
+    .header {
+      .start-over {
+        color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+
+  .bookmark-toggle {
+    .counter {
+      background-color: var(--wsPrimaryColor, lightgrey);
+    }
+  }
+
+  .results-list-component:first-child {
+    .result:first-child {
+      border-radius: 10px;
+    }
+  }
+}
+
+.wizard-bar-component {
+  .controls {
+    a {
+      color: var(--wsPrimaryColor, lightgrey);
+    }
+  }
+}
+
+.results-bar-component {
+  .controls {
+    .control {
+      &.search a,
+      &.filter a,
+      &.sort a,
+      a svg {
+        color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+}
+
+.af-modal-dialog {
+  .af-modal-header {
+    .af-modal-title {
+      svg {
+        color: var(--wsPartnerColor, lightgrey);
+      }
+    }
+  }
+
+  .af-modal-body {
+    .bookmark-icon {
+      border-color: var(--wsPrimaryColor, lightgrey);
+    }
+
+    .bookmark-feature-description {
+      .bookmark-icon {
+        .fa,
+        .svg-inline--fa {
+          color: var(--wsPrimaryColor, lightgrey);
+        }
+      }
+    }
+
+    .activity-details-modal-content {
+      .left {
+        .learn-more {
+          color: var(--wsPrimaryColor, lightgrey);
+        }
+      }
+
+      .right {
+        .action {
+          .bookmark {
+            border-color: var(--wsPrimaryColor, lightgrey);
+            background-color: transparent;
+
+            &.bookmarked {
+              background-color: var(--wsPrimaryColor, lightgrey);
+
+              svg {
+                color: var(--ylb-color-white)
+              }
+            }
+
+            .fa,
+            .svg-inline--fa {
+              color: var(--wsPrimaryColor, lightgrey);
+            }
+          }
+
+          .register {
+            border-color: var(--wsPrimaryColor, lightgrey);
+            background-color: var(--wsPrimaryColor, lightgrey);
+          }
+        }
+      }
+    }
+
+    .bookmarked-items-modal-content {
+      .cart-items {
+        .item {
+          .title {
+            color: var(--wsPrimaryColor, lightgrey);
+
+            svg {
+              color: var(--wsPrimaryColor, lightgrey);
+            }
+          }
+
+          .actions {
+            .register {
+              border-color: var(--wsPrimaryColor, lightgrey);
+              background-color: var(--wsPrimaryColor, lightgrey);
+            }
+
+            .remove {
+              border-color: var(--wsPrimaryColor, lightgrey);
+
+              i {
+                color: var(--wsPrimaryColor, lightgrey);
+              }
+
+              &:active,
+              &:focus,
+              &:hover {
+                opacity: 0.8;
+
+                i {
+                  opacity: 0.8;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .bookmark-toggle {
+      background-color: var(--wsPrimaryColor, lightgrey);
+
+      .counter {
+        background-color: var(--wsPrimaryColor, lightgrey);
+      }
+    }
+  }
+}
+
+.filters-component {
+  .filters-header {
+    a:not([href]):not([class]) {
+      color: var(--wsPrimaryColor, lightgrey);
+    }
+  }
+
+  .filters {
+    .fieldset-component {
+      &:first-child {
+        .fieldset-title {
+          border-top-left-radius: var(--wsBorderRadius, unset);
+          border-top-right-radius: var(--wsBorderRadius, unset);
+        }
+      }
+
+      &:last-child {
+        .fieldset-title {
+          &.collapsed {
+            border-bottom-left-radius: var(--wsBorderRadius, unset);
+            border-bottom-right-radius: var(--wsBorderRadius, unset);
+          }
+        }
+      }
+    }
+  }
+
+  .filters-footer {
+    .buttons {
+      .btn {
+        &.btn-clear.btn-lg {
+          border-color: var(--wsPrimaryColor, lightgrey);
+          color: var(--wsPrimaryColor, lightgrey);
+        }
+      }
+    }
+  }
+}
+
+.ages-filter-component {
+  .foldable-content {
+    .row {
+      .age-option {
+        input[type=checkbox]+label {
+          border-color: var(--wsPrimaryColor, lightgrey);
+          color: var(--wsPrimaryColor, lightgrey);
+        }
+
+        input[type=checkbox]:checked+label {
+          background-color: var(--wsPrimaryColor, lightgrey);
+          color: var(--ylb-color-white, #fff);
+        }
+      }
+    }
+  }
+}
+
+.search {
+  .search-form-component {
+    border-radius: var(--wsBorderRadius, unset);
+
+    .btn {
+      background-color: transparent;
+      border-radius: var(--wsBorderRadius, unset);
+    }
+  }
+
+  h4 {
+    color: var(--ylb-color-black, black);
+  }
+}
