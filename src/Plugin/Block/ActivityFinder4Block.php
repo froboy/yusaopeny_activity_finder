@@ -123,7 +123,12 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
 
     // Remove empty programs and subprograms.
     $results = $backend->runProgramSearch([], 0);
-    $facets = $results['facets']['field_activity_category'];
+
+    $facets = [];
+    if (!empty($results['facets']['field_activity_category'])) {
+      $facets = $results['facets']['field_activity_category'];
+    }
+
     $activeSubPrograms = [];
     foreach ($facets as $item) {
       if (isset($item['id']) && !empty($item['id'])) {
