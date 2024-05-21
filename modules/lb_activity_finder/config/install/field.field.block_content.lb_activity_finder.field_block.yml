@@ -25,6 +25,7 @@ default_value:
       limit_by_category_daxko: null
       limit_by_category: {  }
       exclude_by_category: {  }
+      limit_by_location: {  }
       exclude_by_location: {  }
       legacy_mode: 0
       weeks_filter: 0

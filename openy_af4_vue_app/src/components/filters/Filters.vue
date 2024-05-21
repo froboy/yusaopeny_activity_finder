@@ -76,6 +76,7 @@
           v-model="selectedLocations"
           :locations="locations"
           :facets="data.facets.locations"
+          :limit-by-location="limitByLocation"
           :exclude-by-location="excludeByLocation"
         />
       </Fieldset>
@@ -268,6 +269,10 @@ export default {
       required: true
     },
     excludeByCategory: {
+      type: Array,
+      required: true
+    },
+    limitByLocation: {
       type: Array,
       required: true
     },

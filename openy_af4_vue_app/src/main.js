@@ -1,4 +1,6 @@
 import Vue from 'vue'
+// Enable dev tools only if NODE_ENV is development.
+Vue.config.devtools = process.env.NODE_ENV === 'development'
 import BootstrapVue from 'bootstrap-vue'
 import App from '@/App.vue'
 import router from '@/router/index.js'

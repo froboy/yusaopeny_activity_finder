@@ -301,10 +301,24 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     }
 
     // Select locations based on filters.
+    $locations = null;
     $locations_info = $this->getLocationsInfo();
-    // Only use locations selected in parameters, if specified.
+    $locations_nids = [];
+
+    // Get locations selected in parameters, if specified.
     if (!empty($parameters['locations'])) {
       $locations_nids = explode(',', rawurldecode($parameters['locations']));
+    }
+    if (!empty($parameters['limitloc'])) {
+      $locations_nids = array_merge($locations_nids, explode(',', $parameters['limitloc']));
+    }
+
+    // Get configured location limits and merge with parameters.
+    $locations_nids_config = array_filter(explode(',', $this->config->get('limitloc') ?? ""));
+    $locations_nids = array_merge($locations_nids, $locations_nids_config);
+
+    // Limit locations to parameters + limit.
+    if ($locations_nids) {
       foreach ($locations_info as $key => $item) {
         if (in_array($item['nid'], $locations_nids)) {
           $locations[] = $key;
@@ -317,7 +331,9 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         $locations[] = $key;
       }
     }
-    $query->addCondition('field_session_location', $locations, 'IN');
+    if (!empty($locations)) {
+      $query->addCondition('field_session_location', $locations, 'IN');
+    }
 
     $query->range(0, self::TOTAL_RESULTS_PER_PAGE);
     // Use pager if parameter has been provided.
