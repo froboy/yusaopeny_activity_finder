@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\openy_activity_finder\OpenyActivityFinderSolrBackend;
 use Drupal\openy_system\EntityBrowserFormTrait;
@@ -359,18 +360,34 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['additional']['start_month_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Start month'),
+      '#description' => $this->t('Allow users to filter by start month. This option has no additional configuration.'),
       '#default_value' => $conf['start_month_filter'],
     ];
 
     $form['additional']['in_memberships_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('In Membership'),
+      '#description' => $this->t('Allow users to filter by sessions that are included in their membership. This filters on the ‘In membership’ field on Sessions.'),
       '#default_value' => $conf['in_memberships_filter'],
     ];
 
     $form['additional']['duration_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Duration'),
+      '#description' => $this->t('Allow users to search by the length of the session. Durations are configurable in the @link.', [
+        '@link' => Link::createFromRoute(
+          'Activity Finder Settings',
+          'openy_activity_finder.settings',
+          [],
+          [
+            'attributes' => [
+              'title' => 'Activity Finder Settings',
+              'target' => '_blank',
+            ],
+          ],
+        )
+          ->toString(),
+      ]),
       '#default_value' => $conf['duration_filter'],
     ];
 

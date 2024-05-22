@@ -67,6 +67,9 @@ Vue.filter('formatPlural', function(
   args,
   options = { context: 'Activity Finder' }
 ) {
+  if (!value) {
+    return ''
+  }
   return window.Drupal.formatPlural(value, singular, plural, args, options)
 })
 
