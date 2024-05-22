@@ -1,6 +1,7 @@
 <template>
   <div class="results-component">
     <div class="container">
+      <div class="result-title">{{'Activities for you'| t}}</div>
       <div class="row">
         <div
           v-if="!data.facets"
@@ -21,14 +22,14 @@
         <div v-else :class="resultsClasses">
           <div class="header d-md-none hidden-md hidden-lg">
             <span class="results" v-if="data.count">
-              {{ data.count | formatPlural('1 Result', '@count Results') }}
+              {{ data.count | formatPlural('1 result', '@count of results') }}
             </span>
             <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
           </div>
           <div class="header d-none d-md-flex hidden-xs hidden-sm">
             <span>
               <span class="results" v-if="data.count">
-                {{ data.count | formatPlural('1 Result', '@count Results') }}
+                {{ data.count | formatPlural('1 result', '@count of results') }}
               </span>
               | <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
             </span>
@@ -210,6 +211,20 @@ export default {
 
 <style lang="scss">
 .results-component {
+  .result-title {
+    font-size: 35px;
+    line-height: 40px;
+    color: $af-black;
+    margin-top: 48px;
+    margin-bottom: 24px;
+
+    @include media-breakpoint-up('lg') {
+      font-size: 48px;
+      line-height: 54px;
+      margin-bottom: 14px;
+    }
+  }
+
   .search {
     margin: 40px 0;
   }

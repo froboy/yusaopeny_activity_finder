@@ -7,7 +7,7 @@
             <span class="filters">
               <a :class="{ 'no-filters': !filtersCount }" role="button" @click="showFiltersModal()">
                 <font-awesome-icon icon="filter" />
-                {{ filtersCount | formatPlural('1 Filter', '@count Filters') }}
+                {{ filtersCount | formatPlural('1 Filter Applied', '@count Filters Applied') }}
               </a>
             </span>
             <span class="start-over">

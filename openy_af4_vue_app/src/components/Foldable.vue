@@ -2,8 +2,6 @@
   <div class="foldable-component">
     <div v-b-toggle="collapseId" class="foldable-title">
       <span class="left">
-        <font-awesome-icon icon="chevron-down" />
-        <font-awesome-icon icon="chevron-up" />
         <span class="title">
           <strong>{{ label }}</strong>
         </span>
@@ -15,6 +13,8 @@
         <span v-if="counter > 0" class="counter">
           {{ counter }}
         </span>
+        <font-awesome-icon icon="chevron-down" />
+        <font-awesome-icon icon="chevron-up" />
       </span>
     </div>
     <b-collapse :id="collapseId" role="tabpanel" class="foldable-content">
@@ -54,6 +54,9 @@ export default {
     line-height: 50px;
     display: flex;
     justify-content: space-between;
+    background-color: $af-light-gray;
+    padding: 0 16px;
+    border-bottom: solid 1px $af-border-gray;
 
     .left {
       display: flex;
@@ -97,7 +100,7 @@ export default {
   }
 
   .foldable-content {
-    background-color: $af-light-gray;
+    background-color: $af-lighter-gray2;
 
     .option {
       display: flex;
@@ -130,6 +133,7 @@ export default {
             border: 2px solid $af-dark-gray;
             border-radius: 3px;
             align-self: center;
+            background-color: $white;
           }
         }
 

@@ -21,7 +21,7 @@
     body-class="af-modal-body"
   >
     <template v-slot:modal-header-close>
-      <span aria-hidden="true">&times;</span>
+      <Icon icon="material-symbols:close-small" width="24px" height="24px" />
     </template>
     <template v-slot:modal-title>
       <slot name="modal-title" />
@@ -34,9 +34,13 @@
 
 <script>
 import '@/../node_modules/bootstrap/scss/_modal.scss'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'Modal',
+  components: {
+    Icon
+  },
   props: {
     value: {
       type: Boolean,
@@ -181,7 +185,7 @@ export default {
   .af-modal-header {
     padding: 0 0 0 1rem !important;
     background-color: $white;
-    border-bottom: 1px solid $af-dark-gray;
+    border-bottom: 1px solid $af-border-gray;
     align-items: center;
 
     &:after {
@@ -190,14 +194,14 @@ export default {
     }
 
     .af-modal-title {
-      color: $af-dark-gray;
+      color: $af-black;
       text-transform: uppercase;
       font-size: 18px;
       line-height: 27px;
 
       .fa,
       .svg-inline--fa {
-        width: 50px;
+        width: 40px;
         margin-left: -10px;
         text-align: center;
       }
@@ -214,6 +218,9 @@ export default {
       height: 50px;
       background-color: $white;
       opacity: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 

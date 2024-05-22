@@ -47,6 +47,8 @@ export default {
 <style lang="scss">
 .foldable-input-component {
   .foldable-title {
+    border-bottom: unset;
+
     .input {
       position: relative;
       display: block;

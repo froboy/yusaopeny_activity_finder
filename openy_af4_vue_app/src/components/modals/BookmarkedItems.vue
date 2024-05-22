@@ -2,7 +2,7 @@
   <Modal id="activity-finder-bookmarked-items" v-model="visible" flyout>
     <template v-slot:modal-title>
       <font-awesome-icon icon="bookmark" />
-      <span>{{ 'Bookmarked items' | t }}</span>
+      <span class="bookmarked-items">{{ 'Bookmarked items' | t }}</span>
     </template>
     <template>
       <div class="bookmarked-items-modal-content">
@@ -19,12 +19,19 @@
 
           <div class="cart-items">
             <div v-for="(item, index) in cartItems" :key="item.item.nid + '-' + index" class="item">
-              <div class="title">{{ item.item.name }}</div>
+              <div class="title">
+                <font-awesome-icon icon="bookmark" />
+                {{ item.item.name }}
+              </div>
 
               <div class="row">
                 <div class="col-8 col-xs-8">
                   <div class="item-detail dates">
-                    <font-awesome-icon icon="calendar" />
+                    <Icon
+                      icon="material-symbols:calendar-today-outline"
+                      width="1.2rem"
+                      height="1.2rem"
+                    />
                     <span>
                       <span class="info">{{ item.item.dates }}</span>
                       <br />
@@ -33,7 +40,7 @@
                   </div>
 
                   <div class="item-detail schedule">
-                    <font-awesome-icon icon="clock" />
+                    <Icon icon="material-symbols:schedule-outline" width="1.2rem" height="1.2rem" />
                     <span class="schedule-items">
                       <span
                         v-for="(schedule, schedule_index) in item.item.schedule"
@@ -76,7 +83,7 @@
                     @click="register(index)"
                   >
                     {{ getButtonTitle(index) }}
-                    <i class="fa fa-external-link fa-external-link-alt"></i>
+                    <Icon icon="material-symbols:arrow-outward" width="24px" height="24px" />
                   </a>
                   <a
                     key="remove"
@@ -137,6 +144,7 @@ import BookmarkFeatureDescription from '@/components/modals/BookmarkFeatureDescr
 import AgeIcon from '@/components/AgeIcon.vue'
 import AvailableSpots from '@/components/AvailableSpots'
 import BookmarkIcon from '@/components/BookmarkIcon'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'BookmarkedItemsModal',
@@ -145,7 +153,8 @@ export default {
     BookmarkFeatureDescription,
     AgeIcon,
     AvailableSpots,
-    BookmarkIcon
+    BookmarkIcon,
+    Icon
   },
   props: {
     value: {
@@ -228,7 +237,7 @@ export default {
       }
     },
     getButtonTitle(index) {
-      let title = this.t('Register now')
+      let title = this.t('Register')
       // parseInt('') -> NaN
       // parseInt('0') -> 0
       if (parseInt(this.cartItems[index].item.spots_available) === 0) {
@@ -255,6 +264,15 @@ export default {
 </script>
 
 <style lang="scss">
+.af-modal-content {
+  .bookmarked-items {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    text-transform: capitalize;
+  }
+}
+
 .bookmarked-items-modal-content {
   padding: 20px 10px;
   color: $af-black;
@@ -271,13 +289,16 @@ export default {
 
   .message {
     padding: 0 10px;
+    font-size: 18px;
+    line-height: 28px;
+    margin-bottom: 16px;
   }
 
   .cart-items {
     .item {
       padding: 10px;
-      border: 1px solid $af-light-gray;
-      border-top: 5px solid $af-light-blue;
+      border: 1px solid $af-border-gray;
+      border-radius: $af-border-radius;
       margin-bottom: 10px;
       position: relative;
 
@@ -287,8 +308,8 @@ export default {
 
       .title {
         color: $af-blue;
-        font-size: 14px;
-        line-height: 21px;
+        font-size: 18px;
+        line-height: 28px;
         font-weight: bold;
         margin-bottom: 10px;
       }
@@ -303,8 +324,15 @@ export default {
         }
 
         .details {
-          font-size: 10px;
-          line-height: 15px;
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        svg {
+          color: $af-black;
+          margin-right: 10px;
+          position: relative;
+          top: 6px;
         }
 
         .fa,
@@ -319,8 +347,8 @@ export default {
       }
 
       .info {
-        font-size: 12px;
-        line-height: 18px;
+        font-size: 14px;
+        line-height: 20px;
       }
 
       .age {
@@ -329,7 +357,7 @@ export default {
         margin-bottom: 10px;
 
         .age-label {
-          font-size: 12px;
+          font-size: 14px;
           line-height: 30px;
         }
 
@@ -410,7 +438,7 @@ export default {
       background-color: $af-light-gray;
       width: calc(100% - 2px);
       max-width: 358px;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 18px;
 
       .left {

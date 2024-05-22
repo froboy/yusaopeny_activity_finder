@@ -16,19 +16,18 @@
               <div class="description">{{ item.description }}</div>
               <div v-if="item.ages" class="row ages">
                 <div class="col-3 col-xs-3">
-                  <strong>{{ 'Ages:' | t }}</strong>
+                  {{ 'Ages:' | t }}
                 </div>
                 <div class="col-9 col-xs-9">{{ item.ages }}</div>
               </div>
               <div v-if="item.gender" class="row gender">
                 <div class="col-3 col-xs-3">
-                  <strong>{{ 'Gender:' | t }}</strong>
+                  {{ 'Gender:' | t }}
                 </div>
                 <div class="col-9 col-xs-9">{{ item.gender }}</div>
               </div>
               <a :href="item.link" target="_blank" class="learn-more">
                 {{ 'Learn more about this program' | t }}
-                <i class="fa fa-external-link fa-external-link-alt"></i>
               </a>
             </div>
           </div>
@@ -36,7 +35,11 @@
             <div class="right">
               <div class="info-section">
                 <div v-if="item.dates" class="item-detail dates">
-                  <font-awesome-icon icon="calendar" />
+                  <Icon
+                    icon="material-symbols:calendar-today-outline"
+                    width="1.2rem"
+                    height="1.2rem"
+                  />
                   <span>
                     <span class="info">{{ item.dates }}</span>
                     <br />
@@ -45,7 +48,7 @@
                 </div>
 
                 <div class="item-detail schedule">
-                  <font-awesome-icon icon="clock" />
+                  <Icon icon="material-symbols:schedule-outline" width="1.2rem" height="1.2rem" />
                   <span class="schedule-items">
                     <span
                       v-for="(schedule, index) in item.schedule"
@@ -60,7 +63,11 @@
                 </div>
 
                 <div v-if="item.location" class="item-detail">
-                  <i class="fa fa-map-marker"></i>
+                  <Icon
+                    icon="material-symbols:location-on-outline"
+                    width="1.2rem"
+                    height="1.2rem"
+                  />
                   <span>
                     <span class="info">{{ item.location }}</span>
                     <br />
@@ -69,7 +76,7 @@
                 </div>
 
                 <div v-if="item.instructor" class="item-detail instructor">
-                  <i class="fa fa-user"></i>
+                  <Icon icon="material-symbols:person-outline" width="1.2rem" height="1.2rem" />
                   <span>
                     <span class="info">{{ item.instructor }}</span>
                     <br />
@@ -78,7 +85,7 @@
                 </div>
 
                 <div v-if="item.price" class="item-detail price">
-                  <font-awesome-icon icon="money-bill" />
+                  <Icon icon="material-symbols:payments-outline" width="1.2rem" height="1.2rem" />
                   <span>
                     <span class="info">{{ item.price }}</span>
                   </span>
@@ -105,7 +112,6 @@
                     @click="register(index)"
                   >
                     {{ getButtonTitle }}
-                    <i class="fa fa-external-link fa-external-link-alt"></i>
                   </a>
                   <a
                     v-if="!isBookmarked(age) && !legacyMode"
@@ -185,6 +191,7 @@ import Modal from '@/components/modals/Modal.vue'
 import AgeIcon from '@/components/AgeIcon.vue'
 import AvailableSpots from '@/components/AvailableSpots'
 import Loading from '@/components/Loading.vue'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'ActivityDetailsModal',
@@ -192,7 +199,8 @@ export default {
     Modal,
     AgeIcon,
     AvailableSpots,
-    Loading
+    Loading,
+    Icon
   },
   props: {
     value: {
@@ -381,7 +389,7 @@ export default {
   }
 
   .left {
-    margin: 20px 10px;
+    margin: 20px 25px;
 
     @include media-breakpoint-up('lg') {
       margin-right: 0;
@@ -396,20 +404,21 @@ export default {
 
     .title {
       font-size: 18px;
-      line-height: 24px;
-      font-weight: bold;
+      line-height: 28px;
+      font-weight: 700;
     }
 
     .description,
     .ages,
     .gender,
     .learn-more {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 14px;
+      line-height: 20px;
     }
 
     .learn-more {
       color: $af-blue;
+      text-decoration: underline;
     }
   }
 
@@ -436,6 +445,19 @@ export default {
         margin-bottom: 0;
       }
 
+      svg {
+        color: $af-black;
+        margin-right: 10px;
+        position: relative;
+        top: 6px;
+      }
+
+      &.location {
+        svg {
+          top: 3px;
+        }
+      }
+
       .schedule-items {
         display: flex;
 
@@ -457,13 +479,13 @@ export default {
       }
 
       .info {
-        font-size: 12px;
-        line-height: 18px;
+        font-size: 14px;
+        line-height: 20px;
       }
 
       .details {
-        font-size: 10px;
-        line-height: 15px;
+        font-size: 14px;
+        line-height: 20px;
       }
 
       .fa,
@@ -478,9 +500,7 @@ export default {
     }
 
     .action {
-      padding: 10px;
-      background-color: $white;
-      border: 1px solid $af-darker-gray;
+      padding-right: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
       display: flex;
@@ -557,6 +577,10 @@ export default {
     width: 50px;
     text-align: center;
     margin-right: 10px;
+  }
+  .available-spots-component {
+    display: inline-block;
+    margin-top: 16px;
   }
 }
 </style>

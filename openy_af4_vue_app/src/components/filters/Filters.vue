@@ -481,5 +481,15 @@ export default {
       }
     }
   }
+
+  .fieldset-component {
+    .fieldset-title {
+      .title {
+        text-transform: uppercase;
+        font-size: 15px;
+        line-height: 1.5rem;
+      }
+    }
+  }
 }
 </style>

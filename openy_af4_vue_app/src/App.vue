@@ -93,7 +93,7 @@
           </a>
         </p>
         <p v-if="homeBranchResultsCount" class="homebranch-results-count">
-          {{ homeBranchResultsCount | formatPlural('1 Result', '@count Results') }}
+          {{ homeBranchResultsCount | formatPlural('1 result', '@count of results') }}
         </p>
       </template>
     </SelectPath>
@@ -451,22 +451,22 @@ export default {
         {
           id: 'selectAges',
           name: this.t('Age'),
-          icon: 'fa-birthday-cake'
+          icon: 'material-symbols:cake-outline'
         },
         {
           id: 'selectDaysTimes',
           name: this.t('Day & Time'),
-          icon: 'fa-calendar'
+          icon: 'material-symbols:calendar-month-outline'
         },
         {
           id: 'selectLocations',
           name: this.t('Location'),
-          icon: 'fa-map-marker'
+          icon: 'material-symbols:location-on-outline'
         },
         {
           id: 'selectActivities',
           name: this.t('Activity'),
-          icon: 'fa-heartbeat'
+          icon: 'material-symbols:sprint'
         }
       ],
       selectedPath: '',

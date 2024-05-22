@@ -8,7 +8,7 @@
     >
       <template v-slot:title>
         {{ 'What ages are you searching for?' | t }}
-        <strong v-if="maxAges">{{ 'Maximum of !maxAges.' | t({ '!maxAges': maxAges }) }} </strong>
+        <div v-if="maxAges">{{ 'Choose a maximum of !maxAges ages.' | t({ '!maxAges': maxAges }) }} </div>
       </template>
       <template v-slot:default="{ handleSticky }">
         <Fieldset
@@ -37,7 +37,7 @@
                   <span>
                     <span class="title">{{ age.label }}</span>
                     <span v-if="facetCount(age.value) !== null" class="results-count">
-                      {{ facetCount(age.value) | formatPlural('1 Result', '@count Results') }}
+                      {{ facetCount(age.value) | formatPlural('1 result', '@count of results') }}
                     </span>
                   </span>
                 </label>

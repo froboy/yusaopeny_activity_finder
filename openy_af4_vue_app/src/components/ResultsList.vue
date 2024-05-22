@@ -39,7 +39,7 @@
         </div>
 
         <div v-if="item.dates" class="item-detail dates">
-          <font-awesome-icon icon="calendar" />
+          <Icon icon="material-symbols:calendar-today-outline" width="1.2rem" height="1.2rem" />
           <span>
             <span class="info">{{ item.dates }}</span>
             <br />
@@ -48,7 +48,7 @@
         </div>
 
         <div class="item-detail schedule">
-          <font-awesome-icon icon="clock" />
+          <Icon icon="material-symbols:clock-outline" width="1.2rem" height="1.2rem" />
           <span class="schedule-items">
             <span v-for="(schedule, index) in item.schedule" :key="index" class="schedule-item">
               <span class="info">{{ schedule.time }}</span>
@@ -103,7 +103,7 @@
         <div class="row">
           <div class="col-sm-4">
             <div v-if="item.dates" class="item-detail dates">
-              <font-awesome-icon icon="calendar" />
+              <Icon icon="material-symbols:calendar-today-outline" width="1.2rem" height="1.2rem" />
               <span>
                 <span class="info">{{ item.dates }}</span>
                 <br />
@@ -112,7 +112,7 @@
             </div>
 
             <div class="item-detail schedule">
-              <font-awesome-icon icon="clock" />
+              <Icon icon="material-symbols:schedule-outline" width="1.2rem" height="1.2rem" />
               <span class="schedule-items">
                 <span v-for="(schedule, index) in item.schedule" :key="index" class="schedule-item">
                   <span class="info">{{ schedule.time }}</span>
@@ -124,8 +124,8 @@
           </div>
 
           <div class="col-sm-4">
-            <div v-if="item.location" class="item-detail">
-              <i class="fa fa-map-marker"></i>
+            <div v-if="item.location" class="item-detail location">
+              <Icon icon="material-symbols:location-on-outline" width="1.2rem" height="1.2rem" />
               <span>
                 <span class="info">{{ item.location }}</span>
                 <br />
@@ -134,7 +134,7 @@
             </div>
 
             <div v-if="item.instructor" class="item-detail instructor">
-              <i class="fa fa-user"></i>
+              <Icon icon="material-symbols:person-outline" width="1.2rem" height="1.2rem" />
               <span>
                 <span class="info">{{ item.instructor }}</span>
                 <br />
@@ -145,7 +145,7 @@
 
           <div class="col-sm-4">
             <div v-if="item.price" class="item-detail price">
-              <font-awesome-icon icon="money-bill" />
+              <Icon icon="material-symbols:payments-outline" width="1.2rem" height="1.2rem" />
               <span>
                 <span class="info">{{ item.price }}</span>
               </span>
@@ -165,12 +165,14 @@
 <script>
 import AvailableSpots from '@/components/AvailableSpots'
 import AgeIcon from '@/components/AgeIcon.vue'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'ResultsList',
   components: {
     AvailableSpots,
-    AgeIcon
+    AgeIcon,
+    Icon
   },
   props: {
     results: {
@@ -233,7 +235,7 @@ export default {
 
       @include media-breakpoint-up('lg') {
         font-size: 18px;
-        line-height: 27px;
+        line-height: 28px;
         margin-bottom: 20px;
       }
     }
@@ -264,6 +266,20 @@ export default {
         margin-bottom: 20px;
       }
 
+      svg {
+        color: $af-black;
+        margin-right: 10px;
+        position: relative;
+        top: 6px;
+        min-width: 18px;
+      }
+
+      &.location {
+        svg {
+          top: 3px;
+        }
+      }
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -289,8 +305,8 @@ export default {
       }
 
       .details {
-        font-size: 10px;
-        line-height: 15px;
+        font-size: 14px;
+        line-height: 18px;
       }
 
       .fa,
@@ -305,8 +321,8 @@ export default {
     }
 
     .info {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 }
