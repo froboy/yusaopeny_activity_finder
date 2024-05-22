@@ -85,6 +85,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'limit_by_category_daxko' => [],
       'limit_by_category' => [],
       'exclude_by_category' => [],
+      'limit_by_location' => [],
       'exclude_by_location' => [],
       'legacy_mode' => 0,
       'weeks_filter' => 0,
@@ -114,6 +115,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     }
 
     $limit_by_category = $conf['limit_by_category'];
+    $limit_by_location = $conf['limit_by_location'];
 
     if ($backend_service_id == "openy_daxko2.openy_activity_finder_backend") {
       $limit_by_category = $conf['limit_by_category_daxko'] ? explode(', ', $conf['limit_by_category_daxko']) : [];
@@ -130,9 +132,11 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     }
 
     $activeSubPrograms = [];
-    foreach ($facets as $item) {
-      if (isset($item['id']) && !empty($item['id'])) {
-        $activeSubPrograms[] = $item['id'];
+    if ($facets) {
+      foreach ($facets as $item) {
+        if (isset($item['id']) && !empty($item['id'])) {
+          $activeSubPrograms[] = $item['id'];
+        }
       }
     }
     foreach ($activities as $indexProgram => $program) {
@@ -163,7 +167,24 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
 
     $sort_options = $backend->getSortOptions();
 
-    $locations = $backend->getLocations();
+    $locations = array_values($backend->getLocations());
+    // Filter out excluded locations.
+    foreach ($locations as $indexType => $type) {
+      if (isset($type['value'])) {
+        foreach ($type['value'] as $indexLocation => $location) {
+          if ($limit_by_location && !in_array($location['value'], $limit_by_location)) {
+            unset($locations[$indexType]['value'][$indexLocation]);
+          }
+        }
+      }
+    }
+    // Remove empty location groups.
+    foreach ($locations as $indexType => $type) {
+      if (empty($type['value'])) {
+        unset($locations[$indexType]);
+      }
+    }
+
     \Drupal::moduleHandler()->alter('activity_finder_location_list', $locations);
     return [
       '#theme' => 'openy_activity_finder_4_block',
@@ -190,6 +211,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#filters_section_config' => $backend->getFiltersSectionConfig(),
       '#limit_by_category' => $limit_by_category,
       '#exclude_by_category' => $conf['exclude_by_category'],
+      '#limit_by_location' => $conf['limit_by_location'] ?? [],
       '#exclude_by_location' => $conf['exclude_by_location'],
       '#legacy_mode' => (bool) $conf['legacy_mode'],
       '#weeks_filter' => (bool) $conf['weeks_filter'],
@@ -270,20 +292,43 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
         '#maxlength' => 2048,
       ];
 
-      $form['exclude_by_location'] = $base_by_location + [
+      $form['location_category'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Location & Category filters'),
+        '#description' => $this->t(
+          "Restrict this block to show sessions from only certain Locations or
+          Categories. 'Limit' will show <em>only</em> the specified options.
+          'Exclude' will <em>remove</em> the specified options. Generally you
+          should choose <em>either</em> Exclude <em>or</em> Limit, not both."
+        ),
+        // Open if any of the containing fields are filled.
+        '#open' => ( $conf['limit_by_location'] ||
+          $conf['exclude_by_location'] ||
+          $conf['limit_by_category'] ||
+          $conf['exclude_by_category']
+        ),
+      ];
+
+      $form['location_category']['limit_by_location'] = $base_by_location + [
+        '#title' => $this->t('Limit by location'),
+        '#default_value' => $conf['limit_by_location']
+          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_location'])
+          : NULL,
+      ];
+      $form['location_category']['exclude_by_location'] = $base_by_location + [
         '#title' => $this->t('Exclude by location'),
         '#default_value' => $conf['exclude_by_location']
           ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_location'])
           : NULL,
       ];
-      $form['limit_by_category'] = $base_by_category + [
+      $form['location_category']['limit_by_category'] = $base_by_category + [
         '#title' => $this->t('Limit by category'),
         '#default_value' => $conf['limit_by_category']
           ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_category'])
           : NULL,
       ];
 
-      $form['exclude_by_category'] = $base_by_category + [
+      $form['location_category']['exclude_by_category'] = $base_by_category + [
         '#title' => $this->t('Exclude by category'),
         '#default_value' => $conf['exclude_by_category']
           ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_category'])
@@ -355,14 +400,18 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['limit_by_category_daxko'] = $form_state->getValue('limit_by_category_daxko');
-    $this->configuration['limit_by_category'] = $form_state->getValue('limit_by_category')
-      ? array_column($form_state->getValue('limit_by_category'), 'target_id')
+    $location_category = $form_state->getValue('location_category');
+    $this->configuration['limit_by_category'] = $location_category['limit_by_category']
+      ? array_column($location_category['limit_by_category'], 'target_id')
       : [];
-    $this->configuration['exclude_by_category'] = $form_state->getValue('exclude_by_category')
-      ? array_column($form_state->getValue('exclude_by_category'), 'target_id')
+    $this->configuration['exclude_by_category'] = $location_category['exclude_by_category']
+      ? array_column($location_category['exclude_by_category'], 'target_id')
       : [];
-    $this->configuration['exclude_by_location'] = $form_state->getValue('exclude_by_location')
-      ? array_column($form_state->getValue('exclude_by_location'), 'target_id')
+    $this->configuration['limit_by_location'] = $location_category['limit_by_location']
+      ? array_column($location_category['limit_by_location'], 'target_id')
+      : [];
+    $this->configuration['exclude_by_location'] = $location_category['exclude_by_location']
+      ? array_column($location_category['exclude_by_location'], 'target_id')
       : [];
     $this->configuration['legacy_mode'] = $form_state->getValue('legacy_mode');
     $this->configuration['weeks_filter'] = $form_state->getValue('weeks_filter');

@@ -23,6 +23,7 @@
  * - relevance_sort_option
  * - limit_by_category
  * - exclude_by_category
+ * - limit_by_location
  * - exclude_by_location
  * - legacy_mode
  * - weeks_filter
@@ -52,6 +53,7 @@
       :sort-options="{{ sort_options|json_encode }}"
       :default-sort-option="{{ default_sort_option|json_encode }}"
       :relevance-sort-option="{{ relevance_sort_option|json_encode }}"
+      :limit-by-location="{{ limit_by_location|json_encode }}"
       :limit-by-category="{{ limit_by_category|json_encode }}"
       :exclude-by-location="{{ exclude_by_location|json_encode }}"
       :exclude-by-category="{{ exclude_by_category|json_encode }}"

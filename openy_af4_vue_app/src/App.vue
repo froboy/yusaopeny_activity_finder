@@ -62,6 +62,7 @@
           :bs-version="bsVersion"
           :limit-by-category="limitByCategory"
           :exclude-by-category="excludeByCategory"
+          :limit-by-location="limitByLocation"
           :exclude-by-location="excludeByLocation"
           @filterChange="onFilterChange($event, hideModal)"
           @clearFilters="clearFilters(hideModal)"
@@ -144,6 +145,7 @@
       :facets="data.facets.locations"
       :first-step="selectedPath === 'selectLocations'"
       :home-branch-id="homeBranchId"
+      :limit-by-location="limitByLocation"
       :exclude-by-location="excludeByLocation"
       @nextStep="nextStep('selectLocations')"
     />
@@ -209,6 +211,7 @@
           :bs-version="bsVersion"
           :limit-by-category="limitByCategory"
           :exclude-by-category="excludeByCategory"
+          :limit-by-location="limitByLocation"
           :exclude-by-location="excludeByLocation"
           filters-mode="instant"
           @filterChange="onFilterChange($event)"
@@ -363,6 +366,10 @@ export default {
     },
     legacyMode: {
       type: Boolean,
+      required: true
+    },
+    limitByLocation: {
+      type: Array,
       required: true
     },
     excludeByLocation: {
@@ -557,6 +564,7 @@ export default {
         keywords: this.searchKeywords,
         limit: this.limitByCategory.join(','),
         exclude: this.excludeByCategory.join(','),
+        limitloc: this.limitByLocation.join(','),
         excludeloc: this.excludeByLocation.join(','),
         durations: this.selectedDurations.join(','),
         start_months: this.selectedStartMonths.join(',')

@@ -79,6 +79,7 @@ function openy_activity_finder_theme() {
         'filters_section_config' => [],
         'limit_by_category' => [],
         'exclude_by_category' => [],
+        'limit_by_location' => [],
         'exclude_by_location' => [],
         'legacy_mode' => FALSE,
         'weeks_filter' => FALSE,

@@ -20,14 +20,14 @@
         </div>
         <div v-else :class="resultsClasses">
           <div class="header d-md-none hidden-md hidden-lg">
-            <span class="results">
+            <span class="results" v-if="data.count">
               {{ data.count | formatPlural('1 Result', '@count Results') }}
             </span>
             <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
           </div>
           <div class="header d-none d-md-flex hidden-xs hidden-sm">
             <span>
-              <span class="results">
+              <span class="results" v-if="data.count">
                 {{ data.count | formatPlural('1 Result', '@count Results') }}
               </span>
               | <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
