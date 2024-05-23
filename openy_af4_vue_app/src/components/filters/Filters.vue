@@ -452,12 +452,6 @@ export default {
     height: 140px;
 
     .buttons {
-      position: fixed;
-      bottom: 0;
-      margin-left: -10px;
-      margin-right: -10px;
-      width: calc(100% - 2px);
-      max-width: 358px;
 
       .separator {
         height: 5px;

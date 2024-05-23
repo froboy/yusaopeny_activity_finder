@@ -157,10 +157,10 @@ export default {
   },
   computed: {
     filtersClasses() {
-      return this.bsVersion === 4 ? 'col-3 d-none d-lg-block' : 'col-md-3 hidden-xs hidden-sm'
+      return this.bsVersion === 4 ? 'col-3 d-none d-lg-block' : 'col-lg-3 d-none d-lg-block'
     },
     resultsClasses() {
-      return this.bsVersion === 4 ? 'col-12 col-lg-9' : ' col-xs-12 col-md-9'
+      return this.bsVersion === 4 ? 'col-12 col-lg-9' : ' col-xs-12 col-lg-9'
     }
   },
   methods: {
