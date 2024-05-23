@@ -381,7 +381,6 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
           [],
           [
             'attributes' => [
-              'title' => 'Activity Finder Settings',
               'target' => '_blank',
             ],
           ],
