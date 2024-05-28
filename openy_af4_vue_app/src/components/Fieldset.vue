@@ -2,7 +2,10 @@
   <div class="fieldset-component">
     <div v-b-toggle="collapseId" class="fieldset-title">
       <span class="left">
-        <span class="title text-uppercase">{{ label }}</span>
+        <span class="title">{{ label }}</span>
+        <span v-if="counter" class="counter" :class="{ 'hide-counter': hideCounter }">
+          {{ counter }}
+        </span>
       </span>
       <span class="right">
         <span v-if="counterMax > 0 && counter >= counterMax" class="max text-uppercase">
@@ -13,17 +16,14 @@
           class="options"
           :class="{ 'no-options': counterOptions === 0 }"
         >
-          {{ counterOptions | formatPlural('1 Result', '@count Results') }}
+          {{ counterOptions | formatPlural('1 result', '@count of results') }}
         </span>
-        <span v-if="collapsible && !counter" class="icon">
+        <span v-if="collapsible" class="icon">
           <font-awesome-icon icon="plus-circle" />
           <font-awesome-icon icon="minus-circle" />
         </span>
         <span v-else-if="collapsible && counter && hideCounter" class="icon">
           <font-awesome-icon icon="minus-circle" />
-        </span>
-        <span v-if="counter" class="counter" :class="{ 'hide-counter': hideCounter }">
-          {{ counter }}
         </span>
       </span>
     </div>
@@ -95,9 +95,14 @@ export default {
 
 <style lang="scss">
 .fieldset-component {
+  & .fieldset-title :first-child {
+    border-top-left-radius: $af-border-radius;
+    border-top-right-radius: $af-border-radius;
+  }
+
   .fieldset-title {
-    border: 1px solid $af-dark-gray;
-    padding: 0 10px;
+    border: 1px solid $af-border-gray;
+    padding: 16px;
     display: flex;
     justify-content: space-between;
     min-height: 50px;
@@ -109,14 +114,9 @@ export default {
     }
 
     .title {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 32px;
+      line-height: 34px;
       font-weight: bold;
-
-      @include media-breakpoint-up('lg') {
-        font-size: 14px;
-        line-height: 50px;
-      }
     }
 
     .counter {
@@ -160,10 +160,12 @@ export default {
     }
 
     .icon {
-      font-size: 18px;
+      font-size: 24px;
       line-height: 50px;
       margin-left: 10px;
-      padding: 0 8px;
+      padding: 0;
+      position: relative;
+      right: -5px;
     }
 
     &.collapsed .fa-circle-minus,
@@ -229,53 +231,38 @@ export default {
           & + label {
             position: relative;
             background-color: $white;
-            border: 2px solid $af-blue;
+            border: 1px solid $af-border-gray;
             border-radius: 5px;
             display: flex;
             margin: 0;
             font-family: Verdana, Geneva, sans-serif;
             height: 100%;
-            padding: 4px 10px;
+            padding: 10px;
+            line-height: 28px;
 
             &:before {
               content: '';
-              border: 2px solid $af-dark-gray;
+              border: 1px solid $af-black;
             }
 
             .title {
-              font-size: 12px;
-              line-height: 18px;
               font-weight: bold;
               color: $af-blue;
               display: block;
             }
 
             .description {
-              font-size: 10px;
-              line-height: 15px;
-              font-weight: bold;
+              font-size: 14px;
+              line-height: 20px;
               display: block;
             }
 
             .results-count {
-              font-size: 10px;
-              line-height: 15px;
+              font-size: 14px;
+              line-height: 20px;
               font-weight: normal;
-              color: $af-dark-gray;
               display: block;
             }
-          }
-        }
-
-        input[type='checkbox']:checked + label,
-        input[type='radio']:checked + label {
-          background-color: $af-blue;
-          border-color: $af-blue;
-
-          .title,
-          .description,
-          .results-count {
-            color: $white;
           }
         }
 
@@ -284,30 +271,30 @@ export default {
             &:before {
               color: $white;
               border-radius: 3px;
-              margin: 12px 16px 12px 6px;
-              width: 18px;
-              height: 18px;
-              flex: 0 0 18px;
+              margin: 6px 12px 12px 0;
+              width: 16px;
+              height: 16px;
+              flex: 0 0 16px;
             }
           }
 
           input[type='checkbox']:checked + label,
           input[type='radio']:checked + label {
             &:before {
-              border: none;
-              background-color: $white;
+              border-color: $af-another-blue;
+              background-color: $af-another-blue;
             }
 
             &:after {
               content: '';
               display: block;
               position: absolute;
-              left: 19px;
-              top: 20px;
+              left: 12px;
+              top: 18px;
               width: 12px;
               height: 7px;
-              border-left: 2px solid $af-blue;
-              border-bottom: 2px solid $af-blue;
+              border-left: 2px solid $white;
+              border-bottom: 2px solid $white;
               transform: rotate(-45deg);
             }
           }
@@ -315,7 +302,7 @@ export default {
           input[type='checkbox']:disabled + label,
           input[type='radio']:disabled + label {
             background-color: $af-light-gray;
-            border-color: $af-light-gray;
+            border-color: $af-border-gray;
             cursor: default;
 
             .title {
@@ -324,7 +311,6 @@ export default {
 
             .results-count {
               color: $af-red;
-              font-weight: bold;
             }
           }
         }

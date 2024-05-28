@@ -7,7 +7,7 @@
       @next="onNext"
     >
       <template v-slot:title>
-        {{ 'What day(s) & time(s) are you looking to fill?' | t }}
+        {{ 'What day or time are you looking for?' | t }}
       </template>
       <template v-slot:default="{ handleSticky }">
         <Fieldset
@@ -42,7 +42,7 @@
                       </span>
                     </template>
                     <span class="results-count">
-                      {{ facetCount(time.value) | formatPlural('1 Result', '@count Results') }}
+                      {{ facetCount(time.value) | formatPlural('1 result', '@count of results') }}
                     </span>
                   </span>
                 </label>
@@ -166,3 +166,12 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.select-days-times-component {
+  .fieldset-title {
+    .title {
+      text-transform: capitalize;
+    }
+  }
+}
+</style>

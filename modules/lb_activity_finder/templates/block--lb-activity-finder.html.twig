@@ -29,8 +29,11 @@
 {% set classes = [
   'block',
   'block-' ~ configuration.provider|clean_class,
-  'block-' ~ plugin_id|clean_class
+  'block-' ~ plugin_id|clean_class,
+  'lb-activity-finder'
 ] %}
+
+{{ attach_library('lb_activity_finder/colorway') }}
 
 <div{{ attributes.addClass(classes).setAttribute('id', plugin_id|clean_class ~ configuration['block_revision_id']) }}>
   {{ title_prefix }}

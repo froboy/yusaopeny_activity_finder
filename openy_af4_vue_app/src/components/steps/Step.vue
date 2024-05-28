@@ -5,10 +5,10 @@
         <div class="col-12 col-xs-12">
           <div class="top">
             <div class="controls">
-              <span class="title">
+              <div class="title">
                 <slot name="title" />
-              </span>
-              <span class="buttons-desktop d-none d-md-block hidden-xs hidden-sm">
+              </div>
+              <div class="buttons-desktop d-none d-md-block hidden-xs hidden-sm">
                 <button
                   v-if="filtersSelected"
                   type="button"
@@ -20,7 +20,7 @@
                 <button v-else type="button" class="btn btn-lg btn-skip" @click="onSkip">
                   {{ skipLabel }}
                 </button>
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -54,10 +54,10 @@
             <div class="col-12 col-xs-12">
               <div class="full-width separator"></div>
               <div class="controls">
-                <span class="title">
+                <div class="title">
                   <slot name="title" />
-                </span>
-                <span class="buttons-desktop">
+                </div>
+                <div class="buttons-desktop">
                   <button
                     v-if="filtersSelected"
                     type="button"
@@ -69,7 +69,7 @@
                   <button v-else type="button" class="btn btn-lg btn-skip" @click="onSkip">
                     {{ skipLabel }}
                   </button>
-                </span>
+                </div>
               </div>
             </div>
           </div>
@@ -143,40 +143,34 @@ export default {
     }
   }
 
-  .bottom-desktop {
-    height: 95px;
-
-    @include media-breakpoint-up('lg') {
-      margin-top: 40px;
-    }
-
-    .sticky {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: $white;
-    }
-
-    .controls {
-      padding-top: 20px;
-      padding-bottom: 20px;
-    }
-  }
-
   .controls {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     color: $af-black;
+    flex-wrap: wrap;
+    gap: 24px;
+
+    @include media-breakpoint-up('lg') {
+      flex-direction: row;
+      align-items: center;
+    }
 
     .title {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 35px;
+      line-height: 40px;
 
       @include media-breakpoint-up('lg') {
-        font-size: 14px;
-        line-height: 21px;
+        font-size: 48px;
+        line-height: 54px;
+      }
+
+      & > div {
+        margin-top: 6px;
+        font-size: 18px;
+        line-height: 28px;
+        font-weight: 400;
       }
     }
 
@@ -187,6 +181,11 @@ export default {
         font-size: 18px;
         line-height: 46px;
         padding: 0 30px;
+        white-space: nowrap;
+
+        @include media-breakpoint-up('lg') {
+          margin-top: 0;
+        }
 
         &.btn-skip {
           background-color: $white;
@@ -210,6 +209,32 @@ export default {
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
+  }
+
+  .bottom-desktop {
+    height: 95px;
+
+    @include media-breakpoint-up('lg') {
+      margin-top: 40px;
+    }
+
+    .title {
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    .sticky {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: $white;
+    }
+
+    .controls {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
   }
 
   .separator {

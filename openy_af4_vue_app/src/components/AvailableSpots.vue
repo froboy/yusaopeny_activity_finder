@@ -58,27 +58,26 @@ export default {
 
 <style lang="scss">
 .available-spots-component {
-  display: inline-block;
-  font-size: 10px;
+  display: inline;
+  font-size: 16px;
+  font-weight: 700;
   line-height: 18px;
-  height: 20px;
-  padding: 0 4px;
-  color: $af-dark-gray;
+  height: auto;
+  padding: 6px 12px;
+  color: $af-black;
   background-color: $white;
   border: 1px solid $af-dark-gray;
-  border-radius: 3px;
+  border-radius: $af-border-radius;
   margin-left: auto;
 
   @include media-breakpoint-up('lg') {
-    font-size: 12px;
-    line-height: 23px;
-    height: 25px;
+    font-size: 16px;
   }
 
   &.big {
-    font-size: 12px;
+    font-size: 16px;
     line-height: 23px;
-    height: 25px;
+    height: auto;
   }
 
   &.full {
@@ -86,7 +85,6 @@ export default {
     background-color: $af-black;
     border-color: $af-black;
     font-weight: bold;
-    text-transform: uppercase;
   }
 
   &.low {

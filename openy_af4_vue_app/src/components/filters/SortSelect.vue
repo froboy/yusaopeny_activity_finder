@@ -47,19 +47,19 @@ export default {
   align-items: center;
 
   select {
-    height: 40px;
+    height: 48px;
     border: 1px solid $af-dark-gray;
-    border-radius: 5px;
+    border-radius: $af-border-radius;
     color: $af-black;
     min-width: 260px;
     width: auto;
-    padding: 0 10px;
+    padding: 10px 5px 10px 10px;
     appearance: none;
     z-index: 1;
     background: transparent;
     outline: none;
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 18px;
+    line-height: 1.5rem;
 
     &::-ms-expand {
       display: none;
@@ -67,6 +67,8 @@ export default {
 
     option {
       padding: 10px;
+      font-size: 18px;
+      line-height: 1.5rem;
     }
   }
 

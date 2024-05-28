@@ -6,19 +6,19 @@
           <div class="controls">
             <span v-if="!disableSearchBox" v-b-modal.activity-finder-search class="control search">
               <a role="button">
-                <i class="fa fa-search" />
+                <Icon icon="material-symbols:search" width="1.2rem" height="1.2rem" />
                 {{ 'Search' | t }}
               </a>
             </span>
             <span v-b-modal.activity-finder-filter class="control filter">
               <a role="button">
-                <i class="fa fa-filter" />
+                <Icon icon="material-symbols:filter-list" width="1.2rem" height="1.2rem" />
                 {{ 'Filter' | t }}
               </a>
             </span>
             <span v-b-modal.activity-finder-sort class="control sort">
               <a role="button">
-                <font-awesome-icon icon="sort-amount-down" />
+                <Icon icon="material-symbols:swap-vert" width="1.2rem" height="1.2rem" />
                 {{ 'Sort' | t }}
               </a>
             </span>
@@ -46,11 +46,13 @@
 
 <script>
 import Modal from '@/components/modals/Modal'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'ResultsBar',
   components: {
-    Modal
+    Modal,
+    Icon
   },
   props: {
     disableSearchBox: {
@@ -103,6 +105,11 @@ export default {
 
       a {
         color: $af-blue;
+
+        svg {
+          position: relative;
+          top: -3px;
+        }
       }
     }
   }

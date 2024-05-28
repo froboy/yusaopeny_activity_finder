@@ -36,7 +36,7 @@
                     <span class="title">{{ day.search_value | capitalize }}</span>
                     <span class="results-count">
                       {{
-                        facetCount(day.search_value) | formatPlural('1 Result', '@count Results')
+                        facetCount(day.search_value) | formatPlural('1 result', '@count of results')
                       }}
                     </span>
                   </span>

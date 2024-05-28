@@ -3,7 +3,7 @@
     <div class="banner" :style="{ background: 'url(' + image + ') center center/cover no-repeat' }">
       <div class="separator"></div>
       <div class="shadow">
-        <h1 class="text-center text-uppercase" :class="{ 'visually-hidden': !labelDisplay }">
+        <h1 class="text-center" :class="{ 'visually-hidden': !labelDisplay }">
           {{ label }}
         </h1>
       </div>
@@ -13,9 +13,9 @@
       <div class="row">
         <div class="col-12 col-xs-12">
           <div class="description text-center">
-            <p>{{ 'Find activities that fit your schedule(s)!' | t }}</p>
+            <p>{{ 'Start your search for an activity!' | t }}</p>
             <p>
-              <strong>{{ 'How would you like to start?' | t }}</strong>
+              {{ 'Pick any of the categories to find something that works for you' | t }}
             </p>
           </div>
         </div>
@@ -23,14 +23,20 @@
       <div class="row paths">
         <div v-for="path in paths" :key="path.id" :class="pathClasses" @click="onClick(path.id)">
           <button type="button" class="path btn">
-            <i class="fa" :class="path.icon" aria-hidden="true"></i>
-            <span class="text-uppercase">{{ path.name }}</span>
+            <span class="circle">
+              <span class="material-symbols-outlined">
+                <Icon :icon="path.icon" width="48" height="48" style="color: white" />
+              </span>
+            </span>
+            <span class="text">{{ path.name }}</span>
           </button>
         </div>
       </div>
       <div class="row">
         <div class="col-12 col-xs-12">
           <div class="search">
+            <h4>{{ 'Search by keyword instead' | t }}</h4>
+            <label for="form-control">{{ 'Search by keyword' | t }}</label>
             <slot name="search" />
           </div>
         </div>
@@ -45,8 +51,13 @@
 </template>
 
 <script>
+import { Icon } from '@iconify/vue2'
+
 export default {
   name: 'SelectPath',
+  components: {
+    Icon
+  },
   props: {
     value: {
       type: String,
@@ -163,23 +174,36 @@ export default {
   [class*='col-'] {
     padding-left: 5px;
     padding-right: 5px;
+    padding-bottom: 5px;
 
     @include media-breakpoint-up('sm') {
       padding-left: 10px;
       padding-right: 10px;
+      padding-bottom: 10px;
     }
 
     @include media-breakpoint-up('lg') {
       padding-left: 20px;
       padding-right: 20px;
+      padding-bottom: 20px;
     }
   }
 
   .description {
+    font-family: var(--ylb-font-family-cachet), serif;
     margin: 20px 0;
 
     @include media-breakpoint-up('lg') {
       margin: 40px 0;
+    }
+    & p:first-child {
+      font-size: 48px;
+      line-height: 54px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 28px;
     }
   }
 
@@ -200,16 +224,31 @@ export default {
     font-size: 18px;
     line-height: 50px;
     font-weight: bold;
-    background-color: $af-blue;
     color: $white;
     margin-bottom: 5px;
-    border-radius: 5px;
     width: 100%;
     padding: 0;
+    background-color: $af-light-gray;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 218px;
 
+    &:active,
+    &:focus,
     &:hover {
+      color: $white;
       background-color: $af-blue;
-      color: $af-lighter-gray;
+
+      .text {
+        color: $white;
+      }
+    }
+
+    @include media-breakpoint-up('md') {
+      height: 255px;
     }
 
     @include media-breakpoint-up('lg') {
@@ -218,6 +257,47 @@ export default {
       line-height: 36px;
       padding-bottom: 20px;
       margin-bottom: 0;
+    }
+
+    .circle {
+      background-color: $white;
+      border-radius: 50%;
+      width: 94px;
+      height: 94px;
+      display: flex;
+      flex-wrap: nowrap;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+
+      @include media-breakpoint-up('md') {
+        width: 130px;
+        height: 130px;
+      }
+
+      .material-symbols-outlined {
+        background-color: #00aeef;
+        border-radius: 50%;
+        color: var(--ylb-color-white, #fff);
+        width: 68px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @include media-breakpoint-up('md') {
+          width: 94px;
+          height: 94px;
+        }
+      }
+    }
+
+    .text {
+      font-size: 18px;
+      line-height: 28px;
+      margin-top: 24px;
+      color: $af-black;
     }
 
     svg {
@@ -231,7 +311,7 @@ export default {
       }
     }
 
-    .fa {
+    .material-symbols-outlined {
       width: 50px;
       text-align: center;
       font-size: 20px;
@@ -245,13 +325,33 @@ export default {
     }
   }
 
+  .search {
+    h4 {
+      font-size: 32px;
+      line-height: 34px;
+      margin-bottom: 48px;
+      text-align: left;
+
+      @include media-breakpoint-up('lg') {
+        text-align: center;
+      }
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+
   .search,
   .homebranch {
-    max-width: 340px;
+    max-width: 560px;
     margin: 0 auto;
   }
   .homebranch {
-    margin: 10px auto;
+    margin: 24px auto;
+    font-size: 20px;
   }
 }
 </style>

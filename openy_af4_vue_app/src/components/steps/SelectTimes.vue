@@ -35,7 +35,7 @@
                   <span>
                     <span class="title">{{ time.label }}</span>
                     <span class="results-count">
-                      {{ facetCount(time.value) | formatPlural('1 Result', '@count Results') }}
+                      {{ facetCount(time.value) | formatPlural('1 result', '@count of results') }}
                     </span>
                   </span>
                 </label>
