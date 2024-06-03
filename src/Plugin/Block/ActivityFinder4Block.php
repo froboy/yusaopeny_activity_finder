@@ -347,7 +347,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['weeks_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Weeks filter'),
-      '#description' => $this->t('Replace date/time filter with weeks filter.'),
+      '#description' => $this->t('Replace date/time filter with weeks filter. Note: This filter will only return sessions that include "Camp" in the title or room fields.'),
       '#default_value' => $conf['weeks_filter'],
     ];
 
