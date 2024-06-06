@@ -82,7 +82,7 @@ class StartMonth extends ProcessorPluginBase implements ContainerFactoryPluginIn
         'description' => $this->t("Translates datetime values of session to an index of start month date"),
         'type' => 'string',
         'processor_id' => $this->getPluginId(),
-        'is_list' => FALSE,
+        'is_list' => TRUE,
       ];
       $properties[self::PROPERTY_NAME] = new ProcessorProperty($definition);
     }
@@ -108,7 +108,7 @@ class StartMonth extends ProcessorPluginBase implements ContainerFactoryPluginIn
 
     $timezone = $this->getSystemTimezone();
 
-    $value = self::BASE_DATE . '00:00:00Z';
+    $values = [];
     foreach ($paragraphs as $paragraph) {
       /** @var \Drupal\Core\Field\FieldItemListInterface $range */
       $range = $paragraph->field_session_time_date;
@@ -123,15 +123,14 @@ class StartMonth extends ProcessorPluginBase implements ContainerFactoryPluginIn
       }
 
       $_from = DrupalDateTime::createFromTimestamp(strtotime($_period->get('value')->getValue() . 'Z'), $timezone);
-      $value = $_from->format('n');
-
-      // We need just one value as we can sort only by single value fields.
-      break;
+      $values[] = $_from->format('n');
     }
     $fields = $this->getFieldsHelper()
       ->filterForPropertyPath($item->getFields(), NULL, self::PROPERTY_NAME);
     foreach ($fields as $field) {
-      $field->addValue($value);
+      foreach ($values as $value) {
+        $field->addValue($value);
+      }
     }
   }
 

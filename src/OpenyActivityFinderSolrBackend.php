@@ -219,7 +219,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     }
 
     if (!empty($parameters['durations'])) {
-      $durations = explode(',', rawurldecode($parameters['durations']));
+      $durations = array_map('intval', explode(',', rawurldecode($parameters['durations'])));
       $query->addCondition('af_duration', $durations, 'IN');
     }
 
