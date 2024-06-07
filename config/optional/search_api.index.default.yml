@@ -92,7 +92,7 @@ field_settings:
   af_duration:
     label: Duration
     property_path: search_api_af_duration
-    type: date
+    type: integer
   af_parts_of_day:
     label: 'Parts of day'
     property_path: search_api_af_parts_of_day
