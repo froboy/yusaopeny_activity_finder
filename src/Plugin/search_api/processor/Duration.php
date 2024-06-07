@@ -85,7 +85,7 @@ class Duration extends ProcessorPluginBase implements ContainerFactoryPluginInte
         'description' => $this->t("Translates datetime values of session to an index of duration"),
         'type' => 'string',
         'processor_id' => $this->getPluginId(),
-        'is_list' => FALSE,
+        'is_list' => TRUE,
       ];
       $properties[self::PROPERTY_NAME] = new ProcessorProperty($definition);
     }
@@ -111,7 +111,7 @@ class Duration extends ProcessorPluginBase implements ContainerFactoryPluginInte
 
     $timezone = $this->getSystemTimezone();
 
-    $value = self::BASE_DATE . '00:00:00Z';
+    $values = [];
     // Check if date is in the list of durations in config.
     $config_durations = $this->getDurationsFromConfig();
     foreach ($paragraphs as $paragraph) {
@@ -130,15 +130,15 @@ class Duration extends ProcessorPluginBase implements ContainerFactoryPluginInte
       $_from = DrupalDateTime::createFromTimestamp(strtotime($_period->get('value')->getValue() . 'Z'), $timezone);
       $_end = DrupalDateTime::createFromTimestamp(strtotime($_period->get('end_value')->getValue() . 'Z'), $timezone);
       $diff = $_from->diff($_end)->days;
-      $value = $this->getDurationValue($config_durations, $diff);
-
-      // We need just one value as we can sort only by single value fields.
-      break;
+      $values[] = $this->getDurationValue($config_durations, $diff);
     }
+    $values = array_unique($values, SORT_NUMERIC);
     $fields = $this->getFieldsHelper()
       ->filterForPropertyPath($item->getFields(), NULL, self::PROPERTY_NAME);
     foreach ($fields as $field) {
-      $field->addValue($value);
+      foreach ($values as $value) {
+        $field->addValue($value);
+      }
     }
   }
 
@@ -174,7 +174,7 @@ class Duration extends ProcessorPluginBase implements ContainerFactoryPluginInte
    */
   private function getDurationValue(array $config_durations, int $session_duration): int {
     foreach ($config_durations as $duration) {
-      if ($session_duration <= $duration) {
+      if ($session_duration <= (int) $duration) {
         return $duration;
       }
     }
