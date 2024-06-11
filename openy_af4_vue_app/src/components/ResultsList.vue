@@ -10,6 +10,7 @@
       <div class="d-sm-none hidden-sm hidden-md hidden-lg">
         <div class="result-header">
           <span class="title">
+            <font-awesome-icon v-show="isBookmarked(item.nid)" icon="bookmark" />
             {{ item.name }}
           </span>
         </div>
@@ -80,6 +81,7 @@
       <div class="d-none d-sm-block hidden-xs">
         <div class="result-header">
           <span class="title">
+            <font-awesome-icon v-show="isBookmarked(item.nid)" icon="bookmark" />
             {{ item.name }}
           </span>
           <span v-if="item.ages || (selectedAges.length && !legacyMode)" class="ages">
@@ -194,7 +196,11 @@ export default {
     disableSpotsAvailable: {
       type: Boolean,
       required: true
-    }
+    },
+    cartItems: {
+      type: Array,
+      required: true
+    },
   },
   data() {
     return {}
@@ -202,6 +208,18 @@ export default {
   methods: {
     showActivityDetailsModal(item) {
       this.$emit('showActivityDetailsModal', item)
+    },
+    isBookmarked(nid) {
+      let shouldSkip = false
+      this.cartItems.forEach(cartItem => {
+        if (shouldSkip) {
+          return
+        }
+        if (cartItem.item.nid === nid) {
+          shouldSkip = true
+        }
+      })
+      return shouldSkip
     }
   }
 }
@@ -227,16 +245,22 @@ export default {
     }
 
     .title {
-      font-size: 14px;
-      line-height: 21px;
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
+      line-height: 28px;
       color: $af-blue;
-      font-weight: bold;
+      font-weight: 700;
       margin-bottom: 10px;
+      text-decoration: underline;
 
       @include media-breakpoint-up('lg') {
         font-size: 18px;
         line-height: 28px;
         margin-bottom: 20px;
+      }
+
+      & > svg {
+        margin-right: 10px;
       }
     }
 
@@ -306,7 +330,8 @@ export default {
 
       .details {
         font-size: 14px;
-        line-height: 18px;
+        font-family: var(--ylb-font-family-verdana), serif;
+        line-height: 20px;
       }
 
       .fa,
@@ -322,6 +347,7 @@ export default {
 
     .info {
       font-size: 14px;
+      font-family: var(--ylb-font-family-verdana), serif;
       line-height: 20px;
     }
   }

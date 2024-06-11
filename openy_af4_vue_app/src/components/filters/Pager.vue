@@ -112,7 +112,6 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  border-top: 1px solid $af-black;
   color: $af-black;
 
   .center {

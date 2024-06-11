@@ -44,6 +44,7 @@
             :selected-ages="selectedAges"
             :legacy-mode="legacyMode"
             :disable-spots-available="disableSpotsAvailable"
+            :cart-items="cartItems"
             @showActivityDetailsModal="showActivityDetailsModal($event)"
           />
             <div class="placeholder__insert_adjacent_promo"></div>
@@ -53,6 +54,7 @@
             :selected-ages="selectedAges"
             :legacy-mode="legacyMode"
             :disable-spots-available="disableSpotsAvailable"
+            :cart-items="cartItems"
             @showActivityDetailsModal="showActivityDetailsModal($event)"
           />
           <slot v-if="!data.table.length" name="no-results" />
@@ -247,11 +249,15 @@ export default {
 
     .results {
       color: $af-black;
-      font-weight: bold;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
     }
 
     .start-over {
       color: $af-blue;
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
     }
   }
 }

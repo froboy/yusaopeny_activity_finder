@@ -68,7 +68,8 @@ export default {
     option {
       padding: 10px;
       font-size: 18px;
-      line-height: 1.5rem;
+      font-family: var(--ylb-font-family-verdana), serif;
+      line-height: 22px;
     }
   }
 

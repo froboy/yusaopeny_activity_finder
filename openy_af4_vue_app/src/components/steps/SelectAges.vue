@@ -1,7 +1,7 @@
 <template>
   <div class="select-ages-component">
     <Step
-      :skip-label="'All ages (Skip)' | t"
+      :skip-label="'Any age (skip)' | t"
       :filters-selected="filtersSelected"
       @skip="onSkip"
       @next="onNext"

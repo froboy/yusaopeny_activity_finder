@@ -57,7 +57,8 @@ export default {
   .form-control {
     border: none;
     font-size: 18px;
-    line-height: 18px;
+    font-family: var(--ylb-font-family-verdana), serif;
+    line-height: 22px;
     height: 38px;
     padding: 0;
   }
