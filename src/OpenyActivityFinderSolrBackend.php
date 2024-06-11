@@ -1051,6 +1051,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')->createInstance('direct');
     $query->getParseMode()->setConjunction('OR');
     $query->setParseMode($parse_mode);
+    $query->setOption('search_api_bypass_access', TRUE);
     $query->addCondition('status', 1);
     $query->addCondition('nid', $session_ids, 'IN');
     return $query->execute();
