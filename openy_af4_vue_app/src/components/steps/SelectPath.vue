@@ -25,7 +25,7 @@
           <button type="button" class="path btn">
             <span class="circle">
               <span class="material-symbols-outlined">
-                <Icon :icon="path.icon" width="48" height="48" style="color: white" />
+                <Icon :icon="path.icon" />
               </span>
             </span>
             <span class="text">{{ path.name }}</span>
@@ -296,6 +296,12 @@ export default {
         @include media-breakpoint-up('md') {
           width: 94px;
           height: 94px;
+        }
+
+        svg {
+          color: $white;
+          height: 48px;
+          width: 48px;
         }
       }
     }

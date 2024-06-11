@@ -19,26 +19,11 @@
           {{ counterOptions | formatPlural('1 result', '@count of results') }}
         </span>
         <span v-if="collapsible" class="icon">
-          <Icon
-            icon="material-symbols:add-circle-outline"
-            class="circle-plus"
-            width="1.2rem"
-            height="1.2rem"
-          />
-          <Icon
-            icon="material-symbols:do-not-disturb-on-outline"
-            class="circle-minus"
-            width="1.2rem"
-            height="1.2rem"
-          />
+          <Icon icon="material-symbols:add-circle-outline" class="circle-plus" />
+          <Icon icon="material-symbols:do-not-disturb-on-outline" class="circle-minus" />
         </span>
         <span v-else-if="collapsible && counter && hideCounter" class="icon">
-          <Icon
-            icon="material-symbols:do-not-disturb-on-outline"
-            class="circle-minus"
-            width="1.2rem"
-            height="1.2rem"
-          />
+          <Icon icon="material-symbols:do-not-disturb-on-outline" class="circle-minus" />
         </span>
       </span>
     </div>
@@ -187,6 +172,12 @@ export default {
       padding: 0;
       position: relative;
       right: -5px;
+
+      svg {
+        color: $af-black;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
     }
 
     &.collapsed .circle-minus,
