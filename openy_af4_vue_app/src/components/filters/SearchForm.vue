@@ -8,7 +8,7 @@
       @keyup.enter.prevent="runSearch"
     />
     <button class="btn" @click.stop.prevent="runSearch">
-      <Icon icon="material-symbols:search" width="1.2rem" height="1.2rem" style="color:black" />
+      <Icon icon="material-symbols:search" />
     </button>
   </div>
 </template>
@@ -57,7 +57,8 @@ export default {
   .form-control {
     border: none;
     font-size: 18px;
-    line-height: 18px;
+    font-family: var(--ylb-font-family-verdana), serif;
+    line-height: 22px;
     height: 38px;
     padding: 0;
   }
@@ -71,6 +72,12 @@ export default {
     line-height: 1;
     background-color: transparent;
     border-radius: $af-border-radius;
+
+    svg {
+      color: $af-black;
+      height: 1.2rem;
+      width: 1.2rem;
+    }
 
     span {
       color: $af-black;

@@ -25,7 +25,7 @@
           <button type="button" class="path btn">
             <span class="circle">
               <span class="material-symbols-outlined">
-                <Icon :icon="path.icon" width="48" height="48" style="color: white" />
+                <Icon :icon="path.icon" />
               </span>
             </span>
             <span class="text">{{ path.name }}</span>
@@ -196,12 +196,19 @@ export default {
     @include media-breakpoint-up('lg') {
       margin: 40px 0;
     }
+
     & p:first-child {
-      font-size: 48px;
+      font-family: var(--ylb-font-family), serif;
+      font-size: 32px;
       line-height: 54px;
+
+      @include media-breakpoint-up('lg') {
+        font-size: 48px;
+      }
     }
 
     p {
+      font-family: var(--ylb-font-family-verdana), serif;
       font-size: 18px;
       line-height: 28px;
     }
@@ -290,6 +297,12 @@ export default {
           width: 94px;
           height: 94px;
         }
+
+        svg {
+          color: $white;
+          height: 48px;
+          width: 48px;
+        }
       }
     }
 
@@ -327,12 +340,13 @@ export default {
 
   .search {
     h4 {
-      font-size: 32px;
+      font-size: 26px;
       line-height: 34px;
       margin-bottom: 48px;
       text-align: left;
 
       @include media-breakpoint-up('lg') {
+        font-size: 32px;
         text-align: center;
       }
     }

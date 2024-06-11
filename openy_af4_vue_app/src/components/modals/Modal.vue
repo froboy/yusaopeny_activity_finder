@@ -21,7 +21,7 @@
     body-class="af-modal-body"
   >
     <template v-slot:modal-header-close>
-      <Icon icon="material-symbols:close-small" width="24px" height="24px" />
+      <Icon icon="material-symbols:close-small" />
     </template>
     <template v-slot:modal-title>
       <slot name="modal-title" />
@@ -221,6 +221,11 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      svg {
+        height: 1.2rem;
+        width: 1.2rem;
+      }
     }
   }
 

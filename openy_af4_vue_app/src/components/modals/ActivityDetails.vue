@@ -35,11 +35,7 @@
             <div class="right">
               <div class="info-section">
                 <div v-if="item.dates" class="item-detail dates">
-                  <Icon
-                    icon="material-symbols:calendar-today-outline"
-                    width="1.2rem"
-                    height="1.2rem"
-                  />
+                  <Icon icon="material-symbols:calendar-today-outline" />
                   <span>
                     <span class="info">{{ item.dates }}</span>
                     <br />
@@ -48,7 +44,7 @@
                 </div>
 
                 <div class="item-detail schedule">
-                  <Icon icon="material-symbols:schedule-outline" width="1.2rem" height="1.2rem" />
+                  <Icon icon="material-symbols:schedule-outline" />
                   <span class="schedule-items">
                     <span
                       v-for="(schedule, index) in item.schedule"
@@ -63,11 +59,7 @@
                 </div>
 
                 <div v-if="item.location" class="item-detail">
-                  <Icon
-                    icon="material-symbols:location-on-outline"
-                    width="1.2rem"
-                    height="1.2rem"
-                  />
+                  <Icon icon="material-symbols:location-on-outline" />
                   <span>
                     <span class="info">{{ item.location }}</span>
                     <br />
@@ -76,7 +68,7 @@
                 </div>
 
                 <div v-if="item.instructor" class="item-detail instructor">
-                  <Icon icon="material-symbols:person-outline" width="1.2rem" height="1.2rem" />
+                  <Icon icon="material-symbols:person-outline" />
                   <span>
                     <span class="info">{{ item.instructor }}</span>
                     <br />
@@ -85,7 +77,7 @@
                 </div>
 
                 <div v-if="item.price" class="item-detail price">
-                  <Icon icon="material-symbols:payments-outline" width="1.2rem" height="1.2rem" />
+                  <Icon icon="material-symbols:payments-outline" />
                   <span>
                     <span class="info">{{ item.price }}</span>
                   </span>
@@ -450,11 +442,16 @@ export default {
         margin-right: 10px;
         position: relative;
         top: 6px;
+        height: 1.2rem;
+        width: 1.2rem;
       }
 
       &.location {
         svg {
           top: 3px;
+          color: $af-black;
+          height: 1.2rem;
+          width: 1.2rem;
         }
       }
 

@@ -7,7 +7,12 @@
             <span class="filters">
               <a :class="{ 'no-filters': !filtersCount }" role="button" @click="showFiltersModal()">
                 <font-awesome-icon icon="filter" />
-                {{ filtersCount | formatPlural('1 Filter Applied', '@count Filters Applied') }}
+                <span v-if="filtersCount">
+                  {{ filtersCount | formatPlural('1 Filter Applied', '@count Filters Applied') }}
+                </span>
+                <span v-if="!filtersCount">
+                  {{ '0 Filter Applied' | t }}
+                </span>
               </a>
             </span>
             <span class="start-over">
@@ -169,8 +174,9 @@ export default {
     padding: 16px 0;
 
     .filters {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
+      line-height: 28px;
       .fa-filter {
         margin-right: 8px;
       }
@@ -180,8 +186,9 @@ export default {
     }
 
     .start-over {
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
+      line-height: 28px;
     }
   }
 }

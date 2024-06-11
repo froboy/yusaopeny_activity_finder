@@ -2,7 +2,7 @@
   <div class="filters-component">
     <div class="filters-header" :class="headerClasses">
       <span class="text-uppercase">
-        <strong>{{ 'Filter' | t }}</strong>
+        <span class="title">{{ 'Filter' | t }}</span>
       </span>
       <a role="button" @click="clearFilters">{{ 'Clear Filters' | t }}</a>
     </div>
@@ -446,6 +446,19 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+
+    .title {
+      font-size: 15px;
+      font-family: var(--ylb-font-family-verdana), serif;
+      font-weight: 700;
+      line-height: 18px;
+    }
+
+    a {
+      font-size: 18px;
+      font-family: var(--ylb-font-family-verdana), serif;
+      line-height: 22px;
+    }
   }
 
   .filters-footer {

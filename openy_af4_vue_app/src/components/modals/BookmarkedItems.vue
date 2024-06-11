@@ -27,11 +27,7 @@
               <div class="row">
                 <div class="col-8 col-xs-8">
                   <div class="item-detail dates">
-                    <Icon
-                      icon="material-symbols:calendar-today-outline"
-                      width="1.2rem"
-                      height="1.2rem"
-                    />
+                    <Icon icon="material-symbols:calendar-today-outline" />
                     <span>
                       <span class="info">{{ item.item.dates }}</span>
                       <br />
@@ -40,7 +36,7 @@
                   </div>
 
                   <div class="item-detail schedule">
-                    <Icon icon="material-symbols:schedule-outline" width="1.2rem" height="1.2rem" />
+                    <Icon icon="material-symbols:schedule-outline" />
                     <span class="schedule-items">
                       <span
                         v-for="(schedule, schedule_index) in item.item.schedule"
@@ -83,7 +79,7 @@
                     @click="register(index)"
                   >
                     {{ getButtonTitle(index) }}
-                    <Icon icon="material-symbols:arrow-outward" width="24px" height="24px" />
+                    <Icon icon="material-symbols:arrow-outward" />
                   </a>
                   <a
                     key="remove"
@@ -333,6 +329,8 @@ export default {
           margin-right: 10px;
           position: relative;
           top: 6px;
+          height: 1.2rem;
+          width: 1.2rem;
         }
 
         .fa,
@@ -384,6 +382,11 @@ export default {
           line-height: 50px;
           font-weight: bolder;
           padding: 0;
+
+          svg {
+            height: 24px;
+            width: 24px;
+          }
         }
 
         .remove {

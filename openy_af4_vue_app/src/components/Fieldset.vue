@@ -19,11 +19,11 @@
           {{ counterOptions | formatPlural('1 result', '@count of results') }}
         </span>
         <span v-if="collapsible" class="icon">
-          <font-awesome-icon icon="plus-circle" />
-          <font-awesome-icon icon="minus-circle" />
+          <Icon icon="material-symbols:add-circle-outline" class="circle-plus" />
+          <Icon icon="material-symbols:do-not-disturb-on-outline" class="circle-minus" />
         </span>
         <span v-else-if="collapsible && counter && hideCounter" class="icon">
-          <font-awesome-icon icon="minus-circle" />
+          <Icon icon="material-symbols:do-not-disturb-on-outline" class="circle-minus" />
         </span>
       </span>
     </div>
@@ -46,8 +46,13 @@
 </template>
 
 <script>
+import { Icon } from '@iconify/vue2'
+
 export default {
   name: 'Fieldset',
+  components: {
+    Icon
+  },
   props: {
     label: {
       type: String,
@@ -122,13 +127,14 @@ export default {
     .counter {
       margin-left: 10px;
       display: inline-block;
-      background-color: $af-blue;
+      background-color: $af-black;
       text-align: center;
       color: $white;
       border-radius: 5px;
       font-weight: bold;
       min-width: 30px;
-      font-size: 12px;
+      font-size: 14px;
+      font-family: var(--ylb-font-family-verdana), serif;
       line-height: 30px;
 
       &.hide-counter {
@@ -166,10 +172,16 @@ export default {
       padding: 0;
       position: relative;
       right: -5px;
+
+      svg {
+        color: $af-black;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
     }
 
-    &.collapsed .fa-circle-minus,
-    &:not(.collapsed) .fa-circle-plus {
+    &.collapsed .circle-minus,
+    &:not(.collapsed) .circle-plus {
       display: none;
     }
 

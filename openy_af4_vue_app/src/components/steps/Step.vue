@@ -8,7 +8,7 @@
               <div class="title">
                 <slot name="title" />
               </div>
-              <div class="buttons-desktop d-none d-md-block hidden-xs hidden-sm">
+              <div class="buttons-desktop hidden-xs hidden-sm">
                 <button
                   v-if="filtersSelected"
                   type="button"
@@ -35,19 +35,7 @@
       </div>
     </div>
 
-    <div ref="bottom" class="bottom d-md-none hidden-md hidden-lg">
-      <div class="buttons" :class="{ sticky: sticky }">
-        <div class="separator"></div>
-        <button v-if="filtersSelected" type="button" class="btn btn-lg btn-next" @click="onNext">
-          {{ nextLabel }}
-        </button>
-        <button v-else type="button" class="btn btn-lg btn-skip" @click="onSkip">
-          {{ skipLabel }}
-        </button>
-      </div>
-    </div>
-
-    <div ref="bottomDesktop" class="bottom-desktop d-none d-md-block hidden-xs hidden-sm">
+    <div ref="bottomDesktop" class="bottom-desktop hidden-xs hidden-sm">
       <div :class="{ sticky: stickyDesktop }">
         <div class="container">
           <div class="row">
@@ -212,14 +200,16 @@ export default {
   }
 
   .bottom-desktop {
-    height: 95px;
+    padding-top: 48px;
 
     @include media-breakpoint-up('lg') {
       margin-top: 40px;
+      padding-top: 0;
     }
 
     .title {
       font-size: 18px;
+      font-weight: 500;
       line-height: 28px;
     }
 
