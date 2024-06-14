@@ -32,11 +32,25 @@
               </template>
             </template>
           </span>
-          <AvailableSpots
-            v-if="!disableSpotsAvailable && item.spots_available !== ''"
-            :spots="Number(item.spots_available)"
-            :wait-list="Number(item.wait_list_availability)"
-          />
+          <div class="actions">
+            <AvailableSpots
+              v-if="!disableSpotsAvailable && item.spots_available !== ''"
+              :spots="Number(item.spots_available)"
+              :wait-list="Number(item.wait_list_availability)"
+            />
+            <a
+              v-show="getButtonTitle(item)"
+              key="register"
+              role="button"
+              class="btn btn-lg register"
+              :class="{ disabled: isRegisterDisabled(item) }"
+              :href="item.link"
+              target="_blank"
+              @click="register(item)"
+            >
+              {{ getButtonTitle(item) }}
+            </a>
+          </div>
         </div>
 
         <div v-if="item.dates" class="item-detail dates">
@@ -60,7 +74,7 @@
         </div>
 
         <div v-if="item.location" class="item-detail">
-          <i class="fa fa-map-marker"></i>
+          <Icon icon="material-symbols:location-on-outline" />
           <span>
             <span class="info">{{ item.location }}</span>
             <br />
@@ -152,11 +166,25 @@
                 <span class="info">{{ item.price }}</span>
               </span>
             </div>
-            <AvailableSpots
-              v-if="!disableSpotsAvailable && item.spots_available !== ''"
-              :spots="Number(item.spots_available)"
-              :wait-list="Number(item.wait_list_availability)"
-            />
+            <div class="actions">
+              <AvailableSpots
+                v-if="!disableSpotsAvailable && item.spots_available !== ''"
+                :spots="Number(item.spots_available)"
+                :wait-list="Number(item.wait_list_availability)"
+              />
+              <a
+                v-show="getButtonTitle(item)"
+                key="register"
+                role="button"
+                class="btn btn-lg register"
+                :class="{ disabled: isRegisterDisabled(item) }"
+                :href="item.link"
+                target="_blank"
+                @click="register(item)"
+              >
+                {{ getButtonTitle(item) }}
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -220,6 +248,23 @@ export default {
         }
       })
       return shouldSkip
+    },
+    isRegisterDisabled(item) {
+      // parseInt('') -> NaN
+      // parseInt('0') -> 0
+      return parseInt(item.spots_available) === 0 && !item.wait_list_availability
+    },
+    getButtonTitle(item) {
+      let title = this.t('Register')
+      // parseInt('') -> NaN
+      // parseInt('0') -> 0
+      if (parseInt(item.spots_available) === 0) {
+        title = item.wait_list_availability > 0 ? this.t('Waiting list') : ''
+      }
+      return title
+    },
+    register() {
+      this.trackEvent('register', 'Click in activity details', this.item.product_id)
     }
   }
 }
@@ -347,10 +392,36 @@ export default {
       }
     }
 
+    .register {
+      background-color: $af-violet;
+      border-radius: $af-border-radius;
+      color: $white;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 16px;
+      padding: 8px 12px;
+    }
+
     .info {
       font-size: 14px;
       font-family: var(--ylb-font-family-verdana), serif;
       line-height: 20px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 16px;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      justify-content: center;
+      align-content: center;
+
+      @include media-breakpoint-up('lg') {
+        flex-direction: row;
+      }
     }
   }
 }

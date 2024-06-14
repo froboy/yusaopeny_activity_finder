@@ -44,8 +44,8 @@ export default {
   margin-top: -25px;
   right: 0;
   background-color: $af-blue;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: $af-border-radius;
+  border-bottom-left-radius: $af-border-radius;
   border: 2px solid $white;
   border-right: none;
   z-index: 10;

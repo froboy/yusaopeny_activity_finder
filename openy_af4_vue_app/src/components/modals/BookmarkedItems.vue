@@ -24,51 +24,55 @@
                 {{ item.item.name }}
               </div>
 
-              <div class="row">
-                <div class="col-8 col-xs-8">
-                  <div class="item-detail dates">
-                    <Icon icon="material-symbols:calendar-today-outline" />
-                    <span>
-                      <span class="info">{{ item.item.dates }}</span>
-                      <br />
-                      <span class="details">{{ item.item.days }}</span>
-                    </span>
-                  </div>
-
-                  <div class="item-detail schedule">
-                    <Icon icon="material-symbols:schedule-outline" />
-                    <span class="schedule-items">
-                      <span
-                        v-for="(schedule, schedule_index) in item.item.schedule"
-                        :key="schedule_index"
-                        class="schedule-item"
-                      >
-                        <span class="info">{{ schedule.time }}</span>
-                        <br />
-                        <span class="details">{{ schedule.days }}</span>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <div class="col-4 col-xs-4">
-                  <span class="age">
-                    <span class="age-label">Age:</span>
-                    <AgeIcon v-if="item.age" :age="parseInt(item.age)" :ages="ages" big />
-                    <span v-else class="info">
-                      {{ item.item.ages }}
-                    </span>
+              <div class="session-info">
+                <span class="age">
+                  <span class="age-label">Age:</span>
+                  <AgeIcon v-if="item.age" :age="parseInt(item.age)" :ages="ages" big/>
+                  <span v-else class="info">
+                    {{ item.item.ages }}
                   </span>
-                  <span class="spots">
-                    <AvailableSpots
-                      v-if="!disableSpotsAvailable && item.item.spots_available !== ''"
-                      :spots="Number(item.item.spots_available)"
-                      :wait-list="Number(item.item.wait_list_availability)"
-                    />
+                </span>
+                <span class="spots">
+                  <AvailableSpots
+                    v-if="!disableSpotsAvailable && item.item.spots_available !== ''"
+                    :spots="Number(item.item.spots_available)"
+                    :wait-list="Number(item.item.wait_list_availability)"
+                  />
+                </span>
+                <div class="item-detail dates">
+                  <Icon icon="material-symbols:calendar-today-outline" />
+                  <span>
+                    <span class="info">{{ item.item.dates }}</span>
+                    <br />
+                    <span class="details">{{ item.item.days }}</span>
+                  </span>
+                </div>
+                <div class="item-detail schedule">
+                  <Icon icon="material-symbols:schedule-outline"/>
+                  <span class="schedule-items">
+                    <span
+                      v-for="(schedule, schedule_index) in item.item.schedule"
+                      :key="schedule_index"
+                      class="schedule-item"
+                    >
+                      <span class="info">{{ schedule.time }}</span>
+                      <br />
+                      <span class="details">{{ schedule.days }}</span>
+                    </span>
                   </span>
                 </div>
               </div>
               <div class="actions">
                 <template v-if="buttonsState[index] === 'default'">
+                  <a
+                    key="remove"
+                    role="button"
+                    class="remove"
+                    title="Remove"
+                    @click="removeItem(index)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </a>
                   <a
                     key="register"
                     role="button"
@@ -81,6 +85,8 @@
                     {{ getButtonTitle(index) }}
                     <Icon icon="material-symbols:arrow-outward" />
                   </a>
+                </template>
+                <template v-else-if="buttonsState[index] === 'sentToRegister'">
                   <a
                     key="remove"
                     role="button"
@@ -90,8 +96,6 @@
                   >
                     <i class="fa fa-trash"></i>
                   </a>
-                </template>
-                <template v-else-if="buttonsState[index] === 'sentToRegister'">
                   <a
                     key="reset"
                     role="button"
@@ -100,15 +104,6 @@
                   >
                     <span>{{ 'Sent to register' | t }}</span>
                     <i class="fa fa-redo fa-repeat"></i>
-                  </a>
-                  <a
-                    key="remove"
-                    role="button"
-                    class="remove"
-                    title="Remove"
-                    @click="removeItem(index)"
-                  >
-                    <i class="fa fa-trash"></i>
                   </a>
                 </template>
               </div>
@@ -351,7 +346,7 @@ export default {
 
       .age {
         display: flex;
-        justify-content: space-around;
+        justify-content: start;
         margin-bottom: 10px;
 
         .age-label {
@@ -366,12 +361,19 @@ export default {
 
       .spots {
         display: flex;
-        justify-content: space-around;
+        justify-content: start;
+        margin-bottom: 10px;
+
+        .available-spots-component {
+          justify-content: start;
+          margin: 0;
+        }
       }
 
       .actions {
         display: flex;
         justify-content: space-between;
+        margin-top: 15px;
 
         .register {
           background-color: $af-violet;
@@ -397,7 +399,7 @@ export default {
           border: 2px solid $af-blue;
           border-radius: 5px;
           text-align: center;
-          margin-left: 10px;
+          margin-right: 10px;
 
           .fa,
           .svg-inline--fa {

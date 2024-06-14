@@ -52,13 +52,12 @@ export default {
   display: flex;
   margin: 0 auto;
   border-radius: $af-border-radius;
-  padding: 10px 5px 10px 10px;
+  padding: 5px 5px 5px 10px;
 
   .form-control {
     border: none;
     font-size: 18px;
-    font-family: var(--ylb-font-family-verdana), serif;
-    line-height: 22px;
+    line-height: 18px;
     height: 38px;
     padding: 0;
   }
@@ -86,6 +85,16 @@ export default {
     .fa {
       font-size: 18px;
     }
+  }
+
+  ::placeholder,
+  ::-webkit-input-placeholder,
+  :-moz-placeholder,
+  ::-moz-placeholder,
+  :-ms-input-placeholder {
+    font-family: var(--ylb-font-family-verdana), serif;
+    font-weight: 400;
+    line-height: 22px;
   }
 
   ::-webkit-input-placeholder {

@@ -448,9 +448,9 @@ export default {
     margin-bottom: 20px;
 
     .title {
-      font-size: 15px;
+      font-size: 14px;
       font-family: var(--ylb-font-family-verdana), serif;
-      font-weight: 700;
+      font-weight: 400;
       line-height: 18px;
     }
 
@@ -498,9 +498,11 @@ export default {
   .fieldset-component {
     .fieldset-title {
       .title {
+        font-family: var(--ylb-font-family-verdana), serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
         text-transform: uppercase;
-        font-size: 15px;
-        line-height: 1.5rem;
       }
     }
   }

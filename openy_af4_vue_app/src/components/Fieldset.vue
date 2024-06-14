@@ -121,20 +121,19 @@ export default {
     .title {
       font-size: 32px;
       line-height: 34px;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     .counter {
       margin-left: 10px;
       display: inline-block;
-      background-color: $af-black;
+      background-color: $af-blue;
       text-align: center;
       color: $white;
       border-radius: 5px;
-      font-weight: bold;
+      font-weight: 500;
       min-width: 30px;
-      font-size: 14px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-size: 12px;
       line-height: 30px;
 
       &.hide-counter {
@@ -151,7 +150,7 @@ export default {
       color: $af-red;
       font-size: 10px;
       line-height: 15px;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     .options {
@@ -161,7 +160,7 @@ export default {
 
       &.no-options {
         color: $af-red;
-        font-weight: bold;
+        font-weight: 500;
       }
     }
 
@@ -258,7 +257,7 @@ export default {
             }
 
             .title {
-              font-weight: bold;
+              font-weight: 500;
               color: $af-blue;
               display: block;
             }

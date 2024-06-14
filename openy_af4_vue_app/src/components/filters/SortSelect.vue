@@ -47,7 +47,7 @@ export default {
   align-items: center;
 
   select {
-    height: 48px;
+    height: 50px;
     border: 1px solid $af-dark-gray;
     border-radius: $af-border-radius;
     color: $af-black;
@@ -68,8 +68,7 @@ export default {
     option {
       padding: 10px;
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
-      line-height: 22px;
+      line-height: 1.5rem;
     }
   }
 
