@@ -189,9 +189,6 @@ export default {
         top: -3px;
         width: 1.2rem;
       }
-      //.no-filters {
-      //  color: $af-dark-gray;
-      //}
     }
 
     .start-over {
