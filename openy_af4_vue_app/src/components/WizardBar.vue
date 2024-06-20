@@ -1,12 +1,12 @@
 <template>
-  <div class="wizard-bar-component">
+  <div class="wizard-bar-component full-width">
     <div class="container">
       <div class="row">
         <div class="col-12 col-xs-12">
           <div class="controls">
             <span class="filters">
               <a :class="{ 'no-filters': !filtersCount }" role="button" @click="showFiltersModal()">
-                <font-awesome-icon icon="filter" />
+                <Icon icon="material-symbols:filter-list" />
                 <span v-if="filtersCount">
                   {{ filtersCount | formatPlural('1 Filter Applied', '@count Filters Applied') }}
                 </span>
@@ -49,11 +49,13 @@
 
 <script>
 import FiltersModal from '@/components/modals/Filters.vue'
+import { Icon } from '@iconify/vue2'
 
 export default {
   name: 'WizardBar',
   components: {
-    FiltersModal
+    FiltersModal,
+    Icon
   },
   props: {
     ages: {
@@ -171,7 +173,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 16px;
 
     .filters {
       font-size: 18px;
@@ -180,14 +182,20 @@ export default {
       .fa-filter {
         margin-right: 8px;
       }
-      .no-filters {
-        color: $af-dark-gray;
+      svg {
+        color: $af-black;
+        height: 1.2rem;
+        position: relative;
+        top: -3px;
+        width: 1.2rem;
       }
     }
 
     .start-over {
       font-size: 18px;
       font-family: var(--ylb-font-family-verdana), serif;
+      color: $af-black;
+      text-decoration: underline;
       line-height: 28px;
     }
   }

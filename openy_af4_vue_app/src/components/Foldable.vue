@@ -68,7 +68,7 @@ export default {
     .counter {
       margin: 10px;
       display: inline-block;
-      background-color: $af-blue;
+      background-color: $af-black;
       text-align: center;
       color: $white;
       border-radius: 5px;

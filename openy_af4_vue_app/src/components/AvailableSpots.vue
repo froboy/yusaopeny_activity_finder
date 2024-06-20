@@ -68,7 +68,6 @@ export default {
   background-color: $white;
   border: 1px solid $af-dark-gray;
   border-radius: $af-border-radius;
-  margin-left: auto;
 
   @include media-breakpoint-up('lg') {
     font-size: 16px;

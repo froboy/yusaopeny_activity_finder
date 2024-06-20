@@ -1,6 +1,6 @@
 #Colorway styles.
 colorway:
-  version: 0.2
+  version: 0.3
   css:
     theme:
       assets/css/colorway.css: { minified: false }

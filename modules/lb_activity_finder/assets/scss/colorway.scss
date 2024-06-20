@@ -126,21 +126,7 @@
     }
   }
 
-  .foldable-component {
-    .foldable-title {
-      .counter {
-        background-color: var(--wsPrimaryColor, lightgrey);
-      }
-    }
-  }
-
   .fieldset-component {
-    .fieldset-title {
-      .counter {
-        background-color: var(--wsPrimaryColor, lightgrey);
-      }
-    }
-
     .fieldset-content {
       .options {
         border: 1px solid var(--ylb-color-light-grey-3, #ccc);
@@ -203,12 +189,17 @@
       .results-list-component {
         .result {
           border: 2px solid var(--ylb-color-light-grey-3, #ccc);
-          border-bottom-color: transparent;
 
           &:active,
           &:focus,
           &:hover {
-            border: 2px solid var(--wsPrimaryColor, #ccc);;
+            border: 2px solid var(--wsPrimaryColor, #ccc);
+          }
+
+          .actions {
+            .register {
+              background-color: var(--wsPrimaryColor, lightgrey);
+            }
           }
         }
 
@@ -216,6 +207,12 @@
           .result:first-child {
             border-top-left-radius: var(--wsBorderRadius, unset);
             border-top-right-radius: var(--wsBorderRadius, unset);
+
+            &:active,
+            &:focus,
+            &:hover {
+              border-bottom-color: var(--wsPrimaryColor, #ccc);
+            }
           }
         }
 
@@ -224,6 +221,12 @@
             border-bottom-left-radius: var(--wsBorderRadius, unset);
             border-bottom-right-radius: var(--wsBorderRadius, unset);
             border-bottom-color: var(--ylb-color-light-grey-3, #ccc);
+
+            &:active,
+            &:focus,
+            &:hover {
+              border-bottom-color: var(--wsPrimaryColor, #ccc);
+            }
           }
         }
       }
@@ -234,7 +237,8 @@
 .wizard-bar-component {
   .controls {
     a {
-      color: var(--wsPrimaryColor, lightgrey);
+      color: var(--ylb-color-black, black);
+      text-decoration: underline;
     }
   }
 }
@@ -253,14 +257,6 @@
 }
 
 .af-modal-dialog {
-  .af-modal-header {
-    .af-modal-title {
-      svg {
-        color: var(--wsPartnerColor, lightgrey);
-      }
-    }
-  }
-
   .af-modal-body {
     .bookmark-icon {
       border-color: var(--wsPrimaryColor, lightgrey);
@@ -347,6 +343,14 @@
           }
         }
       }
+
+      .bookmarked-items-footer {
+        .footer-content {
+          .clear-all {
+            color: var(--wsPrimaryColor, lightgrey);
+          }
+        }
+      }
     }
 
     .bookmark-toggle {
@@ -368,6 +372,10 @@
 
   .filters {
     .fieldset-component {
+      .title {
+        font-family: var(--ylb-font-family-verdana), serif;
+      }
+
       &:first-child {
         .fieldset-title {
           border-top-left-radius: var(--wsBorderRadius, unset);
@@ -389,6 +397,10 @@
   .filters-footer {
     .buttons {
       .btn {
+        &.btn-apply.btn-lg {
+          background-color: var(--wsPrimaryColor, lightgrey);
+        }
+
         &.btn-clear.btn-lg {
           border-color: var(--wsPrimaryColor, lightgrey);
           color: var(--wsPrimaryColor, lightgrey);
@@ -434,6 +446,14 @@
 .filters-modal-content {
   .content {
     .view-results {
+      background-color: var(--wsPrimaryColor, lightgrey);
+    }
+  }
+}
+
+.no-results-component .row {
+  .actions {
+    .btn {
       background-color: var(--wsPrimaryColor, lightgrey);
     }
   }

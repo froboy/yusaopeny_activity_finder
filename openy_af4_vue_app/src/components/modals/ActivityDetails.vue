@@ -511,7 +511,7 @@ export default {
         background-color: $af-violet;
         color: $white;
         flex-grow: 1;
-        border-radius: 5px;
+        border-radius: $af-border-radius;
         font-size: 18px;
         line-height: 50px;
         font-weight: bolder;

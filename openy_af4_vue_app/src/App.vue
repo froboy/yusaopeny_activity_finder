@@ -960,6 +960,15 @@ export default {
   position: relative;
 }
 
+.full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 // Fix Safari grid issue.
 // @see https://stackoverflow.com/questions/49403391/bootstrap-4-safari-on-mac-grid-issue
 .row:before,

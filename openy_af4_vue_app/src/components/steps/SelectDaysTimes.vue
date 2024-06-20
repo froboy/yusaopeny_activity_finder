@@ -15,7 +15,10 @@
           :key="index"
           :label="day.search_value"
           :counter="subFiltersCount(index)"
-          :collapsible="false"
+          :collapse-id="'accordion-' + index"
+          :counter-options="optionsCount(index)"
+          accordion="accordion-days-times"
+          :collapsible="Object.keys(filteredDaysTimes).length !== 1"
           :handle-sticky="handleSticky"
         >
           <div class="options">

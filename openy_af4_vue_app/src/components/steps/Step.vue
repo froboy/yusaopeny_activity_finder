@@ -35,12 +35,11 @@
       </div>
     </div>
 
-    <div ref="bottomDesktop" class="bottom-desktop hidden-xs hidden-sm">
+    <div ref="bottomDesktop" class="bottom-desktop hidden-xs hidden-sm full-width">
       <div :class="{ sticky: stickyDesktop }">
         <div class="container">
           <div class="row">
             <div class="col-12 col-xs-12">
-              <div class="full-width separator"></div>
               <div class="controls">
                 <div class="title">
                   <slot name="title" />
@@ -190,17 +189,9 @@ export default {
     }
   }
 
-  .full-width {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-  }
-
   .bottom-desktop {
-    padding-top: 48px;
+    margin-top: 48px;
+    background-color: $af-light-gray;
 
     @include media-breakpoint-up('lg') {
       margin-top: 40px;
@@ -222,15 +213,8 @@ export default {
     }
 
     .controls {
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding: 20px;
     }
-  }
-
-  .separator {
-    height: 5px;
-    background-color: $af-black;
-    opacity: 0.2;
   }
 
   .bottom {

@@ -1,5 +1,5 @@
 <template>
-  <div class="results-bar-component">
+  <div class="results-bar-component full-width">
     <div class="container">
       <div class="row">
         <div class="col-12 col-xs-12 col-sm-8 col-sm-offset-2 m-auto">
