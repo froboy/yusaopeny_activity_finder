@@ -313,6 +313,18 @@ export default {
       display: flex;
       justify-content: space-between;
       margin-bottom: 15px;
+      position: relative;
+
+      .actions {
+        position: absolute;
+        top: 0;
+        right: 10px;
+
+        @include media-breakpoint-up('md') {
+          position: relative;
+          left: 0;
+        }
+      }
     }
 
     .age-label {
