@@ -3,7 +3,7 @@
     <div v-b-toggle="collapseId" class="foldable-title">
       <span class="left">
         <span class="title">
-          <strong>{{ label }}</strong>
+          {{ label }}
         </span>
       </span>
       <span class="right">
@@ -50,7 +50,7 @@ export default {
 <style lang="scss">
 .foldable-component {
   .foldable-title {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 50px;
     display: flex;
     justify-content: space-between;

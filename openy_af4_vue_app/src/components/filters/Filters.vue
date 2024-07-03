@@ -499,7 +499,7 @@ export default {
     .fieldset-title {
       .title {
         font-family: var(--ylb-font-family-verdana), serif;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 400;
         line-height: 18px;
         text-transform: uppercase;
