@@ -89,6 +89,7 @@ function openy_activity_finder_theme() {
         'in_memberships_filter' => FALSE,
         'start_month_filter' => FALSE,
         'duration_filter' => FALSE,
+        'skip_wizard' => FALSE,
       ],
     ],
   ];

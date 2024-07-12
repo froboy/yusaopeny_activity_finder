@@ -415,6 +415,10 @@ export default {
     bsVersion: {
       type: Number,
       required: true
+    },
+    skipWizard: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -472,7 +476,7 @@ export default {
       selectedPath: '',
       maxAges: 2,
       defaults: {
-        step: 'selectPath',
+        step: this.skipWizard ? 'results' : 'selectPath',
         selectedAges: [],
         selectedDays: [],
         selectedTimes: [],

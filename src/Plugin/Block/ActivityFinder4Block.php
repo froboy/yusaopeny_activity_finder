@@ -95,6 +95,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'in_memberships_filter' => 0,
       'duration_filter' => 0,
       'start_month_filter' => 0,
+      'skip_wizard' => 0,
     ];
   }
 
@@ -220,6 +221,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#duration_filter' => (bool) $conf['duration_filter'],
       '#in_memberships_filter' => (bool) $conf['in_memberships_filter'],
       '#hide_home_branch_block' => (bool) $conf['hide_home_branch_block'],
+      '#skip_wizard' => (bool) $conf['skip_wizard'],
       '#background_image' => [
         'mobile' => $image_mobile,
         'desktop' => $image_desktop,
@@ -396,6 +398,13 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#default_value' => $conf['hide_home_branch_block'],
     ];
 
+    $form['skip_wizard'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Skip wizard'),
+      '#description' => $this->t('Display results on page load and skip the "Start your search..." wizard.'),
+      '#default_value' => $conf['skip_wizard'],
+    ];
+
     // Entity Browser element for background image.
     $form['background_image'] = $this->getEntityBrowserForm(
       'images_library',
@@ -436,6 +445,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $this->configuration['duration_filter'] = $additional_filters['duration_filter'];
     $this->configuration['in_memberships_filter'] = $additional_filters['in_memberships_filter'];
     $this->configuration['hide_home_branch_block'] = $form_state->getValue('hide_home_branch_block');
+    $this->configuration['skip_wizard'] = $form_state->getValue('skip_wizard');
     $this->configuration['background_image'] = $this->getEntityBrowserValue($form_state, 'background_image');
   }
 
