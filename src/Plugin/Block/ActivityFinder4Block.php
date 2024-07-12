@@ -342,7 +342,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['legacy_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Legacy mode'),
-      '#description' => $this->t('Enable legacy mode for Activity Finder.'),
+      '#description' => $this->t('Enable legacy mode for Activity Finder to emulate v3. Legacy mode disables bookmarks on the results screen, hides the age indicator on results, and removes the time options on the "Days & Times" wizard step.'),
       '#default_value' => $conf['legacy_mode'],
     ];
 
@@ -362,7 +362,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['additional']['start_month_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Start month'),
-      '#description' => $this->t('Allow users to filter by start month. This option has no additional configuration.'),
+      '#description' => $this->t('Allow users to filter by the start month in the Session Time field. This option has no additional configuration.'),
       '#default_value' => $conf['start_month_filter'],
     ];
 
@@ -395,6 +395,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['hide_home_branch_block'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide Home Branch info block'),
+      '#description' => $this->t('Disables functionality related to the user’s selected home branch.'),
       '#default_value' => $conf['hide_home_branch_block'],
     ];
 
