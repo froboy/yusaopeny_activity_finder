@@ -189,11 +189,15 @@
       .results-list-component {
         .result {
           border: 2px solid var(--ylb-color-light-grey-3, #ccc);
+          border-bottom-width: 1px;
+          border-top-width: 1px;
 
           &:active,
           &:focus,
           &:hover {
             border: 2px solid var(--wsPrimaryColor, #ccc);
+            border-bottom-width: 1px;
+            border-top-width: 1px;
           }
 
           .actions {

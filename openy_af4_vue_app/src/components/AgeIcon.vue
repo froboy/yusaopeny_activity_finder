@@ -59,7 +59,7 @@ export default {
   border-radius: 2em;
   display: inline-block;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 20px;
   height: 20px;
   margin-right: 5px;
