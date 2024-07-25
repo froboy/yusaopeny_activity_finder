@@ -328,13 +328,11 @@ export default {
     }
 
     .age-label {
-      font-size: 10px;
-      line-height: 15px;
+      font-size: 14px;
+      line-height: 20px;
       margin-right: 5px;
 
       @include media-breakpoint-up('lg') {
-        font-size: 12px;
-        line-height: 18px;
         margin-right: 10px;
       }
     }

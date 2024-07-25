@@ -500,7 +500,7 @@ export default {
       .title {
         font-family: var(--ylb-font-family-verdana), serif;
         font-size: 15px;
-        font-weight: 400;
+        font-weight: 700;
         line-height: 18px;
         text-transform: uppercase;
       }
