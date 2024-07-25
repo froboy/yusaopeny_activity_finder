@@ -659,6 +659,10 @@ export default {
       this.updateUrl()
     },
     step(val, oldVal) {
+      // If skipWizard, then ignore all steps and go directly to results.
+      if (this.skipWizard) {
+        this.viewResults()
+      }
       // Check if we returned to previously completed step - using browser back button - then we
       // need to remove this step from completed steps.
       // The else part tracks the completed step if the first (default) step was already completed
