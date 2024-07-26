@@ -95,6 +95,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'in_memberships_filter' => 0,
       'duration_filter' => 0,
       'start_month_filter' => 0,
+      'skip_wizard' => 0,
     ];
   }
 
@@ -220,6 +221,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#duration_filter' => (bool) $conf['duration_filter'],
       '#in_memberships_filter' => (bool) $conf['in_memberships_filter'],
       '#hide_home_branch_block' => (bool) $conf['hide_home_branch_block'],
+      '#skip_wizard' => (bool) $conf['skip_wizard'],
       '#background_image' => [
         'mobile' => $image_mobile,
         'desktop' => $image_desktop,
@@ -340,7 +342,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['legacy_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Legacy mode'),
-      '#description' => $this->t('Enable legacy mode for Activity Finder.'),
+      '#description' => $this->t('Enable legacy mode for Activity Finder to emulate v3. Legacy mode disables bookmarks on the results screen, hides the age indicator on results, and removes the time options on the "Days & Times" wizard step.'),
       '#default_value' => $conf['legacy_mode'],
     ];
 
@@ -360,7 +362,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['additional']['start_month_filter'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Start month'),
-      '#description' => $this->t('Allow users to filter by start month. This option has no additional configuration.'),
+      '#description' => $this->t('Allow users to filter by the start month in the Session Time field. This option has no additional configuration.'),
       '#default_value' => $conf['start_month_filter'],
     ];
 
@@ -393,7 +395,15 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $form['hide_home_branch_block'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide Home Branch info block'),
+      '#description' => $this->t('Disables functionality related to the user’s selected home branch.'),
       '#default_value' => $conf['hide_home_branch_block'],
+    ];
+
+    $form['skip_wizard'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Skip wizard'),
+      '#description' => $this->t('Display results on page load and skip the "Start your search..." wizard.'),
+      '#default_value' => $conf['skip_wizard'],
     ];
 
     // Entity Browser element for background image.
@@ -436,6 +446,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $this->configuration['duration_filter'] = $additional_filters['duration_filter'];
     $this->configuration['in_memberships_filter'] = $additional_filters['in_memberships_filter'];
     $this->configuration['hide_home_branch_block'] = $form_state->getValue('hide_home_branch_block');
+    $this->configuration['skip_wizard'] = $form_state->getValue('skip_wizard');
     $this->configuration['background_image'] = $this->getEntityBrowserValue($form_state, 'background_image');
   }
 
