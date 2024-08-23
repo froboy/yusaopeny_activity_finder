@@ -41,7 +41,7 @@
                   <span>
                     <span class="title">{{ activity.label }}</span>
                     <span class="results-count">
-                      {{ facetCount(activity.value) | formatPlural('1 result', '@count of results') }}
+                      {{ facetCount(activity.value) | formatPlural('1 result', '@count results') }}
                     </span>
                   </span>
                 </label>

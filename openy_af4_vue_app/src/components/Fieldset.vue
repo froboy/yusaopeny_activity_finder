@@ -16,7 +16,7 @@
           class="options"
           :class="{ 'no-options': counterOptions === 0 }"
         >
-          {{ counterOptions | formatPlural('1 result', '@count of results') }}
+          {{ counterOptions | formatPlural('1 result', '@count results') }}
         </span>
         <span v-if="collapsible" class="icon">
           <Icon icon="material-symbols:add-circle-outline" class="circle-plus" />

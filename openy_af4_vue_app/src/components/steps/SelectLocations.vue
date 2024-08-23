@@ -41,7 +41,7 @@
                     <span class="title">{{ location.label }}</span>
                     <span class="results-count">
                       {{
-                        facetCount(location.value) | formatPlural('1 result', '@count of results')
+                        facetCount(location.value) | formatPlural('1 result', '@count results')
                       }}
                     </span>
                   </span>

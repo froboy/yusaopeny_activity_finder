@@ -37,7 +37,7 @@
                   <span>
                     <span class="title">{{ age.label }}</span>
                     <span v-if="facetCount(age.value) !== null" class="results-count">
-                      {{ facetCount(age.value) | formatPlural('1 result', '@count of results') }}
+                      {{ facetCount(age.value) | formatPlural('1 result', '@count results') }}
                     </span>
                   </span>
                 </label>
