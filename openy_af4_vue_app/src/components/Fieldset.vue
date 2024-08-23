@@ -119,6 +119,7 @@ export default {
     }
 
     .title {
+      font-family: var(--ylb-font-family-cachet, Cachet), Verdana, sans-serif;
       font-size: 32px;
       line-height: 34px;
       font-weight: 500;
