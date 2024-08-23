@@ -57,8 +57,6 @@
           <Icon icon="material-symbols:calendar-today-outline" />
           <span>
             <span class="info">{{ item.dates }}</span>
-            <br />
-            <span v-if="item.days" class="details">{{ item.days }}</span>
           </span>
         </div>
 
@@ -122,8 +120,6 @@
               <Icon icon="material-symbols:calendar-today-outline" />
               <span>
                 <span class="info">{{ item.dates }}</span>
-                <br />
-                <span v-if="item.days" class="details">{{ item.days }}</span>
               </span>
             </div>
 
