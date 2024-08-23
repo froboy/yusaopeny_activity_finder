@@ -251,13 +251,13 @@ export default {
       color: $af-black;
       font-weight: 400;
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
     }
 
     .start-over {
       color: $af-blue;
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
     }
   }
 }
