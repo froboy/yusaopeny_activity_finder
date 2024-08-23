@@ -214,6 +214,7 @@ export default {
 <style lang="scss">
 .results-component {
   .result-title {
+    font-family: var(--ylb-font-family-cachet, Cachet), Verdana, sans-serif;
     font-size: 35px;
     line-height: 40px;
     color: $af-black;
