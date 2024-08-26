@@ -22,14 +22,14 @@
         <div v-else :class="resultsClasses">
           <div class="header d-md-none hidden-md hidden-lg">
             <span class="results" v-if="data.count">
-              {{ data.count | formatPlural('1 result', '@count of results') }}
+              {{ data.count | formatPlural('1 result', '@count results') }}
             </span>
             <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
           </div>
           <div class="header d-none d-md-flex hidden-xs hidden-sm">
             <span>
               <span class="results" v-if="data.count">
-                {{ data.count | formatPlural('1 result', '@count of results') }}
+                {{ data.count | formatPlural('1 result', '@count results') }}
               </span>
               | <a class="start-over" role="button" @click="startOver()">{{ 'Start Over' | t }}</a>
             </span>
@@ -214,6 +214,7 @@ export default {
 <style lang="scss">
 .results-component {
   .result-title {
+    font-family: var(--ylb-font-family-cachet, Cachet), Verdana, sans-serif;
     font-size: 35px;
     line-height: 40px;
     color: $af-black;
@@ -251,13 +252,13 @@ export default {
       color: $af-black;
       font-weight: 400;
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
     }
 
     .start-over {
       color: $af-blue;
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
     }
   }
 }

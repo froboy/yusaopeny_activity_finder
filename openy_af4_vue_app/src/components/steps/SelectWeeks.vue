@@ -35,7 +35,7 @@
                   <span>
                     <span class="title">{{ week.label }}</span>
                     <span v-if="facetCount(week.value) !== null" class="results-count">
-                      {{ facetCount(week.value) | formatPlural('1 result', '@count of results') }}
+                      {{ facetCount(week.value) | formatPlural('1 result', '@count results') }}
                     </span>
                   </span>
                 </label>
