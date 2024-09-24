@@ -190,7 +190,7 @@ export default {
   }
 
   .description {
-    font-family: var(--ylb-font-family-cachet), serif;
+    font-family: var(--ylb-font-family-cachet, Cachet), Verdana, sans-serif;
     margin: 20px 0;
 
     @include media-breakpoint-up('lg') {
@@ -198,7 +198,7 @@ export default {
     }
 
     & p:first-child {
-      font-family: var(--ylb-font-family), serif;
+      font-family: var(--ylb-font-family-cachet, Cachet), Verdana, sans-serif;
       font-size: 32px;
       line-height: 54px;
 
@@ -208,7 +208,7 @@ export default {
     }
 
     p {
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
       font-size: 18px;
       line-height: 28px;
     }

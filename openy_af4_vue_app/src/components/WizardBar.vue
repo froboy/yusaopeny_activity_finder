@@ -177,7 +177,7 @@ export default {
 
     .filters {
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
       line-height: 28px;
       .fa-filter {
         margin-right: 8px;
@@ -193,7 +193,7 @@ export default {
 
     .start-over {
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
       color: $af-black;
       text-decoration: underline;
       line-height: 28px;

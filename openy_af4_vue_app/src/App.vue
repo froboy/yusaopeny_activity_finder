@@ -93,7 +93,7 @@
           </a>
         </p>
         <p v-if="homeBranchResultsCount" class="homebranch-results-count">
-          {{ homeBranchResultsCount | formatPlural('1 result', '@count of results') }}
+          {{ homeBranchResultsCount | formatPlural('1 result', '@count results') }}
         </p>
       </template>
     </SelectPath>

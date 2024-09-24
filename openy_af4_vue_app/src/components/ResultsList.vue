@@ -297,7 +297,7 @@ export default {
 
     .title {
       font-size: 18px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
       line-height: 28px;
       color: $af-blue;
       font-weight: 700;
@@ -401,7 +401,7 @@ export default {
 
       .details {
         font-size: 14px;
-        font-family: var(--ylb-font-family-verdana), serif;
+        font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
         line-height: 20px;
       }
 
@@ -428,7 +428,7 @@ export default {
 
     .info {
       font-size: 14px;
-      font-family: var(--ylb-font-family-verdana), serif;
+      font-family: var(--ylb-font-family-verdana, Verdana), sans-serif;
       line-height: 20px;
     }
 
