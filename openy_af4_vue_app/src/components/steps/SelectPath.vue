@@ -1,6 +1,6 @@
 <template>
   <div class="select-path-component">
-    <div class="banner" :style="{ background: 'url(' + image + ') center center/cover no-repeat' }">
+    <div v-if="image" class="banner" :style="{ background: 'url(' + image + ') center center/cover no-repeat' }">
       <div class="separator"></div>
       <div class="shadow">
         <h1 class="text-center" :class="{ 'visually-hidden': !labelDisplay }">
