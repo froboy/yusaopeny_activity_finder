@@ -15,7 +15,8 @@
           <div class="description text-center">
             <p>{{ 'Start your search for an activity!' | t }}</p>
             <p>
-              {{ 'Pick any of the categories to find something that works for you' | t }}
+              {{ 'Pick any of the categories to find something that works for you.' | t }}
+              <a role="button" class=" " @click="viewResults">{{ 'Or, skip to all results.' | t }}</a>
             </p>
           </div>
         </div>
@@ -114,6 +115,9 @@ export default {
       this.trackEvent('selectPath', 'Start with ' + id)
       this.$emit('input', id)
       this.$emit('nextStep')
+    },
+    viewResults() {
+      this.$emit('viewResults')
     }
   }
 }
