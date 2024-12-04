@@ -284,7 +284,7 @@ export default {
       }
 
       .material-symbols-outlined {
-        background-color: #00aeef;
+        background-color: var(--wsTertiaryColor ,#00aeef);
         border-radius: 50%;
         color: var(--ylb-color-white, #fff);
         width: 68px;
