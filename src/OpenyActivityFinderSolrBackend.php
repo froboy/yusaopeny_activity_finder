@@ -117,7 +117,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
    */
   public function runProgramSearch($parameters, $log_id) {
     // Make a request to Search API.
-    $results = $this->doSearchRequest($parameters);
+    try {
+      $results = $this->doSearchRequest($parameters);
+    }
+    catch (\Exception $e) {
+      $this->loggerChannel->error($e->getMessage());
+      return [];
+    }
 
     // Get results count.
     $data['count'] = $results->getResultCount();
