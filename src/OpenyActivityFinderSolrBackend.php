@@ -314,24 +314,39 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     // Select locations based on filters.
     $locations = null;
     $locations_info = $this->getLocationsInfo();
-    $locations_nids = [];
 
-    // Get locations selected in parameters, if specified.
-    if (!empty($parameters['locations'])) {
-      $locations_nids = explode(',', rawurldecode($parameters['locations']));
-    }
-    if (!empty($parameters['limitloc'])) {
-      $locations_nids = array_merge($locations_nids, explode(',', $parameters['limitloc']));
-    }
+    // Build the allowed location set from limitloc param and global config.
+    // limitloc is a hard constraint — only these locations are ever queryable.
+    $limit_nids_param = !empty($parameters['limitloc'])
+      ? array_filter(explode(',', $parameters['limitloc']))
+      : [];
+    $limit_nids_config = array_filter(explode(',', $this->config->get('limitloc') ?? ''));
+    $limit_nids = array_unique(array_merge($limit_nids_param, $limit_nids_config));
 
-    // Get configured location limits and merge with parameters.
-    $locations_nids_config = array_filter(explode(',', $this->config->get('limitloc') ?? ""));
-    $locations_nids = array_merge($locations_nids, $locations_nids_config);
+    // Get locations explicitly selected by the user.
+    $selected_nids = !empty($parameters['locations'])
+      ? array_filter(explode(',', rawurldecode($parameters['locations'])))
+      : [];
+
+    if ($selected_nids) {
+      // User picked specific locations: use only those, but ensure they fall
+      // within the allowed set (limitloc) when a limit is active.
+      $locations_nids = $limit_nids
+        ? array_intersect($selected_nids, $limit_nids)
+        : $selected_nids;
+    }
+    elseif ($limit_nids) {
+      // No specific selection — restrict to the full allowed set.
+      $locations_nids = $limit_nids;
+    }
+    else {
+      $locations_nids = [];
+    }
 
     // Limit locations to parameters + limit.
     if ($locations_nids) {
       foreach ($locations_info as $key => $item) {
-        if (in_array($item['nid'], $locations_nids)) {
+        if (in_array((string) $item['nid'], array_map('strval', $locations_nids))) {
           $locations[] = $key;
         }
       }

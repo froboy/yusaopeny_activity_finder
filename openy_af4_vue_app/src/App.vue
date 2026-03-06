@@ -60,10 +60,10 @@
           :filters-section-config="filtersSectionConfig"
           :daxko="daxko"
           :bs-version="bsVersion"
-          :limit-by-category="limitByCategory"
-          :exclude-by-category="excludeByCategory"
-          :limit-by-location="limitByLocation"
-          :exclude-by-location="excludeByLocation"
+          :limit-by-category="normalizedLimitByCategory"
+          :exclude-by-category="normalizedExcludeByCategory"
+          :limit-by-location="normalizedLimitByLocation"
+          :exclude-by-location="normalizedExcludeByLocation"
           :special-filter-type="specialFilterType"
           @filterChange="onFilterChange($event, hideModal)"
           @clearFilters="clearFilters(hideModal)"
@@ -147,8 +147,8 @@
       :facets="data.facets.locations"
       :first-step="selectedPath === 'selectLocations'"
       :home-branch-id="homeBranchId"
-      :limit-by-location="limitByLocation"
-      :exclude-by-location="excludeByLocation"
+      :limit-by-location="normalizedLimitByLocation"
+      :exclude-by-location="normalizedExcludeByLocation"
       @nextStep="nextStep('selectLocations')"
     />
     <SelectActivities
@@ -158,8 +158,8 @@
       :facets="data.facets.field_activity_category"
       :first-step="selectedPath === 'selectActivities'"
       :multiple="!daxko"
-      :limit-by-category="limitByCategory"
-      :exclude-by-category="excludeByCategory"
+      :limit-by-category="normalizedLimitByCategory"
+      :exclude-by-category="normalizedExcludeByCategory"
       :special-filter-type="specialFilterType"
       @nextStep="nextStep('selectActivities')"
     />
@@ -174,7 +174,7 @@
       :disable-spots-available="disableSpotsAvailable"
       :request-more-info="daxko"
       :bs-version="bsVersion"
-      :db-backend="dbBackend"
+      :db-backend="isDbBackend"
       @startOver="startOver()"
       @addItem="addItem($event)"
       @removeItem="removeItem($event)"
@@ -213,10 +213,10 @@
           :filters-section-config="filtersSectionConfig"
           :daxko="daxko"
           :bs-version="bsVersion"
-          :limit-by-category="limitByCategory"
-          :exclude-by-category="excludeByCategory"
-          :limit-by-location="limitByLocation"
-          :exclude-by-location="excludeByLocation"
+          :limit-by-category="normalizedLimitByCategory"
+          :exclude-by-category="normalizedExcludeByCategory"
+          :limit-by-location="normalizedLimitByLocation"
+          :exclude-by-location="normalizedExcludeByLocation"
           :special-filter-type="specialFilterType"
           filters-mode="instant"
           @filterChange="onFilterChange($event)"
@@ -596,10 +596,10 @@ export default {
         page: this.selectedPage,
         sort: this.selectedSort,
         keywords: this.searchKeywords,
-        limit: this.limitByCategory.join(','),
-        exclude: this.excludeByCategory.join(','),
-        limitloc: this.limitByLocation.join(','),
-        excludeloc: this.excludeByLocation.join(','),
+        limit: this.normalizedLimitByCategory.join(','),
+        exclude: this.normalizedExcludeByCategory.join(','),
+        limitloc: this.normalizedLimitByLocation.join(','),
+        excludeloc: this.normalizedExcludeByLocation.join(','),
         durations: this.selectedDurations.join(','),
         start_months: this.selectedStartMonths.join(','),
         db_backend: this.db_backend ? 1 : 0
@@ -664,6 +664,25 @@ export default {
     },
     resultsBarClasses() {
       return this.bsVersion === 4 ? 'd-lg-none' : 'hidden-md hidden-lg'
+    },
+    // Normalize location/category limit & exclude arrays to strings so that
+    // child components can safely use Array#includes() regardless of whether
+    // PHP serialised the node IDs as integers or strings.
+    normalizedLimitByLocation() {
+      return this.limitByLocation.map(String)
+    },
+    normalizedExcludeByLocation() {
+      return this.excludeByLocation.map(String)
+    },
+    normalizedLimitByCategory() {
+      return this.limitByCategory.map(String)
+    },
+    normalizedExcludeByCategory() {
+      return this.excludeByCategory.map(String)
+    },
+    // True when using a non-Daxko (database/Solr) backend.
+    isDbBackend() {
+      return this.backendService !== 'openy_daxko2.openy_activity_finder_backend'
     }
   },
   watch: {
@@ -947,9 +966,6 @@ export default {
     },
     clearKeywords() {
       this.searchKeywords = ''
-    },
-    dbBackend() {
-      return this.backendService !== 'openy_daxko2.openy_activity_finder_backend'
     },
     getHomeBranchId() {
       const cookie = this.getCookie('home_branch')

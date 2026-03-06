@@ -194,6 +194,15 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       }
     }
 
+    // Re-index to ensure a sequential array so json_encode produces [] not {}.
+    $locations = array_values($locations);
+
+    // Also re-index each group's value array for the same reason.
+    foreach ($locations as &$locationType) {
+      $locationType['value'] = array_values($locationType['value']);
+    }
+    unset($locationType);
+
     \Drupal::moduleHandler()->alter('activity_finder_location_list', $locations);
     return [
       '#theme' => 'openy_activity_finder_4_block',
@@ -264,7 +273,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $conf = $this->getConfiguration();
 
     // Store Daxko limit fields separately since they're strings and not references.
-    if ($backend_service_id == 'openy_daxko2.openy_activity_finder_backend') {
+    if ($backend_service_id == 'openy_daxko2.openy_activity_finder_backend' && !$conf['use_database_backend']) {
       $form['limit_by_category_daxko'] = [
         '#type' => 'textfield',
         '#description' => $this->t('Separate multiple values by a comma and a space, like "ABC123, DEF234".'),
