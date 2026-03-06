@@ -269,7 +269,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $conf = $this->getConfiguration();
 
     // Store Daxko limit fields separately since they're strings and not references.
-    if ($backend_service_id == 'openy_daxko2.openy_activity_finder_backend' && !$conf['use_database_backend']) {
+    if ($backend_service_id == 'openy_daxko2.openy_activity_finder_backend') {
       $form['limit_by_category_daxko'] = [
         '#type' => 'textfield',
         '#description' => $this->t('Separate multiple values by a comma and a space, like "ABC123, DEF234".'),
