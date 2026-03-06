@@ -122,10 +122,6 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $limit_by_category = $conf['limit_by_category'];
     $limit_by_location = $conf['limit_by_location'];
 
-    if ($conf['use_database_backend']) {
-      $backend_service_id = 'openy_activity_finder.solr_backend';
-      $backend = \Drupal::service($backend_service_id);
-    }
     if ($backend_service_id == "openy_daxko2.openy_activity_finder_backend") {
       $limit_by_category = $conf['limit_by_category_daxko'] ? explode(', ', $conf['limit_by_category_daxko']) : [];
     }
@@ -359,9 +355,9 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     if ($backend_service_id != 'openy_activity_finder.solr_backend') {
       $form['use_database_backend'] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Use database backend instead based'),
-        '#description' => $this->t('Enable using database backend instead backend that selected @here', [
-          '@here' => Link::createFromRoute($this->t('here'), 'openy_activity_finder.settings')->toString()
+        '#title' => $this->t('Use Solr/database backend'),
+        '#description' => $this->t('Override the globally configured backend and force this block to use the Solr/database backend (configured @here).', [
+          '@here' => Link::createFromRoute($this->t('here'), 'openy_activity_finder.settings')->toString(),
         ]),
         '#default_value' => $conf['use_database_backend'],
       ];
@@ -461,7 +457,8 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['limit_by_category_daxko'] = $form_state->getValue('limit_by_category_daxko');
-    $this->configuration['use_database_backend'] = $form_state->getValue('use_database_backend') ?? FALSE;
+    // Preserve the existing value when the field is not rendered (solr is already the global backend).
+    $this->configuration['use_database_backend'] = $form_state->getValue('use_database_backend') ?? $this->configuration['use_database_backend'] ?? FALSE;
     $location_category = $form_state->getValue('location_category');
     $this->configuration['limit_by_category'] = $location_category['limit_by_category']
       ? array_column($location_category['limit_by_category'], 'target_id')
@@ -493,6 +490,14 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
   public function getBackend(): array {
     $activity_finder_settings = $this->configFactory->get('openy_activity_finder.settings');
     $backend_service_id = $activity_finder_settings->get('backend');
+
+    // Allow a per-block override to force the Solr/DB backend regardless of
+    // the globally configured backend (e.g. override Daxko with Solr).
+    $conf = $this->getConfiguration();
+    if (!empty($conf['use_database_backend']) && $backend_service_id !== 'openy_activity_finder.solr_backend') {
+      $backend_service_id = 'openy_activity_finder.solr_backend';
+    }
+
     /** @var \Drupal\openy_activity_finder\OpenyActivityFinderBackendInterface $backend */
     $backend = \Drupal::service($backend_service_id);
     return [$activity_finder_settings, $backend_service_id, $backend];

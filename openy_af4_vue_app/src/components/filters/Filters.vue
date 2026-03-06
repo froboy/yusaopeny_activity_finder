@@ -76,7 +76,7 @@
             :facets="data.facets.static_age_filter ? data.facets.static_age_filter : []"
           />
           <DaysFilter
-            v-if="daxko || legacyMode && !weeksFilter"
+            v-if="(daxko || legacyMode) && !weeksFilter"
             :id="id + '-days-filter'"
             v-model="selectedDays"
             :days="days"
