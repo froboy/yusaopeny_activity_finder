@@ -268,91 +268,23 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     [$activity_finder_settings, $backend_service_id, $backend] = $this->getBackend();
     $conf = $this->getConfiguration();
 
-    // Store Daxko limit fields separately since they're strings and not references.
-    if ($backend_service_id == 'openy_daxko2.openy_activity_finder_backend') {
-      $form['limit_by_category_daxko'] = [
-        '#type' => 'textfield',
-        '#description' => $this->t('Separate multiple values by a comma and a space, like "ABC123, DEF234".'),
-        '#title' => $this->t('Limit by category (Daxko)'),
-        '#default_value' => $conf['limit_by_category_daxko'],
-      ];
-    }
-    else {
-      $base_by_category = [
-        '#type' => 'entity_autocomplete',
-        '#description' => $this->t('Separate multiple values by comma.'),
-        '#target_type' => 'node',
-        '#tags' => TRUE,
-        '#selection_settings' => [
-          'target_bundles' => ['program_subcategory'],
-        ],
-        '#size' => 100,
-        '#maxlength' => 2048,
-      ];
+    $global_backend_service_id = $activity_finder_settings->get('backend');
 
-      // Use the allowed location types.
-      $location_types = array_keys(array_filter($activity_finder_settings->get('location_types'))) ??
-        ['branch', 'camp', 'facility'];
-      $base_by_location = [
-        '#type' => 'entity_autocomplete',
-        '#description' => $this->t(
-          'Separate multiple values by comma. Search for title from %types types.',
-          ['%types' => join(', ', $location_types)]
-        ),
-        '#target_type' => 'node',
-        '#tags' => TRUE,
-        '#selection_settings' => [
-          'target_bundles' => $location_types,
-        ],
-        '#size' => 100,
-        '#maxlength' => 2048,
-      ];
+    // Wrap the backend-dependent fields in a container that AJAX can replace.
+    // The actual field rendering is deferred to a #process callback so that
+    // $form_state->getValue() is safe to call (SubformState requires #parents
+    // to be set first, which only happens during the process phase).
+    $form['backend_fields'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'activity-finder-backend-fields'],
+      '#process' => [[static::class, 'processBackendFields']],
+      '#activity_finder_conf' => $conf,
+      '#activity_finder_settings' => $activity_finder_settings,
+    ];
 
-      $form['location_category'] = [
-        '#type' => 'details',
-        '#title' => $this->t('Location & Category filters'),
-        '#description' => $this->t(
-          "Restrict this block to show sessions from only certain Locations or
-          Categories. 'Limit' will show <em>only</em> the specified options.
-          'Exclude' will <em>remove</em> the specified options. Generally you
-          should choose <em>either</em> Exclude <em>or</em> Limit, not both."
-        ),
-        // Open if any of the containing fields are filled.
-        '#open' => ( $conf['limit_by_location'] ||
-          $conf['exclude_by_location'] ||
-          $conf['limit_by_category'] ||
-          $conf['exclude_by_category']
-        ),
-      ];
-
-      $form['location_category']['limit_by_location'] = $base_by_location + [
-        '#title' => $this->t('Limit by location'),
-        '#default_value' => $conf['limit_by_location']
-          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_location'])
-          : NULL,
-      ];
-      $form['location_category']['exclude_by_location'] = $base_by_location + [
-        '#title' => $this->t('Exclude by location'),
-        '#default_value' => $conf['exclude_by_location']
-          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_location'])
-          : NULL,
-      ];
-      $form['location_category']['limit_by_category'] = $base_by_category + [
-        '#title' => $this->t('Limit by category'),
-        '#default_value' => $conf['limit_by_category']
-          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['limit_by_category'])
-          : NULL,
-      ];
-
-      $form['location_category']['exclude_by_category'] = $base_by_category + [
-        '#title' => $this->t('Exclude by category'),
-        '#default_value' => $conf['exclude_by_category']
-          ? $this->entityTypeManager->getStorage('node')->loadMultiple($conf['exclude_by_category'])
-          : NULL,
-      ];
-    }
-
-    if ($backend_service_id != 'openy_activity_finder.solr_backend') {
+    // Show the override checkbox whenever the globally configured backend is
+    // not already Solr. Wire AJAX so toggling immediately swaps the fields above.
+    if ($global_backend_service_id !== 'openy_activity_finder.solr_backend') {
       $form['use_database_backend'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Use Solr/database backend'),
@@ -360,6 +292,11 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
           '@here' => Link::createFromRoute($this->t('here'), 'openy_activity_finder.settings')->toString(),
         ]),
         '#default_value' => $conf['use_database_backend'],
+        '#ajax' => [
+          'callback' => [static::class, 'ajaxBackendFields'],
+          'wrapper' => 'activity-finder-backend-fields',
+          'effect' => 'fade',
+        ],
       ];
     }
 
@@ -453,25 +390,178 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
   }
 
   /**
+   * #process callback: builds backend-dependent fields once #parents is set.
+   *
+   * This is called during the form build process phase, at which point
+   * SubformState has populated #parents and getValue() is safe to call.
+   */
+  public static function processBackendFields(array $element, FormStateInterface $form_state, array &$complete_form): array {
+    $conf = $element['#activity_finder_conf'];
+    $activity_finder_settings = $element['#activity_finder_settings'];
+    $global_backend_service_id = $activity_finder_settings->get('backend');
+
+    // Build the parents path to the sibling use_database_backend checkbox by
+    // taking this element's #parents and replacing the last key ('backend_fields')
+    // with 'use_database_backend'. This works in both standalone block forms
+    // and Layout Builder SubformState where values are scoped differently.
+    $checkbox_parents = $element['#parents'];
+    array_pop($checkbox_parents);
+    $checkbox_parents[] = 'use_database_backend';
+    $use_database_backend = $form_state->getValue($checkbox_parents);
+
+    // Fall back to saved config on initial page load (before any AJAX).
+    if ($use_database_backend === NULL) {
+      $use_database_backend = !empty($conf['use_database_backend']);
+    }
+
+    $isDaxko = $global_backend_service_id === 'openy_daxko2.openy_activity_finder_backend'
+      && empty($use_database_backend);
+
+    if ($isDaxko) {
+      $element['limit_by_category_daxko'] = [
+        '#type' => 'textfield',
+        '#title' => t('Limit by category (Daxko)'),
+        '#description' => t('Separate multiple values by a comma and a space, like "ABC123, DEF234".'),
+        '#default_value' => $conf['limit_by_category_daxko'],
+      ];
+    }
+    else {
+      $base_by_category = [
+        '#type' => 'entity_autocomplete',
+        '#description' => t('Separate multiple values by comma.'),
+        '#target_type' => 'node',
+        '#tags' => TRUE,
+        '#selection_settings' => ['target_bundles' => ['program_subcategory']],
+        '#size' => 100,
+        '#maxlength' => 2048,
+      ];
+
+      $location_types = array_keys(array_filter($activity_finder_settings->get('location_types')))
+        ?: ['branch', 'camp', 'facility'];
+      $base_by_location = [
+        '#type' => 'entity_autocomplete',
+        '#description' => t('Separate multiple values by comma. Search for title from %types types.', ['%types' => implode(', ', $location_types)]),
+        '#target_type' => 'node',
+        '#tags' => TRUE,
+        '#selection_settings' => ['target_bundles' => $location_types],
+        '#size' => 100,
+        '#maxlength' => 2048,
+      ];
+
+      $entity_type_manager = \Drupal::entityTypeManager();
+
+      $element['location_category'] = [
+        '#type' => 'details',
+        '#title' => t('Location & Category filters'),
+        '#description' => t("Restrict this block to show sessions from only certain Locations or Categories. 'Limit' will show <em>only</em> the specified options. 'Exclude' will <em>remove</em> the specified options. Generally you should choose <em>either</em> Exclude <em>or</em> Limit, not both."),
+        '#open' => (
+          $conf['limit_by_location'] ||
+          $conf['exclude_by_location'] ||
+          $conf['limit_by_category'] ||
+          $conf['exclude_by_category']
+        ),
+      ];
+      $element['location_category']['limit_by_location'] = $base_by_location + [
+        '#title' => t('Limit by location'),
+        '#default_value' => $conf['limit_by_location']
+          ? $entity_type_manager->getStorage('node')->loadMultiple($conf['limit_by_location'])
+          : NULL,
+      ];
+      $element['location_category']['exclude_by_location'] = $base_by_location + [
+        '#title' => t('Exclude by location'),
+        '#default_value' => $conf['exclude_by_location']
+          ? $entity_type_manager->getStorage('node')->loadMultiple($conf['exclude_by_location'])
+          : NULL,
+      ];
+      $element['location_category']['limit_by_category'] = $base_by_category + [
+        '#title' => t('Limit by category'),
+        '#default_value' => $conf['limit_by_category']
+          ? $entity_type_manager->getStorage('node')->loadMultiple($conf['limit_by_category'])
+          : NULL,
+      ];
+      $element['location_category']['exclude_by_category'] = $base_by_category + [
+        '#title' => t('Exclude by category'),
+        '#default_value' => $conf['exclude_by_category']
+          ? $entity_type_manager->getStorage('node')->loadMultiple($conf['exclude_by_category'])
+          : NULL,
+      ];
+    }
+
+    return $element;
+  }
+
+  /**
+   * AJAX callback: re-renders the backend-dependent fields wrapper.
+   *
+   * Layout Builder nests the block subform at unpredictable depths, so we
+   * search recursively for the backend_fields container.
+   */
+  public static function ajaxBackendFields(array $form, FormStateInterface $form_state): array {
+    $result = static::findBackendFields($form);
+    if ($result !== NULL) {
+      return $result;
+    }
+
+    // Safe fallback — returns an empty wrapper with the correct ID so the
+    // page doesn't break, and the next full form build will restore it.
+    return [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'activity-finder-backend-fields'],
+    ];
+  }
+
+  /**
+   * Recursively searches $form for the backend_fields container.
+   */
+  protected static function findBackendFields(array $form): ?array {
+    if (isset($form['backend_fields']) && is_array($form['backend_fields'])) {
+      return $form['backend_fields'];
+    }
+    foreach ($form as $key => $value) {
+      // Skip non-array values and Drupal internal keys.
+      if (!is_array($value) || strpos((string) $key, '#') === 0) {
+        continue;
+      }
+      $found = static::findBackendFields($value);
+      if ($found !== NULL) {
+        return $found;
+      }
+    }
+    return NULL;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['limit_by_category_daxko'] = $form_state->getValue('limit_by_category_daxko');
     // Preserve the existing value when the field is not rendered (solr is already the global backend).
     $this->configuration['use_database_backend'] = $form_state->getValue('use_database_backend') ?? $this->configuration['use_database_backend'] ?? FALSE;
-    $location_category = $form_state->getValue('location_category');
-    $this->configuration['limit_by_category'] = $location_category['limit_by_category']
-      ? array_column($location_category['limit_by_category'], 'target_id')
-      : [];
-    $this->configuration['exclude_by_category'] = $location_category['exclude_by_category']
-      ? array_column($location_category['exclude_by_category'], 'target_id')
-      : [];
-    $this->configuration['limit_by_location'] = $location_category['limit_by_location']
-      ? array_column($location_category['limit_by_location'], 'target_id')
-      : [];
-    $this->configuration['exclude_by_location'] = $location_category['exclude_by_location']
-      ? array_column($location_category['exclude_by_location'], 'target_id')
-      : [];
+
+    // Daxko text-field category limit — only present when Daxko is active and
+    // use_database_backend is not checked.
+    $limit_by_category_daxko = $form_state->getValue(['backend_fields', 'limit_by_category_daxko']);
+    if ($limit_by_category_daxko !== NULL) {
+      $this->configuration['limit_by_category_daxko'] = $limit_by_category_daxko;
+    }
+
+    // Entity autocomplete location/category fields — only present when the
+    // effective backend is not Daxko (i.e. solr backend or use_database_backend
+    // is checked). Preserve existing values when the fieldset was not rendered.
+    $location_category = $form_state->getValue(['backend_fields', 'location_category']);
+    if ($location_category !== NULL) {
+      $this->configuration['limit_by_category'] = $location_category['limit_by_category']
+        ? array_column($location_category['limit_by_category'], 'target_id')
+        : [];
+      $this->configuration['exclude_by_category'] = $location_category['exclude_by_category']
+        ? array_column($location_category['exclude_by_category'], 'target_id')
+        : [];
+      $this->configuration['limit_by_location'] = $location_category['limit_by_location']
+        ? array_column($location_category['limit_by_location'], 'target_id')
+        : [];
+      $this->configuration['exclude_by_location'] = $location_category['exclude_by_location']
+        ? array_column($location_category['exclude_by_location'], 'target_id')
+        : [];
+    }
     $this->configuration['legacy_mode'] = $form_state->getValue('legacy_mode');
     $this->configuration['weeks_filter'] = $form_state->getValue('weeks_filter');
     $additional_filters = $form_state->getValue('additional');
