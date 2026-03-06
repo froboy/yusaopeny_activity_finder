@@ -224,6 +224,10 @@ export default {
     requestMoreInfo: {
       type: Boolean,
       default: false
+    },
+    dbBackend: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -340,7 +344,8 @@ export default {
             nid: this.item.nid,
             program: this.item.program_id,
             offering: this.item.offering_id,
-            location: this.item.location_id
+            location: this.item.location_id,
+            db_backend: this.dbBackend ? 1 : 0,
           }
         })
         .then(response => {

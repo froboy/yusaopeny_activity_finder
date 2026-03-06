@@ -6,7 +6,60 @@
       </span>
       <a role="button" @click="clearFilters">{{ 'Clear Filters' | t }}</a>
     </div>
-    <div class="filters">
+    <div class="filters" v-if="specialFilterType">
+      <AgesFilter
+        :id="id + '-ages-filter'"
+        v-model="selectedAges"
+        :ages="ages"
+        :max-ages="maxAges"
+        :facets="data.facets.static_age_filter ? data.facets.static_age_filter : []"
+        :is-fieldset="true"
+      />
+      <WeeksFilter
+        v-if="weeksFilter"
+        :id="id + '-weeks-filter'"
+        v-model="selectedWeeks"
+        :weeks="weeks"
+        :facets="data.facets.static_weeks_filter"
+        :is-fieldset="true"
+      />
+
+      <Fieldset
+        :label="'Type(s)' | t"
+        :collapse-id="id + '-toggle-types'"
+        :collapsed="fieldsetCollapseState('category')"
+        :counter="activityFiltersCount"
+        :hide-counter="true"
+      >
+        <ActivitiesFilter
+          :id="id + '-activities-filter'"
+          v-model="selectedActivities"
+          :activities="activities"
+          :facets="data.facets.field_activity_category"
+          :multiple="!daxko"
+          :limit-by-category="limitByCategory"
+          :exclude-by-category="excludeByCategory"
+        />
+      </Fieldset>
+
+      <Fieldset
+        :label="'Location (s)' | t"
+        :collapse-id="id + '-toggle-locations'"
+        :collapsed="fieldsetCollapseState('locations')"
+        :counter="locationFiltersCount"
+        :hide-counter="true"
+      >
+        <LocationsFilter
+          :id="id + '-locations-filter'"
+          v-model="selectedLocations"
+          :locations="locations"
+          :facets="data.facets.locations"
+          :limit-by-location="limitByLocation"
+          :exclude-by-location="excludeByLocation"
+        />
+      </Fieldset>
+    </div>
+    <div class="filters" v-else>
       <Fieldset
         :label="'Schedules' | t"
         :collapse-id="id + '-toggle-schedules'"
@@ -23,14 +76,14 @@
             :facets="data.facets.static_age_filter ? data.facets.static_age_filter : []"
           />
           <DaysFilter
-            v-if="legacyMode && !weeksFilter"
+            v-if="daxko || legacyMode && !weeksFilter"
             :id="id + '-days-filter'"
             v-model="selectedDays"
             :days="days"
             :facets="data.facets.days_of_week"
           />
           <DaysTimesFilter
-            v-if="!legacyMode && !weeksFilter"
+            v-if="!daxko && !legacyMode && !weeksFilter"
             :id="id + '-days-times-filter'"
             v-model="selectedDaysTimes"
             :days-times="daysTimes"
@@ -283,6 +336,9 @@ export default {
     bsVersion: {
       type: Number,
       required: true
+    },
+    specialFilterType: {
+      type: Boolean
     }
   },
   data() {

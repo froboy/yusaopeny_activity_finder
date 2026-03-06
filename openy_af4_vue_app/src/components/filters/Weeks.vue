@@ -1,5 +1,24 @@
 <template>
+  <Fieldset
+    v-if="isFieldset"
+    :label="'Week(s)' | t"
+    :collapse-id="id + '-toggle'"
+    :counter="filtersCount"
+    :is-fieldset="isFieldset"
+    class="weeks-filter-component foldable-component"
+  >
+    <div v-for="week in weeks" :key="id + '-week-' + week.value" class="option">
+      <input
+        :id="id + '-week-' + week.value"
+        v-model="selectedWeeks"
+        type="checkbox"
+        :value="week.value"
+      />
+      <label :for="id + '-week-' + week.value">{{ week.label }}</label>
+    </div>
+  </Fieldset>
   <Foldable
+    v-else
     :label="'Week(s)' | t"
     :collapse-id="id + '-toggle'"
     :counter="filtersCount"
@@ -18,11 +37,13 @@
 </template>
 
 <script>
+import Fieldset from '@/components/Fieldset'
 import Foldable from '@/components/Foldable'
 
 export default {
   name: 'WeeksFilter',
   components: {
+    Fieldset,
     Foldable
   },
   props: {
@@ -41,6 +62,9 @@ export default {
     facets: {
       type: Array,
       required: true
+    },
+    isFieldset: {
+      type: Boolean
     }
   },
   data() {

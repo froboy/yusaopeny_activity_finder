@@ -1,5 +1,33 @@
 <template>
+  <Fieldset
+    v-if="isFieldset"
+    :label="'Age(s)' | t"
+    :collapse-id="id + '-toggle'"
+    :counter="filtersCount"
+    :counter-max="maxAges"
+    :is-fieldset="isFieldset"
+    class="ages-filter-component foldable-component"
+  >
+    <div class="row">
+      <div v-for="age in ages" :key="id + '-age-' + age.value" class="age-option col-4 col-xs-4">
+        <input
+          :id="id + '-age-' + age.value"
+          v-model="selectedAges"
+          type="checkbox"
+          :value="age.value"
+          :disabled="isDisabled(age.value)"
+        />
+        <label :id="id + '-label-' + age.value" :for="id + '-age-' + age.value">
+          {{ age.label }}
+        </label>
+        <b-tooltip v-if="isDisabled(age.value)" :target="id + '-label-' + age.value">
+          {{ 'Please unselect any of the selected options first' | t }}
+        </b-tooltip>
+      </div>
+    </div>
+  </Fieldset>
   <Foldable
+    v-else
     :label="'Age(s)' | t"
     :collapse-id="id + '-toggle'"
     :counter="filtersCount"
@@ -27,11 +55,13 @@
 </template>
 
 <script>
+import Fieldset from '@/components/Fieldset'
 import Foldable from '@/components/Foldable'
 
 export default {
   name: 'AgesFilter',
   components: {
+    Fieldset,
     Foldable
   },
   props: {
@@ -54,6 +84,9 @@ export default {
     maxAges: {
       type: Number,
       required: true
+    },
+    isFieldset: {
+      type: Boolean
     }
   },
   data() {

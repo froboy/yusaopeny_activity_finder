@@ -48,7 +48,7 @@
             class="btn btn-lg"
             @click="onChoice('selectedActivities')"
           >
-            {{ 'Activity' | t }}
+            {{ getActivityLabel() | t }}
           </button>
         </div>
         <div v-else class="actions">
@@ -100,6 +100,9 @@ export default {
     searchKeywords: {
       type: String,
       required: true
+    },
+    specialFilterType: {
+      type: Boolean
     }
   },
   computed: {
@@ -120,6 +123,9 @@ export default {
     },
     clearKeywords() {
       this.$emit('clearKeywords')
+    },
+    getActivityLabel() {
+      return this.specialFilterType ? 'Types' : 'Activity'
     }
   }
 }

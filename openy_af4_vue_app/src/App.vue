@@ -64,6 +64,7 @@
           :exclude-by-category="excludeByCategory"
           :limit-by-location="limitByLocation"
           :exclude-by-location="excludeByLocation"
+          :special-filter-type="specialFilterType"
           @filterChange="onFilterChange($event, hideModal)"
           @clearFilters="clearFilters(hideModal)"
         />
@@ -159,6 +160,7 @@
       :multiple="!daxko"
       :limit-by-category="limitByCategory"
       :exclude-by-category="excludeByCategory"
+      :special-filter-type="specialFilterType"
       @nextStep="nextStep('selectActivities')"
     />
     <Results
@@ -172,6 +174,7 @@
       :disable-spots-available="disableSpotsAvailable"
       :request-more-info="daxko"
       :bs-version="bsVersion"
+      :db-backend="dbBackend"
       @startOver="startOver()"
       @addItem="addItem($event)"
       @removeItem="removeItem($event)"
@@ -214,6 +217,7 @@
           :exclude-by-category="excludeByCategory"
           :limit-by-location="limitByLocation"
           :exclude-by-location="excludeByLocation"
+          :special-filter-type="specialFilterType"
           filters-mode="instant"
           @filterChange="onFilterChange($event)"
           @clearFilters="clearFilters"
@@ -235,6 +239,7 @@
           :selected-locations="selectedLocations"
           :selected-activities="selectedActivities"
           :search-keywords="searchKeywords"
+          :special-filter-type="specialFilterType"
           @noResultsChoice="noResultsChoice($event)"
           @clearKeywords="clearKeywords($event)"
         />
@@ -420,6 +425,9 @@ export default {
     skipWizard: {
       type: Boolean,
       required: true
+    },
+    specialFilterType: {
+      type: Boolean
     }
   },
   data() {
@@ -470,7 +478,7 @@ export default {
         },
         {
           id: 'selectActivities',
-          name: this.t('Activity'),
+          name: this.specialFilterType ? this.t('Type') : this.t('Activity'),
           icon: 'material-symbols:sprint'
         }
       ],
@@ -506,6 +514,9 @@ export default {
     if (this.backendService === 'openy_daxko2.openy_activity_finder_backend') {
       data.daxko = true
     }
+    else {
+      data.db_backend = true
+    }
 
     // Legacy mode tweaks.
     if (this.legacyMode) {
@@ -521,6 +532,24 @@ export default {
         id: 'selectDays',
         name: this.t('Day'),
         icon: 'fa-calendar'
+      }
+      data.maxAges = 0
+    }
+
+    // Daxko mode tweaks.
+    if (this.backendService === 'openy_daxko2.openy_activity_finder_backend') {
+      data.steps = [
+        'selectPath',
+        'selectAges',
+        'selectActivities',
+        'selectDays',
+        'selectLocations',
+        'results'
+      ]
+      data.paths[1] = {
+        id: 'selectDays',
+        name: this.t('Day'),
+        icon: 'material-symbols:date-range-outline'
       }
       data.maxAges = 0
     }
@@ -572,7 +601,8 @@ export default {
         limitloc: this.limitByLocation.join(','),
         excludeloc: this.excludeByLocation.join(','),
         durations: this.selectedDurations.join(','),
-        start_months: this.selectedStartMonths.join(',')
+        start_months: this.selectedStartMonths.join(','),
+        db_backend: this.db_backend ? 1 : 0
       }
 
       if (this.selectedInMemberships) {
@@ -723,7 +753,7 @@ export default {
         const itemIds = this.cartItems.map(item => item.item.nid)
         if (itemIds.length) {
           client('session_data')
-            .request({ params: { _format: 'json', session_ids: itemIds.join(',') } })
+            .request({ params: { _format: 'json', session_ids: itemIds.join(','), db_backend: this.searchParams.db_backend } })
             .then(response => {
               this.cartItems = this.cartItems
                 .map(cartItem => {
@@ -918,6 +948,9 @@ export default {
     clearKeywords() {
       this.searchKeywords = ''
     },
+    dbBackend() {
+      return this.backendService !== 'openy_daxko2.openy_activity_finder_backend'
+    },
     getHomeBranchId() {
       const cookie = this.getCookie('home_branch')
       if (cookie !== '') {
@@ -945,7 +978,8 @@ export default {
           params: {
             locations: this.homeBranchId,
             limit: this.searchParams.limit,
-            exclude: this.searchParams.exclude
+            exclude: this.searchParams.exclude,
+            db_backend: this.searchParams.db_backend
           }
         })
         .then(response => {

@@ -90,6 +90,7 @@ function openy_activity_finder_theme() {
         'start_month_filter' => FALSE,
         'duration_filter' => FALSE,
         'skip_wizard' => FALSE,
+        'special_filter_type' => FALSE,
       ],
     ],
   ];

@@ -8,6 +8,7 @@ use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Adds the Ages Min Max to the indexed data.
@@ -33,13 +34,18 @@ class AgesMinMax extends ProcessorPluginBase {
   protected $configFactory;
 
   /**
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     /** @var static $processor */
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
 
-    $plugin->setConfigFactory($container->get('config.factory'));
+    $plugin->setPlugins($container->get('config.factory'), $container->get('request_stack'));
 
     return $plugin;
   }
@@ -55,15 +61,28 @@ class AgesMinMax extends ProcessorPluginBase {
   }
 
   /**
+   * Retrieves the request stack service.
+   *
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
+   *   The request stack.
+   */
+  protected function getRequestStack() {
+    return $this->requestStack ?: \Drupal::requestStack();
+  }
+
+  /**
    * Sets the config factory service.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    *
    * @return $this
    */
-  protected function setConfigFactory(ConfigFactoryInterface $config_factory) {
+  protected function setPlugins(ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
     $this->configFactory = $config_factory;
+    $this->requestStack = $request_stack;
     return $this;
   }
 
@@ -76,6 +95,12 @@ class AgesMinMax extends ProcessorPluginBase {
   protected function getBackendService() {
     $config = $this->getConfigFactory()->get('openy_activity_finder.settings');
     $backend_service_id = $config->get('backend');
+    $requestStack = $this->getRequestStack();
+
+    if ($requestStack->getCurrentRequest()->query->get('db_backend') && $config->get('backend') != 'openy_activity_finder.solr_backend') {
+      $backend_service_id = 'openy_activity_finder.solr_backend';
+    }
+
     return \Drupal::service($backend_service_id);
   }
 

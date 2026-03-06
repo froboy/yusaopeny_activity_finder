@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\openy_activity_finder\OpenyActivityFinderSolrBackend;
 use Drupal\openy_system\EntityBrowserFormTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -84,6 +85,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     return [
       'label_display' => 'visible',
       'limit_by_category_daxko' => [],
+      'use_database_backend' => 0,
       'limit_by_category' => [],
       'exclude_by_category' => [],
       'limit_by_location' => [],
@@ -96,6 +98,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       'duration_filter' => 0,
       'start_month_filter' => 0,
       'skip_wizard' => 0,
+      'special_filter_type' => 0,
     ];
   }
 
@@ -119,6 +122,10 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $limit_by_category = $conf['limit_by_category'];
     $limit_by_location = $conf['limit_by_location'];
 
+    if ($conf['use_database_backend']) {
+      $backend_service_id = 'openy_activity_finder.solr_backend';
+      $backend = \Drupal::service($backend_service_id);
+    }
     if ($backend_service_id == "openy_daxko2.openy_activity_finder_backend") {
       $limit_by_category = $conf['limit_by_category_daxko'] ? explode(', ', $conf['limit_by_category_daxko']) : [];
     }
@@ -222,6 +229,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#in_memberships_filter' => (bool) $conf['in_memberships_filter'],
       '#hide_home_branch_block' => (bool) $conf['hide_home_branch_block'],
       '#skip_wizard' => (bool) $conf['skip_wizard'],
+      '#special_filter_type' => (bool) $conf['special_filter_type'],
       '#background_image' => [
         'mobile' => $image_mobile,
         'desktop' => $image_desktop,
@@ -339,6 +347,17 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       ];
     }
 
+    if ($backend_service_id != 'openy_activity_finder.solr_backend') {
+      $form['use_database_backend'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Use database backend instead based'),
+        '#description' => $this->t('Enable using database backend instead backend that selected @here', [
+          '@here' => Link::createFromRoute($this->t('here'), 'openy_activity_finder.settings')->toString()
+        ]),
+        '#default_value' => $conf['use_database_backend'],
+      ];
+    }
+
     $form['legacy_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Legacy mode'),
@@ -406,6 +425,13 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
       '#default_value' => $conf['skip_wizard'],
     ];
 
+    $form['special_filter_type'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Use special filters (Ages, Weeks, Types and Locations)'),
+      '#description' => $this->t('Display only 4 filters'),
+      '#default_value' => $conf['special_filter_type'],
+    ];
+
     // Entity Browser element for background image.
     $form['background_image'] = $this->getEntityBrowserForm(
       'images_library',
@@ -426,6 +452,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['limit_by_category_daxko'] = $form_state->getValue('limit_by_category_daxko');
+    $this->configuration['use_database_backend'] = $form_state->getValue('use_database_backend') ?? FALSE;
     $location_category = $form_state->getValue('location_category');
     $this->configuration['limit_by_category'] = $location_category['limit_by_category']
       ? array_column($location_category['limit_by_category'], 'target_id')
@@ -447,6 +474,7 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     $this->configuration['in_memberships_filter'] = $additional_filters['in_memberships_filter'];
     $this->configuration['hide_home_branch_block'] = $form_state->getValue('hide_home_branch_block');
     $this->configuration['skip_wizard'] = $form_state->getValue('skip_wizard');
+    $this->configuration['special_filter_type'] = $form_state->getValue('special_filter_type');
     $this->configuration['background_image'] = $this->getEntityBrowserValue($form_state, 'background_image');
   }
 

@@ -84,14 +84,21 @@ class SessionData extends ResourceBase {
     $plugin_definition
   ) {
     $config = $container->get('config.factory')->get('openy_activity_finder.settings');
+    $requestStack = $container->get('request_stack');
+
+    $backend = $config->get('backend');
+    if ($requestStack->getCurrentRequest()->query->get('db_backend') && $config->get('backend') != 'openy_activity_finder.solr_backend') {
+      $backend = 'openy_activity_finder.solr_backend';
+    }
+
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('openy_activity_finder'),
-      $container->get('request_stack'),
-      $container->get($config->get('backend'))
+      $requestStack,
+      $container->get($backend)
     );
   }
 

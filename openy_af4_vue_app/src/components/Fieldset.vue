@@ -32,6 +32,7 @@
       :id="collapseId"
       role="tabpanel"
       class="fieldset-content"
+      :class="{ 'foldable-content': isFieldset }"
       :accordion="accordion"
       :visible="!collapsed"
       @shown="handleSticky"
@@ -93,6 +94,9 @@ export default {
     handleSticky: {
       type: Function,
       default: () => {}
+    },
+    isFieldset: {
+      type: Boolean
     }
   }
 }
