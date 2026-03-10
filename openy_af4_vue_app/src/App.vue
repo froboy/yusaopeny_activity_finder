@@ -155,7 +155,7 @@
       v-else-if="step === 'selectActivities'"
       v-model="selectedActivities"
       :activities="activities"
-      :facets="data.facets.field_activity_category"
+      :facets="data.facets.activity_id || data.facets.field_activity_category || []"
       :first-step="selectedPath === 'selectActivities'"
       :multiple="!daxko"
       :limit-by-category="normalizedLimitByCategory"

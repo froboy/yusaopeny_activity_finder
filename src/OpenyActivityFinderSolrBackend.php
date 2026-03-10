@@ -244,26 +244,17 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     }
 
     $category_program_info = $this->getCategoryProgramInfo();
+
+    // The "categories" parameter now carries Activity nids (not subcategory
+    // nids) and is filtered against the activity_id Solr field.
     if (!empty($parameters['categories'])) {
-      $categories_nids = explode(',', rawurldecode($parameters['categories']));
-      // Map nids to titles.
-      foreach ($categories_nids as $nid) {
-        $categories[] = !empty($category_program_info[$nid]['title']) ? $nid : '';
-
-        // Subcategories with the same title could belong to different categories.
-        // Additional category filter is essential.
-        if (!empty($category_program_info[$nid]['program']['title'])) {
-          $program_types[] = $category_program_info[$nid]['program']['title'];
-        }
-
+      $activity_nids = explode(',', rawurldecode($parameters['categories']));
+      $activity_nids = array_filter($activity_nids);
+      if ($activity_nids) {
+        $query->addCondition('activity_id', $activity_nids, 'IN');
       }
-
-      if ($categories) {
-        $query->addCondition('field_activity_category', $categories, 'IN');
-      }
-
     }
-    // Ignore sessions which don't have referenced activity.
+    // Ignore sessions which don't have a referenced activity.
     else {
       $query->addCondition('field_activity_category', NULL, '<>');
     }
@@ -272,7 +263,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $query->addCondition('field_category_program', $program_types, 'IN');
     }
 
-    // Limit categories.
+    // Limit categories — still keyed on subcategory nids from config/params.
     $limit_nids = [];
     $limit_nids_config = [];
     if (!empty($parameters['limit'])) {
@@ -293,7 +284,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       $query->addCondition('field_activity_category', $limit_categories, 'IN');
     }
 
-    // Ensure to exclude categories.
+    // Ensure to exclude categories — still keyed on subcategory nids.
     $exclude_nids = [];
     if (!empty($parameters['exclude'])) {
       $exclude_nids = explode(',', $parameters['exclude']);
@@ -573,7 +564,6 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   public function getFacets($results) {
     $facets = $results->getExtraData('search_api_facets', []);
     $locationsInfo = $this->getLocationsInfo();
-    $category_program_info = $this->getCategoryProgramInfo();
 
     // Add static Age filter.
     $facets['static_age_filter'] = $this->getAges();
@@ -598,10 +588,8 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
             }
           }
         }
-        if ($f == 'field_activity_category') {
-          foreach ($category_program_info as $nid => $info) {
-            $facets_m[$f][$i]['id'] = (int) $facets_m[$f][$i]['filter'];
-          }
+        if ($f == 'activity_id') {
+          $facets_m[$f][$i]['id'] = (int) $facets_m[$f][$i]['filter'];
         }
         // Pass counters to static ages filter.
         if ($f == 'static_age_filter') {
@@ -652,6 +640,13 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       ],
       'field_category_program' => [
         'field' => 'field_category_program',
+        'limit' => 0,
+        'operator' => 'AND',
+        'min_count' => 1,
+        'missing' => TRUE,
+      ],
+      'activity_id' => [
+        'field' => 'activity_id',
         'limit' => 0,
         'operator' => 'AND',
         'min_count' => 1,
@@ -848,40 +843,96 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
   }
 
   /**
+   * Get referencing chain for Activity -> Program Subcategory info.
    *
+   * Returns a map of Activity nid => [title, subcategory => [nid, title]].
+   * Only used by the Solr backend — replaces the Program/Subcategory grouping
+   * with Subcategory/Activity grouping for the "Type" filter.
    */
-  public function getCategoriesTopLevel() {
-    $categories = [];
-    $programInfo = $this->getCategoryProgramInfo();
-    $exclude_nids = explode(',', $this->config->get('exclude'));
-
-    foreach ($programInfo as $key => $item) {
-      if (in_array($key, $exclude_nids)) {
-        continue;
-      }
-      $categories[$item['program']['nid']] = $item['program']['title'];
+  public function getActivitySubcategoryInfo(): array {
+    $data = [];
+    $cid = 'openy_activity_finder:activity_subcategory_info';
+    if ($cache = $this->cache->get($cid)) {
+      return $cache->data;
     }
-    return array_values($categories);
+
+    $nids = $this->entityTypeManager
+      ->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'activity')
+      ->accessCheck(FALSE)
+      ->execute();
+
+    $nids_chunked = array_chunk($nids, 20, TRUE);
+    foreach ($nids_chunked as $chunked) {
+      $activities = $this->entityTypeManager->getStorage('node')->loadMultiple($chunked);
+      foreach ($activities as $activity_node) {
+        $subcategory_node = $activity_node->field_activity_category->entity ?? NULL;
+        if (!$subcategory_node) {
+          continue;
+        }
+        $data[$activity_node->id()] = [
+          'title' => $activity_node->label(),
+          'subcategory' => [
+            'nid' => $subcategory_node->id(),
+            'title' => $subcategory_node->label(),
+          ],
+        ];
+      }
+    }
+
+    $expire = $this->time->getRequestTime() + self::CACHE_TTL;
+    $this->cache->set($cid, $data, $expire, [self::ACTIVITY_FINDER_CACHE_TAG]);
+
+    return $data;
   }
 
   /**
-   *
+   * Returns top-level type labels (Program Subcategory titles) for the Solr
+   * backend, replacing the previous Program-level grouping.
    */
-  public function getCategories() {
-    $categories = [];
-    $programInfo = $this->getCategoryProgramInfo();
-    $exclude_nids = explode(',', $this->config->get('exclude'));
+  public function getCategoriesTopLevel(): array {
+    $subcategories = [];
+    $activityInfo = $this->getActivitySubcategoryInfo();
+    $exclude_nids = array_filter(explode(',', $this->config->get('exclude') ?? ''));
 
-    foreach ($programInfo as $key => $item) {
-      if (in_array($key, $exclude_nids)) {
+    foreach ($activityInfo as $activity_nid => $item) {
+      $sub_nid = $item['subcategory']['nid'];
+      // Respect subcategory-level exclusions.
+      if (in_array($sub_nid, $exclude_nids)) {
         continue;
       }
-      $categories[$item['program']['nid']]['value'][] = [
-        'value' => $key,
+      $subcategories[$sub_nid] = $item['subcategory']['title'];
+    }
+
+    return array_values($subcategories);
+  }
+
+  /**
+   * Returns grouped type options for the Solr backend.
+   *
+   * Group label  = Program Subcategory title.
+   * Item label   = Activity title.
+   * Item value   = Activity nid (matched against the activity_id Solr field).
+   */
+  public function getCategories(): array {
+    $categories = [];
+    $activityInfo = $this->getActivitySubcategoryInfo();
+    $exclude_nids = array_filter(explode(',', $this->config->get('exclude') ?? ''));
+
+    foreach ($activityInfo as $activity_nid => $item) {
+      $sub_nid = $item['subcategory']['nid'];
+      // Respect subcategory-level exclusions.
+      if (in_array($sub_nid, $exclude_nids)) {
+        continue;
+      }
+      $categories[$sub_nid]['value'][] = [
+        'value' => $activity_nid,
         'label' => $item['title'],
       ];
-      $categories[$item['program']['nid']]['label'] = $item['program']['title'];
+      $categories[$sub_nid]['label'] = $item['subcategory']['title'];
     }
+
     return array_values($categories);
   }
 

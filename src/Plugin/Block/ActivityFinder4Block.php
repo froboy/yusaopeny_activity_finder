@@ -131,9 +131,15 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     // Remove empty programs and subprograms.
     $results = $backend->runProgramSearch([], 0);
 
+    // The Solr backend groups by Subcategory/Activity and uses activity_id
+    // facets; other backends still use field_activity_category facets.
+    $active_facet_key = $backend instanceof OpenyActivityFinderSolrBackend
+      ? 'activity_id'
+      : 'field_activity_category';
+
     $facets = [];
-    if (!empty($results['facets']['field_activity_category'])) {
-      $facets = $results['facets']['field_activity_category'];
+    if (!empty($results['facets'][$active_facet_key])) {
+      $facets = $results['facets'][$active_facet_key];
     }
 
     $activeSubPrograms = [];
