@@ -10,6 +10,7 @@ use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Adds the weekdays and parts of day to the indexed data.
@@ -35,6 +36,11 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
   protected $configFactory;
 
   /**
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a Facet object.
    *
    * @param array $configuration
@@ -45,12 +51,16 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The Config Factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack
+   *   The Request Stack.
    */
   public function __construct(array $configuration,
                               $plugin_id,
                               $plugin_definition,
-                              ConfigFactory $config_factory) {
+                              ConfigFactory $config_factory,
+                              RequestStack $request_stack) {
     $this->configFactory = $config_factory;
+    $this->requestStack = $request_stack;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -62,7 +72,8 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('request_stack')
     );
   }
 
@@ -105,6 +116,11 @@ class WeekdaysPartsOfDay extends ProcessorPluginBase implements ContainerFactory
 
     $activity_finder_settings = $this->configFactory->get('openy_activity_finder.settings');
     $backend_service_id = $activity_finder_settings->get('backend');
+
+    if ($this->requestStack->getCurrentRequest()->query->get('db_backend') && $backend_service_id != 'openy_activity_finder.solr_backend') {
+      $backend_service_id = 'openy_activity_finder.solr_backend';
+    }
+
     $backend = \Drupal::service($backend_service_id);
     $weekdays = $backend->getDaysOfWeek();
 

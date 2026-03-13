@@ -78,6 +78,14 @@ export default {
 
       const filteredActivities = {}
       this.activities.forEach((activityGroup, key) => {
+        // When only one of the two arrays is populated PHP has already
+        // pre-filtered the activities list (group-level for Solr, item-level
+        // for other backends), so there is nothing more to do here.
+        if (!this.excludeByCategory.length || !this.limitByCategory.length) {
+          filteredActivities[key] = activityGroup
+          return
+        }
+
         const filteredValue = activityGroup.value.filter(item => {
           let r = true
           // Items must pass both tests, so we intentionally do not ELSE these.

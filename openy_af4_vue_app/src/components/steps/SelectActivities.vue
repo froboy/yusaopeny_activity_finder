@@ -1,13 +1,13 @@
 <template>
   <div class="select-activities-component">
     <Step
-      :skip-label="'Any activity (Skip)' | t"
+      :skip-label="getLabel('step') | t"
       :filters-selected="filtersSelected"
       @skip="onSkip"
       @next="onNext"
     >
       <template v-slot:title>
-        {{ 'What activities are you interested in?' | t }}
+        {{ getLabel('title') | t }}
       </template>
       <template v-slot:default="{ handleSticky }">
         <Fieldset
@@ -92,6 +92,9 @@ export default {
     excludeByCategory: {
       type: Array,
       required: true
+    },
+    specialFilterType: {
+      type: Boolean
     }
   },
   data() {
@@ -203,6 +206,14 @@ export default {
         count += this.facetCount(this.activities[index].value[key].value)
       }
       return count
+    },
+    getLabel(name) {
+      let label = this.specialFilterType ? 'type' : 'activity'
+      let title = this.specialFilterType ? 'types' : 'activities'
+
+      return name === 'step'
+        ? 'Any ' + label + ' (Skip)'
+        :'What ' + title + ' are you interested in?'
     }
   }
 }

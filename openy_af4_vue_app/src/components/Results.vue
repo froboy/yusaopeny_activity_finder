@@ -68,6 +68,7 @@
             :legacy-mode="legacyMode"
             :disable-spots-available="disableSpotsAvailable"
             :request-more-info="requestMoreInfo"
+            :db-backend="dbBackend"
             @bookmark="handleActivityDetailsBookmark($event)"
             @unbookmark="handleActivityDetailsUnbookmark($event)"
           />
@@ -145,6 +146,10 @@ export default {
     bsVersion: {
       type: Number,
       required: true
+    },
+    dbBackend: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

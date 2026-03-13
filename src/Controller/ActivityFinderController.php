@@ -15,6 +15,7 @@ use Drupal\openy_activity_finder\OpenyActivityFinderSolrBackend;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -46,18 +47,25 @@ class ActivityFinderController extends ControllerBase {
   protected $config;
 
   /**
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Creates a new ActivityFinderController.
    */
   public function __construct(
     OpenyActivityFinderBackendInterface $backend,
     CacheBackendInterface $cacheBackend,
     TimeInterface $time,
-    ImmutableConfig $config
+    ImmutableConfig $config,
+    RequestStack $requestStack
   ) {
     $this->backend = $backend;
     $this->cacheBackend = $cacheBackend;
     $this->time = $time;
     $this->config = $config;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -65,12 +73,19 @@ class ActivityFinderController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     $config = $container->get('config.factory')->get('openy_activity_finder.settings');
+    $requestStack = $container->get('request_stack');
+
+    $backend = $config->get('backend');
+    if ($requestStack->getCurrentRequest()->query->get('db_backend') && $config->get('backend') != 'openy_activity_finder.solr_backend') {
+      $backend = 'openy_activity_finder.solr_backend';
+    }
 
     return new static(
-      $container->get($config->get('backend')),
+      $container->get($backend),
       $container->get('cache.default'),
       $container->get('datetime.time'),
-      $config
+      $config,
+      $requestStack
     );
   }
 
@@ -134,7 +149,12 @@ class ActivityFinderController extends ControllerBase {
 
       /** @var \Drupal\Core\Config\Config $expanderSectionsConfig */
       $expanderSectionsConfig = $this->config('openy_activity_finder.settings');
-      $data['expanderSectionsConfig'] = $expanderSectionsConfig->getRawData();
+      $expanderSectionsConfigData = $expanderSectionsConfig->getRawData();
+
+      if ($request->get('db_backend')) {
+        $expanderSectionsConfigData['backend'] = 'openy_activity_finder.solr_backend';
+      }
+      $data['expanderSectionsConfig'] = $expanderSectionsConfigData;
 
       // Allow other modules to alter the search results.
       $this->moduleHandler()->alter('activity_finder_program_search_results', $data);

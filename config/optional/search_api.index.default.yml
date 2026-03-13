@@ -136,6 +136,17 @@ field_settings:
         - field.storage.node.field_session_class
       module:
         - node
+  activity_id:
+    label: 'Activity ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_session_class:entity:field_class_activity:entity:nid'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_class_activity
+        - field.storage.node.field_session_class
+      module:
+        - node
   field_activity_category:
     label: 'Program Subcategory'
     datasource_id: 'entity:node'
