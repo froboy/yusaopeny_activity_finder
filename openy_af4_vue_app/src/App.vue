@@ -729,11 +729,15 @@ export default {
       this.canLoadData = true
 
       // Scroll to view.
-      document.getElementById('activity-finder-app').scrollIntoView(true)
+      setTimeout(() => {
+        document.getElementById('activity-finder-app').scrollIntoView({ behavior: 'smooth' })
+      }, 300)
     },
     selectedPage() {
-      // Scroll to top.
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // Scroll to element.
+      setTimeout(() => {
+        document.getElementById('activity-finder-app').scrollIntoView({ behavior: 'smooth' })
+      }, 500)
     },
     canLoadData() {
       this.loadData()
