@@ -931,6 +931,10 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
         'label' => $item['title'],
       ];
       $categories[$sub_nid]['label'] = $item['subcategory']['title'];
+      // Store the subcategory nid on the group so callers can identify it.
+      // This allows limit_by_category (subcategory nids) to be matched at the
+      // group level rather than mistakenly compared against Activity nids.
+      $categories[$sub_nid]['nid'] = (string) $sub_nid;
     }
 
     return array_values($categories);

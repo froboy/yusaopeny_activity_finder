@@ -152,9 +152,31 @@ class ActivityFinder4Block extends BlockBase implements ContainerFactoryPluginIn
     }
     foreach ($activities as $indexProgram => $program) {
       if (isset($program['value'])) {
+        // For the Solr backend, getCategories() groups Activity nids under a
+        // Program Subcategory. Each group carries a 'nid' key (subcategory nid)
+        // and limit_by_category also contains subcategory nids, so we can match
+        // at the group level instead of comparing Activity nids against
+        // subcategory nids (which would never match).
+        if ($backend instanceof OpenyActivityFinderSolrBackend && $limit_by_category) {
+          $groupNid = (string) ($program['nid'] ?? '');
+          $normalizedLimit = array_map('strval', $limit_by_category);
+          if (!$groupNid || !in_array($groupNid, $normalizedLimit)) {
+            unset($activities[$indexProgram]);
+            continue;
+          }
+        }
+
         foreach ($program['value'] as $indexSubProgram => $subProgram) {
-          if (!in_array($subProgram['value'], $activeSubPrograms) ||
-            ($limit_by_category && !in_array($subProgram['value'], $limit_by_category))) {
+          $removeActivity = !in_array($subProgram['value'], $activeSubPrograms);
+
+          // For non-Solr backends, also apply item-level category limit.
+          if (!$removeActivity && !($backend instanceof OpenyActivityFinderSolrBackend)) {
+            if ($limit_by_category && !in_array($subProgram['value'], $limit_by_category)) {
+              $removeActivity = TRUE;
+            }
+          }
+
+          if ($removeActivity) {
             unset($activities[$indexProgram]['value'][$indexSubProgram]);
           }
         }
