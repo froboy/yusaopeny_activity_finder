@@ -406,7 +406,8 @@ export default {
     .description,
     .ages,
     .gender,
-    .learn-more {
+    .learn-more,
+    .program {
       font-size: 14px;
       line-height: 20px;
     }
