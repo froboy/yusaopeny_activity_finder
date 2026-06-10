@@ -411,19 +411,11 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Bypass register redirect'),
       '#default_value' => $config->get('bypass_register_redirect') ?? FALSE,
       '#description' => $this->t(
-        'When enabled, "Register" links in Activity Finder will point directly
-        to the external registration URL instead of routing through the internal
-        <code>/af/register-redirect</code> proxy. This allows GA4\'s native
-        cross-domain linker to decorate the link at click time, which is the
-        recommended approach for cross-domain tracking. Click logging is moved
-        to an asynchronous POST to <code>/af/log-register</code>.<br>
-        <strong>Security:</strong> The same trusted-host validation applied by
-        the redirect route is enforced here. You must configure
+        'Embed the external registration URL directly in links instead of
+        routing through <code>/af/register-redirect</code>. Useful for GA4
+        cross-domain tracking. Requires
         <code>$settings[\'activity_finder_trusted_redirect_host_patterns\']</code>
-        in <code>settings.php</code> or no direct links will be rendered.<br>
-        Note: if openy_xdt or a similar module is enabled, its server-side
-        cookie injection will have no effect in this mode because there is no
-        redirect response to intercept.',
+        to be set in <code>settings.php</code>.'
       ),
     ];
 
