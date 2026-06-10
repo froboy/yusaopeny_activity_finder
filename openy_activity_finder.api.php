@@ -51,6 +51,10 @@ function hook_activity_finder_location_list_alter(array &$data) {
  * through /af/register-redirect, so GA4's native cross-domain linker can
  * decorate the link client-side.
  *
+ * The URL has already passed the same trusted-host validation enforced by
+ * the /af/register-redirect route before this hook is invoked. Returning an
+ * empty string from an implementation will suppress the link entirely.
+ *
  * Implementations may append static query parameters to the URL (e.g. UTM
  * tags). Note that per-user / per-request data such as analytics cookies
  * should NOT be injected here because the /af/get-data response is cached

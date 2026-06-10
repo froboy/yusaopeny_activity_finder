@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\node\Entity\NodeType;
 use Drupal\search_api\Entity\Index;
 use Drupal\Core\Url;
@@ -1087,6 +1088,26 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
     }
 
     if ($this->config->get('bypass_register_redirect')) {
+      // Apply the same trusted-host validation used by redirectToRegister() to
+      // ensure only known-good external domains are embedded as direct links.
+      // If no patterns are configured the URL is considered untrusted and an
+      // empty string is returned — consistent with the redirect route behaviour.
+      $host_patterns = Settings::get('activity_finder_trusted_redirect_host_patterns', []);
+      $trusted = FALSE;
+      if (!empty($host_patterns)) {
+        $host = parse_url($url, PHP_URL_HOST);
+        foreach ($host_patterns as $pattern) {
+          if (preg_match('/' . $pattern . '/i', $host)) {
+            $trusted = TRUE;
+            break;
+          }
+        }
+      }
+
+      if (!$trusted) {
+        return '';
+      }
+
       $link = $url;
       $context = [
         'url' => $url,

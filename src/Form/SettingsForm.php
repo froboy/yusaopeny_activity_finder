@@ -416,10 +416,14 @@ class SettingsForm extends ConfigFormBase {
         <code>/af/register-redirect</code> proxy. This allows GA4\'s native
         cross-domain linker to decorate the link at click time, which is the
         recommended approach for cross-domain tracking. Click logging is moved
-        to an asynchronous POST to <code>/af/log-register</code>. Note: if
-        openy_xdt or a similar module is enabled, its server-side cookie
-        injection will have no effect in this mode because there is no redirect
-        response to intercept.',
+        to an asynchronous POST to <code>/af/log-register</code>.<br>
+        <strong>Security:</strong> The same trusted-host validation applied by
+        the redirect route is enforced here. You must configure
+        <code>$settings[\'activity_finder_trusted_redirect_host_patterns\']</code>
+        in <code>settings.php</code> or no direct links will be rendered.<br>
+        Note: if openy_xdt or a similar module is enabled, its server-side
+        cookie injection will have no effect in this mode because there is no
+        redirect response to intercept.',
       ),
     ];
 
