@@ -406,6 +406,23 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('disable_cache_debug_log') ?? FALSE,
     ];
 
+    $form['bypass_register_redirect'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Bypass register redirect'),
+      '#default_value' => $config->get('bypass_register_redirect') ?? FALSE,
+      '#description' => $this->t(
+        'When enabled, "Register" links in Activity Finder will point directly
+        to the external registration URL instead of routing through the internal
+        <code>/af/register-redirect</code> proxy. This allows GA4\'s native
+        cross-domain linker to decorate the link at click time, which is the
+        recommended approach for cross-domain tracking. Click logging is moved
+        to an asynchronous POST to <code>/af/log-register</code>. Note: if
+        openy_xdt or a similar module is enabled, its server-side cookie
+        injection will have no effect in this mode because there is no redirect
+        response to intercept.',
+      ),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -438,6 +455,7 @@ class SettingsForm extends ConfigFormBase {
       ->save();
     $config->set('disable_program_search_log', $form_state->getValue('disable_program_search_log'))->save();
     $config->set('disable_cache_debug_log', $form_state->getValue('disable_cache_debug_log'))->save();
+    $config->set('bypass_register_redirect', (bool) $form_state->getValue('bypass_register_redirect'))->save();
     $allowed_values = explode(PHP_EOL, $form_state->getValue('allowed_query_arguments'));
     $allowed_values = array_filter(array_map('trim', $allowed_values));
     $config->set('allowed_query_arguments', $allowed_values)->save();
