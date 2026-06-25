@@ -1105,16 +1105,7 @@ class OpenyActivityFinderSolrBackend extends OpenyActivityFinderBackend {
       }
 
       if (!$trusted) {
-        // Fall back to the redirect route so the Register button still works
-        // when bypass_register_redirect is enabled but trusted-host patterns
-        // are missing or do not match this URL. This prevents the button from
-        // silently becoming a no-op and keeps parity with the redirect route's
-        // own host validation (it will 404 for genuinely untrusted hosts).
-        return Url::fromRoute(
-          'openy_activity_finder.register_redirect',
-          ['log' => $log_id],
-          ['query' => ['url' => $url]]
-        )->toString(TRUE)->getGeneratedUrl();
+        return '';
       }
 
       $link = $url;
